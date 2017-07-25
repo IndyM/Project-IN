@@ -90,6 +90,8 @@
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
     <AppDesigner Include="Properties\" />
+    <None Include="Resources\Obj\Beispiel_1.mtl" />
+    <None Include="Resources\Obj\Beispiel_1.obj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
