@@ -65,11 +65,10 @@
     <Compile Include="Mesh\MeshAttribute.cs" />
     <Compile Include="Mesh\MeshObject.cs" />
     <Compile Include="MeshObjectController.cs" />
+    <Compile Include="ObjReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
