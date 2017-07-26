@@ -9,7 +9,8 @@ namespace Geometry
 {
     public static class ObjReader
     {
-        public static List<MeshObject> read(String path) {
+        // http://paulbourke.net/dataformats/obj/
+        public static List<MeshObject> Read(String path) {
            
             var meshObjects = new List<MeshObject>();
 
@@ -28,13 +29,18 @@ namespace Geometry
                     while ((line = reader.ReadLine()) != null)
                     {
                         line.Trim();
+                        String key, args;
+                        SplitLine(line,out key,out args);
 
+                        switch (key) {
+                            case "o": meshObject = new MeshObject(args); break;
 
+                        }
                     }
                 }
             }
             catch (Exception e) {
-                System.Diagnostics.Debug.WriteLine(e.ToString());
+                Console.WriteLine(e.ToString());
             }
             finally
             {
@@ -44,5 +50,32 @@ namespace Geometry
 
             return meshObjects;
         }
+
+        /// <summary>
+        /// Splits a line in keyword and arguments.
+        /// </summary>
+        /// <param name="line">
+        /// The line.
+        /// </param>
+        /// <param name="keyword">
+        /// The keyword.
+        /// </param>
+        /// <param name="arguments">
+        /// The arguments.
+        /// </param>
+        private static void SplitLine(string line, out string keyword, out string arguments)
+        {
+            int idx = line.IndexOf(' ');
+            if (idx < 0)
+            {
+                keyword = line;
+                arguments = null;
+                return;
+            }
+
+            keyword = line.Substring(0, idx);
+            arguments = line.Substring(idx + 1);
+        }
+
     }
 }
