@@ -7,6 +7,9 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="800"  Loaded="Window_Loaded" WindowState="Maximized">
     <DockPanel>
+        <Ribbon DockPanel.Dock="Top">
+            
+        </Ribbon><!--
         <Menu Height="24" DockPanel.Dock="Top">
             <MenuItem Header="File">
                 <MenuItem Name="OpenFile" Header="Open File ..." Click="OpenFile_Click" />
@@ -14,6 +17,7 @@
             </MenuItem>
             <MenuItem Header="Edit"></MenuItem>
         </Menu>
+        -->
         <TreeView DockPanel.Dock="Right" Width="400"></TreeView>
         <WindowsFormsHost DockPanel.Dock="Left"  Name="host" />
     </DockPanel>

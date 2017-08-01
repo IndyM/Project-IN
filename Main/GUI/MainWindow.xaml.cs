@@ -18,6 +18,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using Geometry;
+using System.Diagnostics;
 
 namespace GUI
 {
@@ -48,9 +49,17 @@ namespace GUI
 
             // Assign the GLControl as the host control's child.
             host.Child = _glc;
-            
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            //MeshObjectController.loadModelISA();
+            MeshObjectController.loadModelPartOf();
+            sw.Stop();
+            Debug.WriteLine("Time needed to load Model: " + sw.Elapsed.ToString());
         }
-        void glc_Load(object sender, EventArgs e)
+        
+
+
+        private void glc_Load(object sender, EventArgs e)
         {
             // Make background "chocolate"
             GL.ClearColor(System.Drawing.Color.DarkGray);
