@@ -60,9 +60,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Objects\IMeshAttribute.cs" />
-    <Compile Include="Objects\Mesh.cs" />
-    <Compile Include="Objects\MeshAttribute.cs" />
     <Compile Include="Objects\MeshObject.cs" />
     <Compile Include="MeshObjectController.cs" />
     <Compile Include="Objects\MeshObjectBP3D.cs" />
