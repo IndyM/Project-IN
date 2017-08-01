@@ -1,5 +1,6 @@
-﻿using Geometry.Mesh;
-
+﻿using DMS.Geometry;
+using Geometry.Mesh;
+using Model.Objects;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -57,7 +58,7 @@ namespace Model
                         line = reader.ReadLine();
                     }
 
-                    Mesh.Mesh mesh = createMesh(vertexBlock, normalBlock, faceBlock);
+                    Mesh mesh = createMesh(vertexBlock, normalBlock, faceBlock);
 
                     /*
                     // Read and display lines from the file until the end of 
@@ -88,9 +89,9 @@ namespace Model
             return meshObject;
         }
 
-        private static Mesh.Mesh createMesh(List<string> vertexBlock, List<string> normalBlock, List<string> faceBlock)
+        private static Mesh createMesh(List<string> vertexBlock, List<string> normalBlock, List<string> faceBlock)
         {
-            var mesh = new Mesh.Mesh();
+            var mesh = new Mesh();
             foreach (var vertexLine in vertexBlock) {
                 var vertexString = vertexLine.Split(new char[] {'v', ' ' },StringSplitOptions.RemoveEmptyEntries);
                 var vertex = new Vector3() {
