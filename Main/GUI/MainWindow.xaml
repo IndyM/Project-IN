@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="800"  Loaded="Window_Loaded" WindowState="Maximized">
-    <DockPanel>
+    <DockPanel LastChildFill="True">
         <Ribbon DockPanel.Dock="Top">
             
         </Ribbon><!--
@@ -19,7 +19,15 @@
         </Menu>
         -->
         <TreeView DockPanel.Dock="Right" Width="400"></TreeView>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
         <WindowsFormsHost DockPanel.Dock="Left"  Name="host" />
+        </Grid>
     </DockPanel>
 
 </Window>

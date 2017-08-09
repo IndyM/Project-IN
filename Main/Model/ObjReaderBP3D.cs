@@ -36,6 +36,8 @@ namespace Model
                         line = reader.ReadLine();
                     }
                     meshObject = getNewMeshObjectByCommentBlock(commentBlock);
+
+                    
                     List<String> vertexBlock = new List<string>();
                     while (line != null && line.StartsWith("v "))
                     {
@@ -56,9 +58,12 @@ namespace Model
                         faceBlock.Add(line);
                         line = reader.ReadLine();
                     }
+                    
+                    meshObject.Mesh = createMesh(vertexBlock, normalBlock, faceBlock);
+                    meshObject.Load();
+                    MeshObjectController.MeshObjects.Add(meshObject);
 
-                    Mesh mesh = createMesh(vertexBlock, normalBlock, faceBlock);
-
+                
                     /*
                     // Read and display lines from the file until the end of 
                     // the file is reached.
@@ -127,7 +132,7 @@ namespace Model
                 var vertexString = faceLine.Split(new char[] { 'f', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var ele in vertexString) {
                     var facePart = ele.Split(new char[] { '/' });
-                    mesh.IDs.Add(uint.Parse(facePart[0]));
+                    mesh.IDs.Add(uint.Parse(facePart[0])-1);
                     //no uvs in file
                     mesh.uv.List.Add(new Vector2(.0f,.0f));
                 }

@@ -20,6 +20,7 @@ using OpenTK.Graphics.OpenGL;
 
 using System.Diagnostics;
 using Model;
+using DMS.Geometry;
 
 namespace GUI
 {
@@ -29,69 +30,158 @@ namespace GUI
     public partial class MainWindow : Window
     {
         private  GLControl _glc;
+
+        private bool _rotating;
+        private System.Drawing.Point _rotatingStart;
         public GLControl Glc {
             get { return _glc; }
         }
+        public Scene Scene {
+            get;
+            set;
+        }
+        
+        private System.Timers.Timer timer;
         public MainWindow()
         {
             InitializeComponent();
 
+            _rotating = false;
             _glc = new GLControl();
+            Scene = new Scene();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
-
             OpenTK.Toolkit.Init();
 
+            //_glc.BackColor = System.Drawing.Color.DarkGray;
             _glc.Load += new EventHandler(glc_Load);
             _glc.Paint += new PaintEventHandler(glc_Paint);
 
             // Assign the GLControl as the host control's child.
             host.Child = _glc;
+
+            //_glc.Height = (int)host.ActualHeight;
+            //_glc.Width = (int)host.ActualWidth;
+
             Stopwatch sw = new Stopwatch();
             sw.Start();
             //MeshObjectController.loadModelISA();
             MeshObjectController.loadModelPartOf();
             sw.Stop();
             Debug.WriteLine("Time needed to load Model: " + sw.Elapsed.ToString());
+
+            // Timer for 60 fps Render.
+            timer = new System.Timers.Timer() {
+                Interval = 1000 / 60,
+                AutoReset = true,
+            };
+
+            timer.Elapsed += OnTimedEvent;
+            // Start the timer
+            timer.Enabled = true;
+
         }
         
 
 
         private void glc_Load(object sender, EventArgs e)
         {
+
             // Make background "chocolate"
             GL.ClearColor(System.Drawing.Color.DarkGray);
+            GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.CullFace);
 
-            int w = _glc.Width;
-            int h = _glc.Height;
 
-            // Set up initial modes
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Ortho(0, w, 0, h, -1, 1);
-            GL.Viewport(0, 0, w, h);
+            //GL.MatrixMode(MatrixMode.Projection);
+            //GL.LoadIdentity();
+
+            int w = Glc.Width;
+            int h = Glc.Height;
+
+            float orthoW = w;
+            float orthoH = h;
+
+            //GL.Ortho(0, orthoW, 0, orthoH, -1, 1); // Bottom-left corner pixel has coordinate (0, 0)
+            GL.Viewport(0, 0, w, h); // Use all of the glControl painting area
+
+            _glc.Resize += _glc_Resize;
+
+            _glc.MouseMove += _glc_MouseMove;
+
+            _glc.MouseWheel += _glc_MouseWheel;
+
         }
+
+        private void _glc_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (Keyboard.GetKeyStates(Key.LeftShift) == KeyStates.Down)
+            {
+                Scene.Camera.FovY *= (float)Math.Pow(1.05, e.Delta);
+            }
+            else
+            {
+                Debug.WriteLine("Delta : " + e.Delta);
+                var sign = 1;
+                if (e.Delta < 0)
+                    sign = -1;
+                //Scene.Camera.Distance = sign*0.2f*(float)Math.Pow(1.05, e.Delta);
+                Scene.Camera.Distance += e.Delta;
+            }
+        }
+
+        private void _glc_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            //       if (ButtonState.Pushed == e.Mouse.LeftButton)
+            {
+                if (!_rotating)
+                {
+                    _rotating = true;
+                    _rotatingStart = e.Location;
+                }
+                var deltaLocX = -_rotatingStart.X + e.X;
+                var deltaLocY = -1 * _rotatingStart.Y + e.Y;
+                var deltaX = (float)(e.Location.X - e.X);
+                var deltaY = (float)(e.Location.X - e.X);
+
+                Scene.Camera.Azimuth += 300*(deltaLocX / (float)_glc.Width);// * 2 /*- 1*/;
+                Scene.Camera.Elevation += 300 * (deltaLocY / (float)_glc.Height);
+                //Scene.Camera.Azimuth += 300* e.X / (float)_glc.Width;
+                //Scene.Camera.Elevation +=/* 300 **/ 0.1f*e.Y / (float)_glc.Height;
+                System.Diagnostics.Debug.WriteLine(" deltaX: " + deltaLocX);
+                System.Diagnostics.Debug.WriteLine(" Scene.Camera.Azimuth: " + Scene.Camera.Azimuth);
+                _rotatingStart = e.Location;
+            }
+            else {
+                _rotating = false;
+            }
+        }
+
+        private void _glc_Resize(object sender, EventArgs e)
+        {
+            Scene.Camera.Aspect = (float)Glc.Width / Glc.Height;
+            int w = Glc.Width;
+            int h = Glc.Height;
+
+            GL.Viewport(0, 0, w, h); // Use all of the glControl painting area
+        }
+
         void glc_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
-
-            // Draw a little yellow triangle
-            GL.Color3(System.Drawing.Color.Yellow);
-            GL.Begin(PrimitiveType.Triangles);
-            GL.Vertex2(200, 50);
-            GL.Vertex2(200, 200);
-            GL.Vertex2(100, 50);
-            GL.End();
-
+            Scene.Render();
+ 
             _glc.SwapBuffers();
         }
 
+        private void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            _glc.Invalidate();
+           // Console.WriteLine("The Elapsed event was raised at {0}", e.SignalTime);
+        }
         private void OpenFile_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
