@@ -3,6 +3,7 @@ using DMS.OpenGL;
 using Model.Objects;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,16 +13,16 @@ namespace Model
 {
     public static class MeshObjectController
     {
-        private static List<MeshObject> _meshObjects;
+        private static ObservableCollection<MeshObject> _meshObjects;
         private static Shader baseShader;
 
-        public static List<MeshObject> MeshObjects {
+        public static ObservableCollection<MeshObject> MeshObjects {
             get { return _meshObjects; }
             set { _meshObjects = value; }
         }
 
         static MeshObjectController() {
-            _meshObjects = new List<MeshObject>();
+            _meshObjects = new ObservableCollection<MeshObject>();
 
         }
 
@@ -31,8 +32,9 @@ namespace Model
             var files = Directory.EnumerateFiles(path);
 
             foreach (var file in files) {
-                var meshObject = ObjReaderBP3D.Read(file);
+                var meshObject = ObjReaderBP3D.ReadObj(file);
             }
+
             System.Diagnostics.Debug.WriteLine("Finished Reading File");
         }
         public static void loadModelPartOf()
@@ -43,7 +45,7 @@ namespace Model
 
             foreach (var file in files)
             {
-                var meshObject = ObjReaderBP3D.Read(file);
+                var meshObject = ObjReaderBP3D.ReadObj(file);
                 
             }
             System.Diagnostics.Debug.WriteLine("Finished Reading File");

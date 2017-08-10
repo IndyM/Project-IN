@@ -97,7 +97,10 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\Icons\load_full.png" />
+    <Resource Include="Resources\Icons\load_half.png" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Model\Model.csproj">
       <Project>{6A23DBDF-2F9D-4775-87B0-E790521103CD}</Project>

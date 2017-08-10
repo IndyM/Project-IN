@@ -21,6 +21,7 @@ using OpenTK.Graphics.OpenGL;
 using System.Diagnostics;
 using Model;
 using DMS.Geometry;
+using Model.Objects;
 
 namespace GUI
 {
@@ -67,8 +68,7 @@ namespace GUI
 
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            //MeshObjectController.loadModelISA();
-            MeshObjectController.loadModelPartOf();
+
             sw.Stop();
             Debug.WriteLine("Time needed to load Model: " + sw.Elapsed.ToString());
 
@@ -196,6 +196,23 @@ namespace GUI
             {
                 ObjReader.Read(openFileDialog1.FileName);
             }
+        }
+
+        private void loadFull_Click(object sender, RoutedEventArgs e)
+        {
+            MeshObjectController.loadModelISA();
+            
+        }
+
+        private void loadPart_Click(object sender, RoutedEventArgs e)
+        {
+            MeshObjectController.loadModelPartOf();
+        }
+
+        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+
+            Scene.Camera.Target = ((MeshObjectBP3D)e.NewValue).GetCenter();
         }
     }
 }

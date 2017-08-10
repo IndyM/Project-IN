@@ -34,10 +34,18 @@ namespace Model.Objects
 
 
 
+
         public MeshObjectBP3D(String name) : base(name) {
             
         }
-
+        /// <summary>
+        /// Get the Center-Point of the Mesh
+        /// </summary>
+        /// <returns> Center-Point as Vector3 </returns>
+        public Vector3 GetCenter() {
+            var ret = Bounds.Item1 + 0.5f * (-Bounds.Item1 + Bounds.Item2);
+            return ret;
+        }
 
 
     }

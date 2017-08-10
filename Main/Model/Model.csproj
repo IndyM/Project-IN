@@ -83,8 +83,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Objects\Resources\frag_base.glsl" />
-    <None Include="Objects\Resources\vertex_base.glsl" />
     <None Include="Resources\Model\isa_BP3D_4.0\isa_BP3D_4.0_obj_99.zip" />
     <None Include="Resources\Model\isa_BP3D_4.0\isa_BP3D_4.0_obj_99\FJ1252.obj" />
     <None Include="Resources\Model\isa_BP3D_4.0\isa_BP3D_4.0_obj_99\FJ1253.obj" />

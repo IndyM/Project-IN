@@ -3,13 +3,23 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:model ="clr-namespace:Model;assembly=Model"
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="800"  Loaded="Window_Loaded" WindowState="Maximized">
     <DockPanel LastChildFill="True">
         <Ribbon DockPanel.Dock="Top">
-            
-        </Ribbon><!--
+            <RibbonTab Header="Home">
+                <RibbonGroup Header="Load Model" >
+                   
+                    <RibbonButton Name="loadFull" Label="Full" LargeImageSource="Resources/Icons/load_full.png" Click="loadFull_Click" />
+                    <RibbonButton Name="loadPart" Label="Part" LargeImageSource="Resources/Icons/load_half.png" Click="loadPart_Click" />
+                </RibbonGroup>
+                    
+
+            </RibbonTab>
+        </Ribbon>
+        <!--
         <Menu Height="24" DockPanel.Dock="Top">
             <MenuItem Header="File">
                 <MenuItem Name="OpenFile" Header="Open File ..." Click="OpenFile_Click" />
@@ -18,7 +28,7 @@
             <MenuItem Header="Edit"></MenuItem>
         </Menu>
         -->
-        <TreeView DockPanel.Dock="Right" Width="400"></TreeView>
+        <TreeView DockPanel.Dock="Right" ItemsSource="{Binding Source={x:Static model:MeshObjectController.MeshObjects}}" DisplayMemberPath="Name" Width="400" SelectedItemChanged="TreeView_SelectedItemChanged"></TreeView>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>

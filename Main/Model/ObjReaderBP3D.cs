@@ -14,7 +14,7 @@ namespace Model
     static class ObjReaderBP3D
     {
         // http://paulbourke.net/dataformats/obj/
-        public static MeshObjectBP3D Read(String path)
+        public static MeshObjectBP3D ReadObj(String path)
         {
             MeshObjectBP3D meshObject = null;
 
@@ -79,6 +79,7 @@ namespace Model
                         }
                     }*/
                 }
+
             }
             catch (Exception e)
             {
