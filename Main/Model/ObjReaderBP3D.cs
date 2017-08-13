@@ -13,7 +13,12 @@ namespace Model
 {
     static class ObjReaderBP3D
     {
-        // http://paulbourke.net/dataformats/obj/
+       
+        /// <summary>
+        /// Read a PB3D .obj File
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns> The read MeshObjectBP3D </returns>
         public static MeshObjectBP3D ReadObj(String path)
         {
             MeshObjectBP3D meshObject = null;
@@ -24,60 +29,37 @@ namespace Model
                 stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
                 using (StreamReader reader = new StreamReader(stream))
                 {
+
                     stream = null;
 
                     string line;
 
-                    //Start reading the Comment-Block
+
                     List<String> commentBlock = new List<string>();
-                    line = reader.ReadLine();
-                    while (line != null && line.StartsWith("#")) {
-                        commentBlock.Add(line);
-                        line = reader.ReadLine();
-                    }
-                    meshObject = getNewMeshObjectByCommentBlock(commentBlock);
-
-                    
                     List<String> vertexBlock = new List<string>();
-                    while (line != null && line.StartsWith("v "))
-                    {
-                        vertexBlock.Add(line);
-                        line = reader.ReadLine();
-                    }
                     List<String> normalBlock = new List<string>();
-                    while (line != null && line.StartsWith("vn "))
-                    {
-                        normalBlock.Add(line);
-                        line = reader.ReadLine();
-                    }
-                    line = reader.ReadLine();
-                    line = reader.ReadLine();
                     List<String> faceBlock = new List<string>();
-                    while (line != null && line.StartsWith("f "))
-                    {
-                        faceBlock.Add(line);
-                        line = reader.ReadLine();
-                    }
-                    
-                    meshObject.Mesh = createMesh(vertexBlock, normalBlock, faceBlock);
-                    meshObject.Load();
-                    MeshObjectController.MeshObjects.Add(meshObject);
 
-                
-                    /*
-                    // Read and display lines from the file until the end of 
-                    // the file is reached.
+
+                    // Read until the end of the file is reached.
                     while ((line = reader.ReadLine()) != null)
                     {
                         line.Trim();
                         String key, args;
                         SplitLine(line, out key, out args);
-
+                        //Dataformat described in http://paulbourke.net/dataformats/obj/
                         switch (key)
                         {
-                            
+                            case "#": commentBlock.Add(args); break;
+                            case "v": vertexBlock.Add(args); break;
+                            case "vn": normalBlock.Add(args); break;
+                            case "f": faceBlock.Add(args); break;
                         }
-                    }*/
+                    }
+                    meshObject = getNewMeshObjectByCommentBlock(commentBlock);
+                    meshObject.Mesh = createMesh(vertexBlock, normalBlock, faceBlock);
+                    meshObject.Load();
+                    MeshObjectController.MeshObjects.Add(meshObject);
                 }
 
             }
@@ -98,7 +80,7 @@ namespace Model
         {
             var mesh = new Mesh();
             foreach (var vertexLine in vertexBlock) {
-                var vertexString = vertexLine.Split(new char[] {'v', ' ' },StringSplitOptions.RemoveEmptyEntries);
+                var vertexString = vertexLine.Split(new char[] {' ' },StringSplitOptions.RemoveEmptyEntries);
                 var vertex = new Vector3() {
                     X = float.Parse(vertexString[0]),
                     Y = float.Parse(vertexString[1]),
@@ -108,7 +90,7 @@ namespace Model
             }
             foreach (var normalLine in normalBlock)
             {
-                var vertexString = normalLine.Split(new char[] { 'v','n', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var vertexString = normalLine.Split(new char[] {' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var vertex = new Vector3()
                 {
                     X = float.Parse(vertexString[0]),
@@ -119,7 +101,7 @@ namespace Model
             }
             foreach (var normalLine in normalBlock)
             {
-                var vertexString = normalLine.Split(new char[] { 'v', 'n', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var vertexString = normalLine.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var vertex = new Vector3()
                 {
                     X = float.Parse(vertexString[0]),
@@ -130,11 +112,11 @@ namespace Model
             }
             foreach (var faceLine in faceBlock)
             {
-                var vertexString = faceLine.Split(new char[] { 'f', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var vertexString = faceLine.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var ele in vertexString) {
                     var facePart = ele.Split(new char[] { '/' });
                     mesh.IDs.Add(uint.Parse(facePart[0])-1);
-                    //no uvs in file
+                    //no uvs used, just add an empty Vector
                     mesh.uv.List.Add(new Vector2(.0f,.0f));
                 }
             }
@@ -158,6 +140,8 @@ namespace Model
             //Build UP
             String conceptID = commentBlock[firstline + 4].Split(new char[] { ':', ' ' }).Last();
             String name = commentBlock[firstline + 5].Split(new char[] { ':' }).Last().Substring(1);
+            if (name == "")
+                name = fileID+" NoName";
             var args = commentBlock[firstline + 6].Split(new char[] { ':' , ' '}).Last();
             var vecs = args.Split(new char[] { '-', ' ','(',',',')' },StringSplitOptions.RemoveEmptyEntries);
             var vec1 = new Vector3() {

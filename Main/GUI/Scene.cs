@@ -23,11 +23,9 @@ namespace GUI
                 FarClip = 5000,
                 Distance = 30,
             };
-
         }
 
         public void Render() {
-            //Camera.Distance += 1;
             foreach (var meshObject in MeshObjectController.MeshObjects)
             {
                 Matrix4 camera = Camera.CalcMatrix().ToOpenTK();

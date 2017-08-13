@@ -46,7 +46,5 @@ namespace Model.Objects
             var ret = Bounds.Item1 + 0.5f * (-Bounds.Item1 + Bounds.Item2);
             return ret;
         }
-
-
     }
 }

@@ -83,6 +83,5 @@ namespace Model
             keyword = line.Substring(0, idx);
             arguments = line.Substring(idx + 1);
         }
-
     }
 }
