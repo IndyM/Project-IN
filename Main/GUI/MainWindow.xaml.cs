@@ -129,6 +129,7 @@ namespace GUI
                     sign = -1;
                 //Scene.Camera.Distance = sign*0.2f*(float)Math.Pow(1.05, e.Delta);
                 Scene.Camera.Distance += e.Delta;
+                
             }
         }
 
@@ -144,15 +145,10 @@ namespace GUI
                 }
                 var deltaLocX = -_rotatingStart.X + e.X;
                 var deltaLocY = -1 * _rotatingStart.Y + e.Y;
-                var deltaX = (float)(e.Location.X - e.X);
-                var deltaY = (float)(e.Location.X - e.X);
 
-                Scene.Camera.Azimuth += 300*(deltaLocX / (float)_glc.Width);// * 2 /*- 1*/;
+                Scene.Camera.Azimuth += 300*(deltaLocX / (float)_glc.Width);
                 Scene.Camera.Elevation += 300 * (deltaLocY / (float)_glc.Height);
-                //Scene.Camera.Azimuth += 300* e.X / (float)_glc.Width;
-                //Scene.Camera.Elevation +=/* 300 **/ 0.1f*e.Y / (float)_glc.Height;
-                System.Diagnostics.Debug.WriteLine(" deltaX: " + deltaLocX);
-                System.Diagnostics.Debug.WriteLine(" Scene.Camera.Azimuth: " + Scene.Camera.Azimuth);
+
                 _rotatingStart = e.Location;
             }
             else {
@@ -201,18 +197,29 @@ namespace GUI
         private void loadFull_Click(object sender, RoutedEventArgs e)
         {
             MeshObjectController.loadModelISA();
-            
+            setUpTree();
         }
 
         private void loadPart_Click(object sender, RoutedEventArgs e)
         {
             MeshObjectController.loadModelPartOf();
+            setUpTree();
+        }
+        private void setUpTree() {
+            var treeitem = MeshObjectController.TreeStart.getTreeViewChildren();
+            GroupView.Items.Add(treeitem);
+            /*
+            foreach (var meshGroup in MeshObjectController.TreeStart.Children) {
+                var treeitem = meshGroup.getTreeViewChildren();
+                GroupView.Items.Add(treeitem);
+
+            }*/
         }
 
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-
-            Scene.Camera.Target = ((MeshObjectBP3D)e.NewValue).GetCenter();
+            System.Diagnostics.Debug.WriteLine(e.NewValue.GetType());
+           // Scene.Camera.Target = ((MeshObjectBP3D)e.NewValue).GetCenter();
         }
     }
 }

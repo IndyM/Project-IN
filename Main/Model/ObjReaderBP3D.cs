@@ -2,6 +2,7 @@
 using Model.Objects;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -59,7 +60,7 @@ namespace Model
                     meshObject = getNewMeshObjectByCommentBlock(commentBlock);
                     meshObject.Mesh = createMesh(vertexBlock, normalBlock, faceBlock);
                     meshObject.Load();
-                    MeshObjectController.MeshObjects.Add(meshObject);
+                    //MeshObjectController.MeshObjects.Add(meshObject);
                 }
 
             }
@@ -74,6 +75,147 @@ namespace Model
             }
 
             return meshObject;
+        }
+
+        internal static MeshObjectBP3DGroup ReadRelations(string path)
+        {
+            var treeBuildList = new ObservableCollection<MeshObjectBP3DGroup>();
+            Stream stream = null;
+            try
+            {
+                stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    
+                    stream = null;
+
+                    string line = reader.ReadLine();//skip the first line
+
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        line.Trim();
+                        var parts = line.Split(new char[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                        var parent_ConID = parts[0];
+                        var parent_name = parts[1];
+                        var child_ConID = parts[2];
+                        var child_name = parts[3];
+
+                        MeshObjectBP3DGroup child = null;
+                        foreach (var meshObject in MeshObjectController.AllGroups)
+                        {
+                            if (meshObject.ConceptID.Equals(child_ConID)) { 
+                                child = meshObject;
+                                break;
+                            }
+                        }
+
+                        MeshObjectBP3DGroup parent = null;
+                        foreach (var meshObject in MeshObjectController.AllGroups)
+                        {
+                            if (meshObject.ConceptID.Equals(parent_ConID))
+                            {
+                                parent = meshObject;
+                                break;
+                            }
+                        }
+                        if (parent == null ) {
+                            parent = new MeshObjectBP3DGroup(parent_name) {
+                                ConceptID = parent_ConID,
+                            };
+                            treeBuildList.Add(parent);
+                            MeshObjectController.AllGroups.Add(parent);
+                        }
+                        if (child == null)
+                        {
+                            child = new MeshObjectBP3DGroup(child_name)
+                            {
+                                ConceptID = child_ConID,
+                            };
+                            treeBuildList.Add(child);
+                            MeshObjectController.AllGroups.Add(child);
+                        }
+
+                        if (parent != null && child != null) {
+                            child.Parent = parent;
+                            parent.Children.Add(child);
+                            treeBuildList.Remove(child);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Dispose();
+            }
+
+            return treeBuildList.FirstOrDefault();
+        }
+
+        public static ObservableCollection<MeshObject> ReadElementPartList(String path)
+        {
+            var ret = new ObservableCollection<MeshObject>();
+ /*           Stream stream = null;
+            try
+            {
+                stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+                using (StreamReader reader = new StreamReader(stream))
+                {
+
+                    stream = null;
+
+                    MeshObjectBP3DGroup actualGroup = null; 
+                    string line = reader.ReadLine();//skip the first line
+
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        line.Trim();
+                        var parts = line.Split(new char[] { '\t' },StringSplitOptions.RemoveEmptyEntries);
+                        var conceptID = parts[0];
+                        var name = parts[1];
+                        var fileID = parts[2];
+
+                        //System.Diagnostics.Debug.WriteLine(""+ parts);
+                        bool grouped = false;
+                        bool add = false;
+                        if (actualGroup != null)
+                        {
+                            foreach (var meshObject in MeshObjectController.MeshObjects) { 
+                                if (((MeshObjectBP3DGroup)meshObject).FileID.Equals(fileID)) {
+                                    actualGroup.Children.Add(meshObject);
+                                    grouped = true;
+                                }
+                            }
+                        }
+                        if (!grouped) {
+                            foreach (var meshObject in MeshObjectController.MeshObjects)
+                                if (((MeshObjectBP3D)meshObject).ConceptID.Equals(conceptID)) { 
+                                    actualGroup = new MeshObjectBP3DGroup((MeshObjectBP3DGroup)meshObject);
+                                    add = true;
+                                }
+                        }
+                        if (add)
+                            ret.Add(actualGroup);
+
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Dispose();
+            }*/
+
+            return ret;
         }
 
         private static Mesh createMesh(List<string> vertexBlock, List<string> normalBlock, List<string> faceBlock)
