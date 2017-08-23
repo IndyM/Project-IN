@@ -218,8 +218,11 @@ namespace GUI
 
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            System.Diagnostics.Debug.WriteLine(e.NewValue.GetType());
-           // Scene.Camera.Target = ((MeshObjectBP3D)e.NewValue).GetCenter();
+            //System.Diagnostics.Debug.WriteLine(e.NewValue.GetType());
+            var mod = ((MeshObjectBP3DGroup)((TreeViewItem)e.NewValue).DataContext);
+            if(mod.HasAMesh())
+                Scene.Camera.Target = mod.GetCenter();
+            // Scene.Camera.Target = ((MeshObjectBP3D)e.NewValue).GetCenter();
         }
     }
 }

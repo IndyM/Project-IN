@@ -30,11 +30,9 @@ namespace Model
                 stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
                 using (StreamReader reader = new StreamReader(stream))
                 {
-
                     stream = null;
 
                     string line;
-
 
                     List<String> commentBlock = new List<string>();
                     List<String> vertexBlock = new List<string>();
