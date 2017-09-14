@@ -21,7 +21,7 @@ namespace GUI
             Camera = new CameraOrbit()
             {
                 FarClip = 5000,
-                Distance = 30,
+                Distance = 500,
             };
             
         }

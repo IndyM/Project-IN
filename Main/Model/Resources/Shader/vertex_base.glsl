@@ -8,13 +8,13 @@ in vec3 normal;
 in vec3 instancePosition;
 
 out vec3 n;
-out vec4 pos_vertex;
+out vec3 pos_vertex;
 
 void main() 
 {
 	n = normal;
 
-	vec3 pos = position + instancePosition;
-	vec4 pos_vertex = camera * vec4(pos, 1.0);
-	gl_Position = pos_vertex;
+	pos_vertex = position;// + instancePosition;
+	vec4 pos = camera * vec4(pos_vertex, 1.0);
+	gl_Position = pos;
 }

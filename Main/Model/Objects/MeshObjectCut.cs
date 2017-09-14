@@ -16,10 +16,10 @@ namespace Model.Objects
     {
         public MeshObjectCut()
         {
-            Mesh = Meshes.CreateCubeWithNormals(100);
+            Mesh = Meshes.CreateCubeSpecial(100);
 
             var dir = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + @"\..\Resources\Shader\";
-            Shader = ShaderLoader.FromFiles(dir + "vertex_base.glsl", dir + "frag_cut.glsl");
+            Shader = ShaderLoader.FromFiles(dir + "vertex_base.glsl", dir + "frag_cutCube.glsl");
 
             Load();
         }
@@ -28,8 +28,11 @@ namespace Model.Objects
         public override void Render(Matrix4 camera)
         {
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
+            GL.Disable(EnableCap.CullFace);
+            GL.CullFace(CullFaceMode.FrontAndBack);
             GL.Enable(EnableCap.Blend);
-            // GL.DepthMask(false);
+            
+            GL.DepthMask(false);
 
             //GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
 
@@ -37,6 +40,9 @@ namespace Model.Objects
             base.Render(camera);
             //GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
             GL.Disable(EnableCap.Blend);
+            GL.CullFace(CullFaceMode.Front);
+            //GL.Enable(EnableCap.CullFace);
+            GL.DepthMask(true);
         }
     }
 }

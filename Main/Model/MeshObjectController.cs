@@ -134,7 +134,7 @@ namespace Model
             System.Diagnostics.Debug.WriteLine("Setting up Trees ...");
             setUpTree();
             setUpTreeParts();
-
+ 
 
             _cutObject = new MeshObjectCut();
         }

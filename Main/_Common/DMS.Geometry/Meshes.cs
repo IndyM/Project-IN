@@ -296,7 +296,107 @@ namespace DMS.Geometry
 			Add(5);
 			return mesh;
 		}
+        public static Mesh CreateCubeSpecial(float size=1.0f)
+        {
+            float s2 = size * 0.5f;
+            var mesh = new Mesh();
 
+            //corners
+            var c = new Vector3[] {
+                new Vector3(s2, s2, -s2),
+                new Vector3(s2, s2, s2),
+                new Vector3(-s2, s2, s2),
+                new Vector3(-s2, s2, -s2),
+                new Vector3(s2, -s2, -s2),
+                new Vector3(-s2, -s2, -s2),
+                new Vector3(-s2, -s2, s2),
+                new Vector3(s2, -s2, s2),
+            };
+
+            uint id = 0;
+            var n = new Vector3(-0.5f,0.5f,0.5f);
+
+            Action<int> Add = (int pos) => { mesh.position.List.Add(c[pos]); mesh.normal.List.Add(n); mesh.IDs.Add(id); ++id; };
+
+            //Left face
+            Add(2);
+            n = new Vector3(0.5f, -0.5f, 0.5f);
+            Add(5);
+            n = new Vector3(-0.5f, -0.5f, 0.5f);
+            Add(6);
+            n = new Vector3(-0.5f, 0.5f, 0.5f);
+            Add(2);
+            n = new Vector3(-0.5f, 0.5f, -0.5f);
+            Add(3);
+            n = new Vector3(0.5f, -0.5f, 0.5f);
+            Add(5);
+            //Right face
+            n = new Vector3(0.5f, 0.5f, 0.5f);
+            Add(1);
+            n = new Vector3(0.5f, -0.5f, -0.5f);
+            Add(4);
+            n = new Vector3(0.5f, 0.5f, -0.5f);
+            Add(0);
+            n = new Vector3(0.5f, 0.5f, 0.5f);
+            Add(1);
+            n = new Vector3(-0.5f, -0.5f, -0.5f);
+            Add(7);
+            n = new Vector3(0.5f, -0.5f, -0.5f);
+            Add(4);
+            //Top Face
+            n = new Vector3(0.5f, 0.5f, -0.5f);
+            Add(0);
+            n = new Vector3(-0.5f, 0.5f, 0.5f);
+            Add(2);
+            n = new Vector3(0.5f, 0.5f, 0.5f);
+            Add(1);
+            n = new Vector3(0.5f, 0.5f, -0.5f);
+            Add(0);
+            n = new Vector3(-0.5f, 0.5f, -0.5f);
+            Add(3);
+            n = new Vector3(-0.5f, 0.5f, 0.5f);
+            Add(2);
+            //Bottom Face
+            n = new Vector3(0.5f, -0.5f, -0.5f);
+            Add(4);
+            n = new Vector3(-0.5f, -0.5f, 0.5f);
+            Add(6);
+            n = new Vector3(0.5f, -0.5f, 0.5f);
+            Add(5);
+            n = new Vector3(0.5f, -0.5f, -0.5f);
+            Add(4);
+            n = new Vector3(-0.5f, -0.5f, -0.5f);
+            Add(7);
+            n = new Vector3(-0.5f, -0.5f, 0.5f);
+            Add(6);
+            //Front Face
+            n = new Vector3(0.5f, 0.5f, 0.5f);
+            Add(1);
+            n = new Vector3(-0.5f, -0.5f, 0.5f);
+            Add(6);
+            n = new Vector3(-0.5f, -0.5f, -0.5f);
+            Add(7);
+            n = new Vector3(0.5f, 0.5f, 0.5f);
+            Add(1);
+            n = new Vector3(-0.5f, 0.5f, 0.5f);
+            Add(2);
+            n = new Vector3(-0.5f, -0.5f, 0.5f);
+            Add(6);
+            //Back Face
+            n = new Vector3(0.5f, 0.5f, -0.5f);
+            Add(0);
+            n = new Vector3(0.5f, -0.5f, 0.5f);
+            Add(5);
+            n = new Vector3(-0.5f, 0.5f, -0.5f);
+            Add(3);
+            n = new Vector3(0.5f, 0.5f, -0.5f);
+            Add(0);
+            n = new Vector3(0.5f, -0.5f, -0.5f);
+            Add(4);
+            n = new Vector3(0.5f, -0.5f, 0.5f);
+            Add(5);
+            return mesh;
+        }
 		public static Mesh CreateSphere(float radius_ = 1.0f, uint subdivision = 1)
 		{
 			//idea: subdivide icosahedron
