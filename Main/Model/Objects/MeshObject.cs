@@ -18,9 +18,17 @@ namespace Model.Objects
         private Shader _shader;
 
         public String Name { get; private set; }
+
+        public Shader Shader
+        {
+            get { return _shader; }
+            set { _shader = value; }
+        }
         public Mesh Mesh { get; set; }
 
+        public MeshObject() {
 
+        }
         public MeshObject(String name) {
             Name = name;
             Mesh = new Mesh();
@@ -29,16 +37,30 @@ namespace Model.Objects
            // _shader = new Shader();
             
         }
+
         public MeshObject(String name, Mesh mesh)
         {
             Name = name;
             Mesh = mesh;
         }
+        /*
+        ~MeshObject()
+        {
+            if (_vao != null)
+                if (_vao.Disposed == false) 
+                    _vao.Dispose();
+               
+            
+                if(_shader!=null)
+                    if(_shader.Disposed==false)
+                        _shader.Dispose();
+            }
+            */
         public virtual void Load() {
             _vao = VAOLoader.FromMesh(Mesh, _shader);
         }
 
-        public void Render(Matrix4 camera)
+        public virtual void Render(Matrix4 camera)
         {
             _shader.Activate();
             

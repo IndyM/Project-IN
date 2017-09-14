@@ -99,7 +99,7 @@ namespace Model
                         var child_name = parts[3];
 
                         MeshObjectBP3DGroup child = null;
-                        foreach (var meshObject in MeshObjectController.AllGroups)
+                        foreach (var meshObject in MeshObjectController.RelationAllGroups)
                         {
                             if (meshObject.ConceptID.Equals(child_ConID)) { 
                                 child = meshObject;
@@ -108,7 +108,7 @@ namespace Model
                         }
 
                         MeshObjectBP3DGroup parent = null;
-                        foreach (var meshObject in MeshObjectController.AllGroups)
+                        foreach (var meshObject in MeshObjectController.RelationAllGroups)
                         {
                             if (meshObject.ConceptID.Equals(parent_ConID))
                             {
@@ -121,7 +121,7 @@ namespace Model
                                 ConceptID = parent_ConID,
                             };
                             treeBuildList.Add(parent);
-                            MeshObjectController.AllGroups.Add(parent);
+                            MeshObjectController.RelationAllGroups.Add(parent);
                         }
                         if (child == null)
                         {
@@ -130,7 +130,7 @@ namespace Model
                                 ConceptID = child_ConID,
                             };
                             treeBuildList.Add(child);
-                            MeshObjectController.AllGroups.Add(child);
+                            MeshObjectController.RelationAllGroups.Add(child);
                         }
 
                         if (parent != null && child != null) {
@@ -154,10 +154,10 @@ namespace Model
             return treeBuildList.FirstOrDefault();
         }
 
-        public static ObservableCollection<MeshObject> ReadElementPartList(String path)
+        public static ObservableCollection<MeshObjectBP3DGroup> ReadElementPartList(String path)
         {
-            var ret = new ObservableCollection<MeshObject>();
- /*           Stream stream = null;
+            var ret = new ObservableCollection<MeshObjectBP3DGroup>();
+            Stream stream = null;
             try
             {
                 stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -177,28 +177,37 @@ namespace Model
                         var name = parts[1];
                         var fileID = parts[2];
 
-                        //System.Diagnostics.Debug.WriteLine(""+ parts);
-                        bool grouped = false;
-                        bool add = false;
-                        if (actualGroup != null)
-                        {
-                            foreach (var meshObject in MeshObjectController.MeshObjects) { 
-                                if (((MeshObjectBP3DGroup)meshObject).FileID.Equals(fileID)) {
-                                    actualGroup.Children.Add(meshObject);
-                                    grouped = true;
-                                }
+                        var found_parent = false;
+                        MeshObjectBP3DGroup parent = null;
+                        foreach (var meshObject in MeshObjectController.PartAllGroups) {
+                            if (meshObject.ConceptID.Equals(conceptID))
+                            {
+                                found_parent = true;
+                                parent = meshObject; 
+                                break;
                             }
                         }
-                        if (!grouped) {
-                            foreach (var meshObject in MeshObjectController.MeshObjects)
-                                if (((MeshObjectBP3D)meshObject).ConceptID.Equals(conceptID)) { 
-                                    actualGroup = new MeshObjectBP3DGroup((MeshObjectBP3DGroup)meshObject);
-                                    add = true;
-                                }
+                        MeshObjectBP3DGroup child = null;
+                        foreach (var meshObject in MeshObjectController.PartAllGroups)
+                        {
+                            if (meshObject.FileID.Equals(fileID))
+                            {
+                                child = meshObject; 
+                                break;
+                            }
                         }
-                        if (add)
-                            ret.Add(actualGroup);
-
+                        if (parent == null) {
+                            parent = new MeshObjectBP3DGroup(name) { ConceptID = conceptID };
+                        }
+                        if (child != null) {
+                            if (!found_parent) { 
+                                MeshObjectController.PartAllGroups.Add(parent);
+                                ret.Add(parent);
+                            }
+                            parent.Children.Add(child);
+                            
+                            
+                        }
                     }
                 }
 
@@ -211,7 +220,7 @@ namespace Model
             {
                 if (stream != null)
                     stream.Dispose();
-            }*/
+            }
 
             return ret;
         }
@@ -222,8 +231,8 @@ namespace Model
             foreach (var vertexLine in vertexBlock) {
                 var vertexString = vertexLine.Split(new char[] {' ' },StringSplitOptions.RemoveEmptyEntries);
                 var vertex = new Vector3() {
-                    X = float.Parse(vertexString[0]),
-                    Y = float.Parse(vertexString[1]),
+                    X = -float.Parse(vertexString[0]),
+                    Y = -float.Parse(vertexString[1]), //Invert Y Direction
                     Z = float.Parse(vertexString[2]),
                 };
                 mesh.position.List.Add(vertex);
@@ -233,13 +242,13 @@ namespace Model
                 var vertexString = normalLine.Split(new char[] {' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var vertex = new Vector3()
                 {
-                    X = float.Parse(vertexString[0]),
-                    Y = float.Parse(vertexString[1]),
+                    X = -float.Parse(vertexString[0]),
+                    Y = -float.Parse(vertexString[1]),
                     Z = float.Parse(vertexString[2]),
                 };
                 mesh.normal.List.Add(vertex);
             }
-            foreach (var normalLine in normalBlock)
+ /*           foreach (var normalLine in normalBlock)
             {
                 var vertexString = normalLine.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var vertex = new Vector3()
@@ -249,7 +258,7 @@ namespace Model
                     Z = float.Parse(vertexString[2]),
                 };
                 mesh.normal.List.Add(vertex);
-            }
+            }*/
             foreach (var faceLine in faceBlock)
             {
                 var vertexString = faceLine.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);

@@ -112,7 +112,7 @@ namespace GUI
             _glc.MouseMove += _glc_MouseMove;
 
             _glc.MouseWheel += _glc_MouseWheel;
-
+            
         }
 
         private void _glc_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -128,8 +128,9 @@ namespace GUI
                 if (e.Delta < 0)
                     sign = -1;
                 //Scene.Camera.Distance = sign*0.2f*(float)Math.Pow(1.05, e.Delta);
-                Scene.Camera.Distance += e.Delta;
-                
+                Scene.Camera.Distance += e.Delta/5;
+                if (Scene.Camera.Distance < 0)
+                    Scene.Camera.Distance = 0;
             }
         }
 
@@ -167,7 +168,7 @@ namespace GUI
 
         void glc_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            
             Scene.Render();
  
             _glc.SwapBuffers();
@@ -197,32 +198,24 @@ namespace GUI
         private void loadFull_Click(object sender, RoutedEventArgs e)
         {
             MeshObjectController.loadModelISA();
-            setUpTree();
+
         }
 
         private void loadPart_Click(object sender, RoutedEventArgs e)
         {
             MeshObjectController.loadModelPartOf();
-            setUpTree();
-        }
-        private void setUpTree() {
-            var treeitem = MeshObjectController.TreeStart.getTreeViewChildren();
-            GroupView.Items.Add(treeitem);
-            /*
-            foreach (var meshGroup in MeshObjectController.TreeStart.Children) {
-                var treeitem = meshGroup.getTreeViewChildren();
-                GroupView.Items.Add(treeitem);
 
-            }*/
         }
+
 
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            //System.Diagnostics.Debug.WriteLine(e.NewValue.GetType());
+            if (e == null || e.NewValue==null)
+                return;
             var mod = ((MeshObjectBP3DGroup)((TreeViewItem)e.NewValue).DataContext);
             if(mod.HasAMesh())
                 Scene.Camera.Target = mod.GetCenter();
-            // Scene.Camera.Target = ((MeshObjectBP3D)e.NewValue).GetCenter();
+
         }
     }
 }

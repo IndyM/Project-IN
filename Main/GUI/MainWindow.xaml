@@ -31,8 +31,10 @@
         -->
        <!-- <TreeView DockPanel.Dock="Right" ItemsSource="{Binding Source={x:Static model:MeshObjectController.MeshObjects}}" DisplayMemberPath="Name" Width="400" SelectedItemChanged="TreeView_SelectedItemChanged"></TreeView>
 -->
-        <TreeView DockPanel.Dock="Right" Name="GroupView" Grid.Row="0" Grid.Column="0" Width="400" SelectedItemChanged="TreeView_SelectedItemChanged">
- <!--           <TreeView.Resources>
+        <TabControl DockPanel.Dock="Right" Width="400">
+            <TabItem Header="Relation Tree">
+                <TreeView  Name="GroupView" ItemsSource="{Binding Source={x:Static model:MeshObjectController.TreeItems}}"  SelectedItemChanged="TreeView_SelectedItemChanged">
+                    <!--           <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type model:MeshObjectController}" ItemsSource="{Binding Source={x:Static model:MeshObjectController.SortedGroups}}">
                     <TextBlock Text="{Binding Path=Name}" />
                 </HierarchicalDataTemplate>
@@ -40,7 +42,15 @@
                     <TextBlock Text="{Binding Path=Name}" />
                 </DataTemplate>
             </TreeView.Resources>-->
-        </TreeView>
+                </TreeView>
+            </TabItem>
+            <TabItem Header="Parts">
+                <TreeView  Name="partsView" ItemsSource="{Binding Source={x:Static model:MeshObjectController.ElementPartsTreeItems}}" DisplayMemberPath="Name" SelectedItemChanged="TreeView_SelectedItemChanged">
+    
+                </TreeView>
+            </TabItem>
+        </TabControl>
+
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>

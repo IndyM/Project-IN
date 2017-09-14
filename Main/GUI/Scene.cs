@@ -2,7 +2,7 @@
 using DMS.OpenGL;
 using Model;
 using OpenTK;
-
+using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,15 +23,26 @@ namespace GUI
                 FarClip = 5000,
                 Distance = 30,
             };
+            
         }
 
         public void Render() {
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+
+
+
+            Matrix4 camera = Camera.CalcMatrix().ToOpenTK();
             foreach (var meshObject in MeshObjectController.MeshObjects)
             {
-                Matrix4 camera = Camera.CalcMatrix().ToOpenTK();
                 
+
                 meshObject.Render(camera);
+
             }
+        
+            MeshObjectController.CutObject?.Render(camera);
+
         }
     }
 }

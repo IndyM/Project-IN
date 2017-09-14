@@ -71,6 +71,7 @@
     <Compile Include="MeshObjectController.cs" />
     <Compile Include="Objects\MeshObjectBP3D.cs" />
     <Compile Include="Objects\MeshObjectBP3DGroup.cs" />
+    <Compile Include="Objects\MeshObjectCut.cs" />
     <Compile Include="ObjReader.cs" />
     <Compile Include="ObjReaderBP3D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -3580,6 +3581,7 @@
     <None Include="Resources\Model\partof_BP3D_4.0\partof_BP3D_4.0_obj_99\FJ3654.obj" />
     <None Include="Resources\Model\partof_BP3D_4.0\partof_BP3D_4.0_obj_99\FJ3656.obj" />
     <None Include="Resources\Model\partof_BP3D_4.0\partof_BP3D_4.0_obj_99\FJ3659.obj" />
+    <None Include="Resources\Shader\frag_cut.glsl" />
     <None Include="Resources\Shader\frag_base.glsl" />
     <None Include="Resources\Shader\vertex_base.glsl" />
   </ItemGroup>
