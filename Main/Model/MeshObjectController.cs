@@ -169,5 +169,19 @@ namespace Model
             foreach (var element in MeshObjectController.ElementParts)
                 ElementPartsTreeItems.Add(element.getTreeView());
         }
+
+        public static void loadCube()
+        {
+            // var path = Environment.CurrentDirectory + "\\..\\..\\..\\Resources\\Model\\partof_BP3D_4.0\\partof_BP3D_4.0_obj_99\\";
+            var path = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + "\\Resources\\Model\\Cube\\";
+            var files = Directory.EnumerateFiles(path);
+
+            foreach (var file in files)
+            {
+                var meshObject = ObjReaderBP3D.ReadObj(file);
+
+            }
+            System.Diagnostics.Debug.WriteLine("Finished Reading File");
+        }
     }
 }

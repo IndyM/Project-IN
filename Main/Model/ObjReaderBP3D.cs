@@ -34,6 +34,7 @@ namespace Model
 
                     string line;
 
+                    List<String> namesBlock = new List<string>();
                     List<String> commentBlock = new List<string>();
                     List<String> vertexBlock = new List<string>();
                     List<String> normalBlock = new List<string>();
@@ -49,6 +50,7 @@ namespace Model
                         //Dataformat described in http://paulbourke.net/dataformats/obj/
                         switch (key)
                         {
+                            case "o": namesBlock.Add(args); break;
                             case "#": commentBlock.Add(args); break;
                             case "v": vertexBlock.Add(args); break;
                             case "vn": normalBlock.Add(args); break;

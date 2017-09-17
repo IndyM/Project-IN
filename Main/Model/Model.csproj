@@ -51,8 +51,10 @@
   <ItemGroup>
     <Reference Include="DMS.Base, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="OpenTK, Version=2.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Adv_Spiele\Game\Framework\Externals\OpenTK\OpenTK.dll</HintPath>
+      <HintPath>..\packages\OpenTK.2.0.0\lib\net20\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK.GLControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenTK.GLControl.1.1.2349.61993\lib\NET40\OpenTK.GLControl.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -87,6 +89,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
+    <None Include="OpenTK.dll.config" />
+    <None Include="packages.config" />
+    <None Include="Resources\Model\Cube\Cube.obj" />
     <None Include="Resources\Model\isa_BP3D_4.0\isa_BP3D_4.0_obj_99.zip" />
     <None Include="Resources\Model\isa_BP3D_4.0\isa_BP3D_4.0_obj_99\FJ1252.obj" />
     <None Include="Resources\Model\isa_BP3D_4.0\isa_BP3D_4.0_obj_99\FJ1253.obj" />
@@ -3581,6 +3587,7 @@
     <None Include="Resources\Model\partof_BP3D_4.0\partof_BP3D_4.0_obj_99\FJ3654.obj" />
     <None Include="Resources\Model\partof_BP3D_4.0\partof_BP3D_4.0_obj_99\FJ3656.obj" />
     <None Include="Resources\Model\partof_BP3D_4.0\partof_BP3D_4.0_obj_99\FJ3659.obj" />
+    <None Include="Resources\Model\Simple\Simple_Object.obj" />
     <None Include="Resources\Shader\frag_base.glsl" />
     <None Include="Resources\Shader\frag_cutCube.glsl" />
     <None Include="Resources\Shader\vertex_base.glsl" />

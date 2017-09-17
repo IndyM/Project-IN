@@ -115,6 +115,11 @@
       <Name>DMS.OpenGL</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\cube.png" />
+    <Resource Include="Resources\Icons\Cube_auswahl_r.jpg" />
+    <Resource Include="Resources\Icons\Cube_empty.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

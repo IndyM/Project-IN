@@ -207,6 +207,11 @@ namespace GUI
 
         }
 
+        private void loadCube_Click(object sender, RoutedEventArgs e)
+        {
+            MeshObjectController.loadCube();
+        }
+
 
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
@@ -215,6 +220,26 @@ namespace GUI
             var mod = ((MeshObjectBP3DGroup)((TreeViewItem)e.NewValue).DataContext);
             if(mod.HasAMesh())
                 Scene.Camera.Target = mod.GetCenter();
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Frame_Navigated(object sender, NavigationEventArgs e)
+        {
+
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void host_ChildChanged(object sender, System.Windows.Forms.Integration.ChildChangedEventArgs e)
+        {
 
         }
     }

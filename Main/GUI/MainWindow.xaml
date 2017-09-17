@@ -4,22 +4,211 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:model ="clr-namespace:Model;assembly=Model"
-        xmlns:obj ="clr-namespace:Model.Objects;assembly=Model"
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="800"  Loaded="Window_Loaded" WindowState="Maximized">
-    <DockPanel LastChildFill="True">
+        Title="MainWindow" Height="1717" Width="1055"  Loaded="Window_Loaded" WindowState="Maximized">
+    <DockPanel LastChildFill="True" Name="Hauptfenster">
         <Ribbon DockPanel.Dock="Top">
             <RibbonTab Header="Home">
                 <RibbonGroup Header="Load Model" >
-                   
                     <RibbonButton Name="loadFull" Label="Full" LargeImageSource="Resources/Icons/load_full.png" Click="loadFull_Click" />
                     <RibbonButton Name="loadPart" Label="Part" LargeImageSource="Resources/Icons/load_half.png" Click="loadPart_Click" />
+                    <RibbonButton Name="LoadCube" Label="Cube" LargeImageSource="Resources/Icons/cube.png" Click="loadCube_Click" />
                 </RibbonGroup>
-                    
+
 
             </RibbonTab>
         </Ribbon>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid Background="#F2F2F2" Margin="0" Grid.Column="1" HorizontalAlignment="Right">
+                <ScrollViewer Width="380">
+                    <Border BorderThickness="1" Padding="10" Background="White" BorderBrush="#C9C9C9" Width="350" HorizontalAlignment="Right">
+                        <Grid Margin="0,0,-2,-11">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto" MinHeight="26"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="100
+                                               "/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Label Content="Schnitträume:" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" Height="26" Width="80"/>
+                            <Grid Margin="0,0,0,10" Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TreeView Margin="0" VerticalContentAlignment="Top" VerticalAlignment="Top" Height="97"/>
+                                <StackPanel Grid.Column="1" Margin="0">
+                                    <Button Content="Neuer Schnittraum" Click="Button_Click" Margin="0" Width="100" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="20"/>
+                                    <Button Content="Neues Element"/>
+                                    <Button Content="Element löschen"/>
+                                    <RadioButton Content="Additiv" GroupName="Mode" IsChecked="True"/>
+                                    <RadioButton Content="Subtraktiv" GroupName="Mode"/>
+                                </StackPanel>
+                            </Grid>
+                            <Grid Grid.Row="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto" MinHeight="1"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="68"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="1" Margin="0" Orientation="Horizontal" VerticalAlignment="Top" Grid.ColumnSpan="2" Height="26">
+                                    <Label Content="Translate" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                    <Label Content="x:"/>
+                                    <TextBox Height="23" TextWrapping="Wrap" Text="50" MinWidth="50" VerticalContentAlignment="Center"/>
+                                    <Label Content="y:"/>
+                                    <TextBox Height="23" TextWrapping="Wrap" Text="50" MinWidth="50" VerticalContentAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0" Grid.Row="1" VerticalAlignment="Top" Orientation="Horizontal" Grid.ColumnSpan="2" Height="26">
+                                    <Label Content="x"/>
+                                    <Slider VerticalAlignment="Center" Width="235" MinWidth="1"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0" Grid.Row="2" VerticalAlignment="Top" Orientation="Horizontal" Grid.ColumnSpan="2" Height="26">
+                                    <Label Content="y"/>
+                                    <Slider VerticalAlignment="Center" Width="235" MinWidth="1"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0" Orientation="Horizontal" VerticalAlignment="Top" Grid.Row="3" Grid.ColumnSpan="2" Height="26">
+                                    <Label Content="Rotate" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                    <Label Content="z:"/>
+                                    <TextBox Height="23" TextWrapping="Wrap" Text="0" MinWidth="50" VerticalContentAlignment="Center"/>
+                                    <Label Content="x:"/>
+                                    <TextBox Height="23" TextWrapping="Wrap" Text="0" MinWidth="50" VerticalContentAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0" Grid.Row="4" VerticalAlignment="Top" Orientation="Horizontal" Grid.ColumnSpan="2" Height="26">
+                                    <Label Content="z"/>
+                                    <Slider VerticalAlignment="Center" Width="235" MinWidth="1"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0" Grid.Row="5" VerticalAlignment="Top" Orientation="Horizontal" Grid.ColumnSpan="2" Height="26">
+                                    <Label Content="x"/>
+                                    <Slider VerticalAlignment="Center" Width="235" MinWidth="1"/>
+                                </StackPanel>
+                                <Separator Margin="0,5,0,0" Grid.Row="6" VerticalAlignment="Top" Grid.ColumnSpan="3" Height="1"/>
+                                <StackPanel Grid.Column="1" Margin="0" Orientation="Horizontal" VerticalAlignment="Top" Grid.Row="7" Grid.ColumnSpan="2" Height="26">
+                                    <Label Content="Skalieren" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                    <Label Content="x:"/>
+                                    <TextBox Height="23" TextWrapping="Wrap" Text="50" MinWidth="50" VerticalContentAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0" Grid.Row="8" VerticalAlignment="Top" Orientation="Horizontal" Grid.ColumnSpan="2" Height="26">
+                                    <Label Content="x"/>
+                                    <Slider VerticalAlignment="Center" Width="235" MinWidth="1"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0,0,125,0" Orientation="Horizontal" VerticalAlignment="Top" Grid.Row="9" Grid.ColumnSpan="2" Height="26">
+                                    <Label Content="slope f:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                    <TextBox Height="23" TextWrapping="Wrap" Text="0" MinWidth="30" VerticalContentAlignment="Center" TextChanged="TextBox_TextChanged"/>
+                                    <Label Content="b:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                    <TextBox Height="23" TextWrapping="Wrap" Text="0" MinWidth="30" VerticalContentAlignment="Center" TextChanged="TextBox_TextChanged"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Margin="1,0,-1,0" Orientation="Horizontal" VerticalAlignment="Top" Grid.Row="9" Height="26">
+                                    <Label Content="slope t:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                    <TextBox Height="23" TextWrapping="Wrap" Text="0" MinWidth="30" VerticalContentAlignment="Center"/>
+                                    <Label Content="b:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                    <TextBox Height="23" TextWrapping="Wrap" Text="0" MinWidth="30" VerticalContentAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0" Grid.Row="10" VerticalAlignment="Top" Orientation="Horizontal" Height="26">
+                                    <Label Content="f:" Width="20"/>
+                                    <Slider VerticalAlignment="Center" Width="105" MinWidth="1"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0" Grid.Row="11" VerticalAlignment="Top" Orientation="Horizontal" Height="26">
+                                    <Label Content="b:" Width="20"/>
+                                    <Slider VerticalAlignment="Center" Width="105" MinWidth="1"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Margin="0" Grid.Row="10" VerticalAlignment="Top" Orientation="Horizontal" Height="26">
+                                    <Label Content="t:" Width="20"/>
+                                    <Slider VerticalAlignment="Center" Width="105" MinWidth="1"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Margin="0" Grid.Row="11" VerticalAlignment="Top" Orientation="Horizontal" Height="26">
+                                    <Label Content="b:" Width="20"/>
+                                    <Slider VerticalAlignment="Center" Width="105" MinWidth="1"/>
+                                </StackPanel>
+                                <Image Height="65" Grid.RowSpan="3" VerticalAlignment="Top" Width="65" HorizontalAlignment="Left" Source="Resources/Icons/Cube_empty.jpg"/>
+                                <Image HorizontalAlignment="Left" Height="65" Margin="0" Grid.Row="7" Grid.RowSpan="3" VerticalAlignment="Top" Width="65"/>
+                                <Grid Margin="0,0,0,5" Grid.Row="10" Grid.RowSpan="3">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="25*"/>
+                                        <ColumnDefinition Width="25*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Content="left" Margin="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                    <Button Content="right" Margin="0" Grid.Column="1"/>
+                                    <Button Content="top" Margin="0" Grid.Row="1"/>
+                                    <Button Content="bottom" Margin="0" Grid.Row="1" Grid.Column="1"/>
+                                    <Button Content="center" Grid.ColumnSpan="2" Margin="0" Grid.Row="2"/>
+                                </Grid>
+                                <Separator Grid.ColumnSpan="2" Margin="10,0,0,0" Grid.Row="12" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                <Image HorizontalAlignment="Left" Height="60" Margin="3,0,0,0" Grid.RowSpan="3" Width="60" VerticalAlignment="Top" Grid.Row="7" Source="Resources/Icons/Cube_auswahl_r.jpg"/>
+                            </Grid>
+                            <Border BorderBrush="Black" BorderThickness="1" Height="302" Grid.Row="3" Margin="0,0,0,5">
+                                <WindowsFormsHost Margin="0"/>
+                            </Border>
+
+                            <TabControl Grid.Row="12" VerticalContentAlignment="Stretch" Height="350">
+                                <TabItem Header="Relation Tree">
+                                    <TreeView  x:Name="GroupView" ItemsSource="{Binding Source={x:Static model:MeshObjectController.TreeItems}}"  SelectedItemChanged="TreeView_SelectedItemChanged"/>
+                                </TabItem>
+                                <TabItem Header="Parts">
+                                    <TreeView  x:Name="partsView" ItemsSource="{Binding Source={x:Static model:MeshObjectController.ElementPartsTreeItems}}" DisplayMemberPath="Name" SelectedItemChanged="TreeView_SelectedItemChanged"/>
+                                </TabItem>
+                            </TabControl>
+
+
+                            <!--<TreeView ItemsSource="{Binding Source={x:Static model:MeshObjectController.MeshObjects}}" DisplayMemberPath="Name" SelectedItemChanged="TreeView_SelectedItemChanged" Margin="0" Grid.Row="10"/>-->
+                            <Label Content="Sichtbare Elemente:" HorizontalAlignment="Left" Margin="0" Grid.Row="5" VerticalAlignment="Top"/>
+                            <Label Content="Selektierte Elemente:" HorizontalAlignment="Left" Margin="0" Grid.Row="7" VerticalAlignment="Top"/>
+                            <TreeView Height="100" Margin="0" Grid.Row="6" VerticalAlignment="Top"/>
+                            <TreeView Height="100" Margin="0" Grid.Row="8" VerticalAlignment="Top"/>
+                            <Label Content="Objekt zentrieren:" HorizontalAlignment="Left" Margin="0" Grid.Row="11" VerticalAlignment="Top"/>
+                            <Slider HorizontalAlignment="Left" Margin="0" Grid.Row="4" VerticalAlignment="Top" Width="330"/>
+                            <Label Content="Unsichtbare Elemente:" HorizontalAlignment="Left" Margin="0" Grid.Row="9" VerticalAlignment="Top"/>
+                            <TreeView Margin="0" Grid.Row="10" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Height="100"/>
+                        </Grid>
+                    </Border>
+                </ScrollViewer>
+            </Grid>
+            <GridSplitter Width="7" Background="Black" Margin="0" Name="SignalValuesGridSplitter"/>
+            <Grid Margin="0,0,5,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <WindowsFormsHost DockPanel.Dock="Left"  x:Name="host" ChildChanged="host_ChildChanged" MinWidth="200" /> <!-- MinWidth="{Binding ElementName=Hauptfenster, Path=ActualWidth}" />-->
+            </Grid>
+        </Grid>
         <!--
         <Menu Height="24" DockPanel.Dock="Top">
             <MenuItem Header="File">
@@ -29,37 +218,6 @@
             <MenuItem Header="Edit"></MenuItem>
         </Menu>
         -->
-       <!-- <TreeView DockPanel.Dock="Right" ItemsSource="{Binding Source={x:Static model:MeshObjectController.MeshObjects}}" DisplayMemberPath="Name" Width="400" SelectedItemChanged="TreeView_SelectedItemChanged"></TreeView>
--->
-        <TabControl DockPanel.Dock="Right" Width="400">
-            <TabItem Header="Relation Tree">
-                <TreeView  Name="GroupView" ItemsSource="{Binding Source={x:Static model:MeshObjectController.TreeItems}}"  SelectedItemChanged="TreeView_SelectedItemChanged">
-                    <!--           <TreeView.Resources>
-                <HierarchicalDataTemplate DataType="{x:Type model:MeshObjectController}" ItemsSource="{Binding Source={x:Static model:MeshObjectController.SortedGroups}}">
-                    <TextBlock Text="{Binding Path=Name}" />
-                </HierarchicalDataTemplate>
-                <DataTemplate DataType="{x:Type obj:MeshObjectBP3DGroup}" >
-                    <TextBlock Text="{Binding Path=Name}" />
-                </DataTemplate>
-            </TreeView.Resources>-->
-                </TreeView>
-            </TabItem>
-            <TabItem Header="Parts">
-                <TreeView  Name="partsView" ItemsSource="{Binding Source={x:Static model:MeshObjectController.ElementPartsTreeItems}}" DisplayMemberPath="Name" SelectedItemChanged="TreeView_SelectedItemChanged">
-    
-                </TreeView>
-            </TabItem>
-        </TabControl>
-
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-        <WindowsFormsHost DockPanel.Dock="Left"  Name="host" />
-        </Grid>
     </DockPanel>
 
 </Window>
