@@ -64,7 +64,10 @@ namespace Model.Objects
         {
             _shader.Activate();
             
+
             GL.UniformMatrix4(_shader.GetUniformLocation("camera"), true, ref camera);
+
+
             _vao.Draw();
             _shader.Deactivate();
         }

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Model
 {
@@ -59,6 +60,10 @@ namespace Model
                     }
                     meshObject = getNewMeshObjectByCommentBlock(commentBlock);
                     meshObject.Mesh = createMesh(vertexBlock, normalBlock, faceBlock);
+                    var rot = Matrix4x4.CreateRotationX(DMS.Geometry.MathHelper.DegreesToRadians(-90));
+                    Transform(meshObject, rot);
+
+
                     meshObject.Load();
                     //MeshObjectController.MeshObjects.Add(meshObject);
                 }
@@ -75,6 +80,140 @@ namespace Model
             }
 
             return meshObject;
+        }
+
+        public static void Transform(MeshObjectBP3D m, Matrix4x4 transform)
+        {
+            for (int i = 0; i < m.Mesh.position.List.Count; i++)
+            {
+                var newPos = Vector3.Transform(m.Mesh.position.List[i], transform);
+                m.Mesh.position.List[i] = newPos;
+            }
+            for (int i = 0; i < m.Mesh.normal.List.Count; i++)// in m.Mesh.normal.List)
+            {
+                var newN = Vector3.TransformNormal(m.Mesh.normal.List[i], transform);
+                m.Mesh.normal.List[i] = newN;
+            }
+            /*
+            Vector3 vec1 = Vector3.Transform(m.Bounds.Item1, transform);
+            Vector3 vec2 = Vector3.Transform(m.Bounds.Item2, transform);
+            var bounds = new Tuple<Vector3, Vector3>(vec1, vec2);
+            m.Bounds = bounds;
+            */
+            Mesh tmp = MyCube(m.Bounds.Item1, m.Bounds.Item2);
+            tmp = tmp.Transform(transform);
+
+            m.Bounds = getBounds(tmp);
+            tmp = null;
+
+        }
+
+        public static Mesh MyCube(System.Numerics.Vector3 q, System.Numerics.Vector3 w)
+        {
+            var mesh = new Mesh();
+
+            //corners
+            var corners = new System.Numerics.Vector3[] {
+                new System.Numerics.Vector3(w.X, w.Y, q.Z),  //0
+                new System.Numerics.Vector3(w.X, w.Y, w.Z),  //1
+                new System.Numerics.Vector3(q.X, w.Y, w.Z),  //2
+                new System.Numerics.Vector3(q.X, w.Y, q.Z),  //3
+                new System.Numerics.Vector3(w.X, q.Y, q.Z),  //4
+                new System.Numerics.Vector3(q.X, q.Y, q.Z),  //5
+                new System.Numerics.Vector3(q.X, q.Y, w.Z),  //6
+                new System.Numerics.Vector3(w.X, q.Y, w.Z),  //7
+            };
+
+            uint id = 0;
+            var n = -System.Numerics.Vector3.UnitX;
+
+            Action<int> Add = (int pos) => { mesh.position.List.Add(corners[pos]); mesh.normal.List.Add(n); mesh.IDs.Add(id); mesh.corner.Add(pos); ++id; };
+
+            //Left face
+            Add(2);
+            Add(5);
+            Add(6);
+            Add(2);
+            Add(3);
+            Add(5);
+            //Right face
+            n = System.Numerics.Vector3.UnitX;
+            Add(1);
+            Add(4);
+            Add(0);
+            Add(1);
+            Add(7);
+            Add(4);
+            //Top Face
+            n = System.Numerics.Vector3.UnitY;
+            Add(0);
+            Add(2);
+            Add(1);
+            Add(0);
+            Add(3);
+            Add(2);
+            //Bottom Face
+            n = -System.Numerics.Vector3.UnitY;
+            Add(4);
+            Add(6);
+            Add(5);
+            Add(4);
+            Add(7);
+            Add(6);
+            //Front Face
+            n = System.Numerics.Vector3.UnitZ;
+            Add(1);
+            Add(6);
+            Add(7);
+            Add(1);
+            Add(2);
+            Add(6);
+            //Back Face
+            n = -System.Numerics.Vector3.UnitZ;
+            Add(0);
+            Add(5);
+            Add(3);
+            Add(0);
+            Add(4);
+            Add(5);
+
+            return mesh;
+        }
+
+        public static Tuple<System.Numerics.Vector3, System.Numerics.Vector3> getBounds(Mesh m)
+        {
+            System.Numerics.Vector3 max = m.position.List[0];
+            System.Numerics.Vector3 min = m.position.List[0];
+
+            for (int i = 1; i < m.position.List.Count; i++)
+            {
+                if (max.X < m.position.List[i].X)
+                {
+                    max.X = m.position.List[i].X;
+                }
+                if (max.Y < m.position.List[i].Y)
+                {
+                    max.Y = m.position.List[i].Y;
+                }
+                if (max.Z < m.position.List[i].Z)
+                {
+                    max.Z = m.position.List[i].Z;
+                }
+
+                if (min.X > m.position.List[i].X)
+                {
+                    min.X = m.position.List[i].X;
+                }
+                if (min.Y > m.position.List[i].Y)
+                {
+                    min.Y = m.position.List[i].Y;
+                }
+                if (min.Z > m.position.List[i].Z)
+                {
+                    min.Z = m.position.List[i].Z;
+                }
+            }
+            return new Tuple<System.Numerics.Vector3, System.Numerics.Vector3>(min, max); ;
         }
 
         internal static MeshObjectBP3DGroup ReadRelations(string path)
@@ -233,8 +372,8 @@ namespace Model
             foreach (var vertexLine in vertexBlock) {
                 var vertexString = vertexLine.Split(new char[] {' ' },StringSplitOptions.RemoveEmptyEntries);
                 var vertex = new Vector3() {
-                    X = -float.Parse(vertexString[0]),
-                    Y = -float.Parse(vertexString[1]), //Invert Y Direction
+                    X = float.Parse(vertexString[0]),
+                    Y = float.Parse(vertexString[1]), //Invert Y Direction
                     Z = float.Parse(vertexString[2]),
                 };
                 mesh.position.List.Add(vertex);
@@ -244,8 +383,8 @@ namespace Model
                 var vertexString = normalLine.Split(new char[] {' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var vertex = new Vector3()
                 {
-                    X = -float.Parse(vertexString[0]),
-                    Y = -float.Parse(vertexString[1]),
+                    X = float.Parse(vertexString[0]),
+                    Y = float.Parse(vertexString[1]),
                     Z = float.Parse(vertexString[2]),
                 };
                 mesh.normal.List.Add(vertex);
@@ -294,7 +433,8 @@ namespace Model
             if (name == "")
                 name = fileID+" NoName";
             var args = commentBlock[firstline + 6].Split(new char[] { ':' , ' '}).Last();
-            var vecs = args.Split(new char[] { '-', ' ','(',',',')' },StringSplitOptions.RemoveEmptyEntries);
+            var vecs = args.Split(new char[] { ' ','(',',',')' },StringSplitOptions.RemoveEmptyEntries);
+            //Debug.WriteLine("vecs0: " + vecs[0]+" vecs1: "+vecs[1]+" vecs2: "+vecs[2] + " vecs3: " + vecs[4] + " vecs4: " + vecs[5] + " vecs5: " + vecs[6]);
             var vec1 = new Vector3() {
                 X= float.Parse(vecs[0]),
                 Y = float.Parse(vecs[1]),
@@ -302,10 +442,12 @@ namespace Model
             };
             var vec2 = new Vector3()
             {
-                X = float.Parse(vecs[3]),
-                Y = float.Parse(vecs[4]),
-                Z = float.Parse(vecs[5]),
+                X = float.Parse(vecs[4]),
+                Y = float.Parse(vecs[5]),
+                Z = float.Parse(vecs[6]),
             };
+            Debug.WriteLine(args);
+            Debug.WriteLine("vec1: "+ vec1+ " vec2: "+ vec2);
             var bounds = new Tuple<Vector3, Vector3>(vec1,vec2);
 
             Double volume;

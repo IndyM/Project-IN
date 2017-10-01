@@ -9,5 +9,6 @@ namespace DMS.Geometry
 		public IMeshAttribute<Vector3> normal = new MeshAttribute<Vector3>(nameof(normal));
 		public IMeshAttribute<Vector2> uv = new MeshAttribute<Vector2>(nameof(uv));
 		public List<uint> IDs = new List<uint>();
+        public List<int> corner = new List<int>();
 	}
 }

@@ -30,10 +30,23 @@ namespace GUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private  GLControl _glc;
+        private GLControl _glc;
 
-        private bool _rotating;
-        private System.Drawing.Point _rotatingStart;
+        float MOUSE_SPEED = 0.1f;
+        float ROTATION_SPEED = 2.0f;
+        private double mousePosX;
+        private double mousePosY;
+        private double mouseOldX;
+        private double mouseOldY;
+        private double angelCamera;
+
+        private bool dragStarted;
+        float scaleXl;
+
+        public TreeViewItem selectedItem = null;
+        private bool cb_auto_center = true;
+
+
         public GLControl Glc {
             get { return _glc; }
         }
@@ -41,13 +54,11 @@ namespace GUI
             get;
             set;
         }
-        
+
         private System.Timers.Timer timer;
         public MainWindow()
         {
             InitializeComponent();
-
-            _rotating = false;
             _glc = new GLControl();
             Scene = new Scene();
         }
@@ -83,7 +94,7 @@ namespace GUI
             timer.Enabled = true;
 
         }
-        
+
 
 
         private void glc_Load(object sender, EventArgs e)
@@ -112,7 +123,9 @@ namespace GUI
             _glc.MouseMove += _glc_MouseMove;
 
             _glc.MouseWheel += _glc_MouseWheel;
-            
+            _glc.MouseDown += _glc_MouseDown;
+            _glc.MouseUp += _glc_MouseUp;
+
         }
 
         private void _glc_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -128,32 +141,106 @@ namespace GUI
                 if (e.Delta < 0)
                     sign = -1;
                 //Scene.Camera.Distance = sign*0.2f*(float)Math.Pow(1.05, e.Delta);
-                Scene.Camera.Distance += e.Delta/5;
+                Scene.Camera.Distance += e.Delta / 5;
                 if (Scene.Camera.Distance < 0)
                     Scene.Camera.Distance = 0;
             }
         }
 
+        private void _glc_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            mousePosX = e.X;
+            mousePosY = e.Y;
+            mouseOldX = e.X;
+            mouseOldY = e.Y;
+            angelCamera = Scene.Camera.Elevation;
+
+            if (selectedItem != null)
+            {
+                MeshObjectCut obj = (MeshObjectCut)selectedItem.DataContext;
+                scaleXl = obj.scaleXl;
+            }
+        }
+
+        private void _glc_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
+
+        {
+            Debug.WriteLine("Mouse up!");
+            if (e.Button == MouseButtons.Left)
+            {
+                if (selectedItem != null)
+                {
+                    if (cb_auto_center == true)
+                    {
+                        MeshObjectCut obj = (MeshObjectCut)selectedItem.DataContext;
+                        Scene.Camera.Target = obj.getCenter();
+                    }
+                }
+            }
+        }
+
         private void _glc_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
-            //       if (ButtonState.Pushed == e.Mouse.LeftButton)
+            //Kamera-Modus -----------------------------------------------------
+            if (e.Button == MouseButtons.Middle)
             {
-                if (!_rotating)
+                mouseOldX = mousePosX;
+                mouseOldY = mousePosY;
+                mousePosX = e.X;
+                mousePosY = e.Y;
+                double mouseDeltaX = (mousePosX - mouseOldX);
+                double mouseDeltaY = (mousePosY - mouseOldY);
+
+                double modifier = 1.0;
+
+
+                double anglex, angley;
+
+                if ((angelCamera > 90 && angelCamera < 270))
+                    angley = Scene.Camera.Azimuth - mouseDeltaX * MOUSE_SPEED * modifier * ROTATION_SPEED;
+                else
+                    angley = Scene.Camera.Azimuth + mouseDeltaX * MOUSE_SPEED * modifier * ROTATION_SPEED;
+                if (angley < 0)
+                    angley = 360 - angley;
+                else if (angley > 360)
+                    angley = angley - 360;
+
+                anglex = Scene.Camera.Elevation + mouseDeltaY * MOUSE_SPEED * modifier * ROTATION_SPEED;
+                if (anglex < 0)
+                    anglex = 360 - anglex;
+                else if (anglex > 360)
+                    anglex = anglex - 360;
+
+                if (Keyboard.IsKeyDown(Key.LeftCtrl) == false && Keyboard.IsKeyDown(Key.LeftAlt) == false)
                 {
-                    _rotating = true;
-                    _rotatingStart = e.Location;
+                    Scene.Camera.Azimuth = (float)angley;
+                    Scene.Camera.Elevation = (float)anglex;
                 }
-                var deltaLocX = -_rotatingStart.X + e.X;
-                var deltaLocY = -1 * _rotatingStart.Y + e.Y;
-
-                Scene.Camera.Azimuth += 300*(deltaLocX / (float)_glc.Width);
-                Scene.Camera.Elevation += 300 * (deltaLocY / (float)_glc.Height);
-
-                _rotatingStart = e.Location;
+                else if (Keyboard.IsKeyDown(Key.LeftCtrl) == true && Keyboard.IsKeyDown(Key.LeftAlt) == false)
+                {
+                    Scene.Camera.Azimuth = (float)angley;
+                }
+                else if (Keyboard.IsKeyDown(Key.LeftCtrl) == false && Keyboard.IsKeyDown(Key.LeftAlt) == true)
+                {
+                    Scene.Camera.Elevation = (float)anglex;
+                }
             }
-            else {
-                _rotating = false;
+            else if (e.Button == MouseButtons.Left)
+            {
+                mouseOldX = mousePosX;
+                mouseOldY = mousePosY;
+                mousePosX = e.X;
+                mousePosY = e.Y;
+                double mouseDeltaX = (mousePosX - mouseOldX);
+                double mouseDeltaY = (mousePosY - mouseOldY);
+
+                if (selectedItem != null)
+                {
+                    MeshObjectCut obj = (MeshObjectCut)selectedItem.DataContext;
+                    obj.scaleXl = scaleXl + (float)mouseDeltaX;
+                    scaleXl = obj.scaleXl;
+                    obj.update();
+                }
             }
         }
 
@@ -198,13 +285,15 @@ namespace GUI
         private void loadFull_Click(object sender, RoutedEventArgs e)
         {
             MeshObjectController.loadModelISA();
-
+            var ret = MeshObjectController.bounds_min + 0.5f * (-MeshObjectController.bounds_min + MeshObjectController.bounds_max);
+            Scene.Camera.Target = ret;
         }
 
         private void loadPart_Click(object sender, RoutedEventArgs e)
         {
             MeshObjectController.loadModelPartOf();
-
+            var ret = MeshObjectController.bounds_min + 0.5f * (-MeshObjectController.bounds_min + MeshObjectController.bounds_max);
+            Scene.Camera.Target = ret;
         }
 
         private void loadCube_Click(object sender, RoutedEventArgs e)
@@ -218,15 +307,80 @@ namespace GUI
             if (e == null || e.NewValue==null)
                 return;
             var mod = ((MeshObjectBP3DGroup)((TreeViewItem)e.NewValue).DataContext);
-            if(mod.HasAMesh())
+            if (mod.HasAMesh())
+            {
                 Scene.Camera.Target = mod.GetCenter();
-
+            }
         }
+
+        private void TreeView_SelectedCutItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (e == null || e.NewValue == null)
+                return;
+            selectedItem = (TreeViewItem)e.NewValue;
+            var obj = ((MeshObjectCut)((TreeViewItem)e.NewValue).DataContext);
+            Scene.Camera.Target = obj.getCenter();
+            Debug.WriteLine("Item selected: "+ obj.name);
+        }
+
+
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            System.Diagnostics.Debug.WriteLine("Buttons pressed ...");
+            System.Windows.Controls.Button Quelle = (System.Windows.Controls.Button)sender;
 
+            if (Quelle.Name == "new_room")
+            {
+                MeshObjectController.addNewCuttingRoom();
+            }
+            else if(Quelle.Name == "new_child")
+            {
+                MeshObjectController.addNewCuttingChild(selectedItem);
+            }
+            else if(Quelle.Name == "delete")
+            {
+                MeshObjectController.deleteCuttingElement(selectedItem);
+            }
+            else if(Quelle.Name == "center")
+            {
+                MeshObjectCut obj = (MeshObjectCut)selectedItem.DataContext;
+                Scene.Camera.Target = obj.getCenter();
+            }
+            
         }
+
+        private void Checkbox_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("Buttons pressed ...");
+            System.Windows.Controls.CheckBox Quelle = (System.Windows.Controls.CheckBox) sender;
+
+            if(Quelle.Name == "auto_center")
+            {
+                cb_auto_center = (bool)Quelle.IsChecked;
+            }
+        }
+
+
+
+            private void Slider_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        {
+            //Debug.WriteLine("comlete: "+((Slider)sender).Value);
+            this.dragStarted = false;
+        }
+
+        private void Slider_DragStarted(object sender, System.Windows.Controls.Primitives.DragStartedEventArgs e)
+        {
+            //Debug.WriteLine("start: " + ((Slider)sender).Value);
+            this.dragStarted = true;
+        }
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (dragStarted==true)
+                Debug.WriteLine("Changed: "+((Slider)sender).Value);
+        }
+
 
         private void Frame_Navigated(object sender, NavigationEventArgs e)
         {
@@ -242,5 +396,6 @@ namespace GUI
         {
 
         }
+
     }
 }
