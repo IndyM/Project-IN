@@ -12,14 +12,16 @@ namespace DMS.Geometry
 			FarClip = 1;
 			FovY = 90;
 			Azimuth = 0;
-			NearClip = 0.1f;
+            Pitch = 0;
+            NearClip = 0.1f;
 			Target = Vector3.Zero;
 			Elevation = 0;
 		}
 
 		public float Aspect { get; set; }
 		public float Azimuth { get; set; }
-		public float Distance { get; set; }
+        public float Pitch { get; set; }
+        public float Distance { get; set; }
 		public float Elevation { get; set; }
 		public float FarClip { get; set; }
 		public float FovY { get { return fovY; } set { fovY = MathHelper.Clamp(value, 0f, 179.9f); } }
@@ -35,8 +37,9 @@ namespace DMS.Geometry
 			var mtxDistance = Matrix4x4.Transpose(Matrix4x4.CreateTranslation(0, 0, -Distance));
 			var mtxElevation = Matrix4x4.Transpose(Matrix4x4.CreateRotationX(MathHelper.DegreesToRadians(Elevation)));
 			var mtxAzimut = Matrix4x4.Transpose(Matrix4x4.CreateRotationY(MathHelper.DegreesToRadians(Azimuth)));
-			var mtxTarget = Matrix4x4.Transpose(Matrix4x4.CreateTranslation(-Target));
-			return mtxDistance * mtxElevation * mtxAzimut * mtxTarget;
+            var mtxPitch = Matrix4x4.Transpose(Matrix4x4.CreateRotationZ(MathHelper.DegreesToRadians(Pitch)));
+            var mtxTarget = Matrix4x4.Transpose(Matrix4x4.CreateTranslation(-Target));
+			return mtxDistance * mtxElevation * mtxAzimut * mtxTarget * mtxPitch;
 		}
 
 		public Matrix4x4 CalcProjectionMatrix()

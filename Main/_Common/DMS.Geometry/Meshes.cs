@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using System.Diagnostics;
 
 namespace DMS.Geometry
 {
@@ -50,9 +51,9 @@ namespace DMS.Geometry
 			mesh.IDs.AddRange(m.IDs);
 			foreach (var pos in m.position.List)
 			{
-				var newPos = Vector3.Transform(pos, transform);
+                var newPos = Vector3.Transform(pos, transform);
 				mesh.position.List.Add(newPos);
-			}
+            }
 			foreach (var n in m.normal.List)
 			{
 				var newN = Vector3.TransformNormal(n, transform);

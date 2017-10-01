@@ -25,7 +25,8 @@ void main()
 		}
 	if(count1==1){
 	//if(!any(greaterThan(abs_pos, vec3(w_edge)))){
-		color = vec4(.0,.3,.5, .1);
+		//color = vec4(.0,.3,.5, .1);
+		color = vec4(.0,1.0,1.0, 1.0);
 		}
 	else{
 		color = vec4(.0,1.0,1.0, 1.0);

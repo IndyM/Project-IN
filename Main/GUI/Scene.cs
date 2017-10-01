@@ -17,11 +17,12 @@ namespace GUI
             get;
         }
 
+
         public Scene() {
             Camera = new CameraOrbit()
             {
-                FarClip = 5000,
-                Distance = 500,
+                FarClip = 10000,
+                Distance = 1300,
             };
             
         }
@@ -35,14 +36,16 @@ namespace GUI
             Matrix4 camera = Camera.CalcMatrix().ToOpenTK();
             foreach (var meshObject in MeshObjectController.MeshObjects)
             {
-                
-
                 meshObject.Render(camera);
-
             }
-        
-            MeshObjectController.CutObject?.Render(camera);
 
+            foreach (var cutObject in MeshObjectController.CutObject)
+            {
+                cutObject.Render(camera);
+            }
+
+            //MeshObjectController.CutObject?.Render(camera);
+            //GL.Translate(10, 10, 100);
         }
     }
 }

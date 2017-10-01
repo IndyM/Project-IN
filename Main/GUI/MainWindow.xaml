@@ -45,20 +45,40 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <Label Content="Schnitträume:" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" Height="26" Width="80"/>
+                            <Label Content="Cutting space:" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" Height="26" Width="80"/>
                             <Grid Margin="0,0,0,10" Grid.Row="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="53*"/>
+                                    <RowDefinition Height="10*"/>
+                                </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <TreeView Margin="0" VerticalContentAlignment="Top" VerticalAlignment="Top" Height="97"/>
+                                <TreeView Margin="0" VerticalContentAlignment="Center" x:Name="RoomView" ItemsSource="{Binding Source={x:Static model:MeshObjectController.TreeCutItems}}"  SelectedItemChanged="TreeView_SelectedCutItemChanged"/>
                                 <StackPanel Grid.Column="1" Margin="0">
-                                    <Button Content="Neuer Schnittraum" Click="Button_Click" Margin="0" Width="100" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="20"/>
-                                    <Button Content="Neues Element"/>
-                                    <Button Content="Element löschen"/>
+                                    <Button Name="new_room" Content="New cut space" Click="Button_Click" Margin="0" Width="100" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="20"/>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="27*"/>
+                                            <RowDefinition Height="73*"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="49*"/>
+                                            <ColumnDefinition Width="52*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Content="Cut" Margin="0" Grid.RowSpan="2"/>
+                                        <RadioButton Content="Add" Grid.Column="1" Margin="0" VerticalAlignment="Top" GroupName="Mode1" IsChecked="True"/>
+                                        <RadioButton Content="Sub" Grid.Column="1" Margin="0" Grid.Row="1" VerticalAlignment="Top" GroupName="Mode1"/>
+                                    </Grid>
+                                    <Separator Height="5" Margin="0" HorizontalContentAlignment="Center"/>
+                                    <Button Name="new_child" Content="New child" Click="Button_Click"/>
                                     <RadioButton Content="Additiv" GroupName="Mode" IsChecked="True"/>
                                     <RadioButton Content="Subtraktiv" GroupName="Mode"/>
+                                    <Button x:Name="delete" Content="delete element" Click="Button_Click"/>
                                 </StackPanel>
+                                <Button Content="Center" Margin="0,3,0,0" Grid.Row="1" VerticalAlignment="Top" Grid.Column="1" HorizontalContentAlignment="Center"/>
+                                <CheckBox Content="Enable auto center" Margin="0" Grid.Row="1" VerticalAlignment="Center" IsChecked="True"/>
                             </Grid>
                             <Grid Grid.Row="2">
                                 <Grid.RowDefinitions>
@@ -91,11 +111,11 @@
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Margin="0" Grid.Row="1" VerticalAlignment="Top" Orientation="Horizontal" Grid.ColumnSpan="2" Height="26">
                                     <Label Content="x"/>
-                                    <Slider VerticalAlignment="Center" Width="235" MinWidth="1"/>
+                                    <Slider VerticalAlignment="Center" Width="235" MinWidth="1" ValueChanged="Slider_ValueChanged" Thumb.DragStarted="Slider_DragStarted" Thumb.DragCompleted="Slider_DragCompleted"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Margin="0" Grid.Row="2" VerticalAlignment="Top" Orientation="Horizontal" Grid.ColumnSpan="2" Height="26">
                                     <Label Content="y"/>
-                                    <Slider VerticalAlignment="Center" Width="235" MinWidth="1"/>
+                                    <Slider VerticalAlignment="Center" Width="235" MinWidth="1" ValueChanged="Slider_ValueChanged" Thumb.DragStarted="Slider_DragStarted" Thumb.DragCompleted="Slider_DragCompleted"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Margin="0" Orientation="Horizontal" VerticalAlignment="Top" Grid.Row="3" Grid.ColumnSpan="2" Height="26">
                                     <Label Content="Rotate" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -114,7 +134,7 @@
                                 </StackPanel>
                                 <Separator Margin="0,5,0,0" Grid.Row="6" VerticalAlignment="Top" Grid.ColumnSpan="3" Height="1"/>
                                 <StackPanel Grid.Column="1" Margin="0" Orientation="Horizontal" VerticalAlignment="Top" Grid.Row="7" Grid.ColumnSpan="2" Height="26">
-                                    <Label Content="Skalieren" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                    <Label Content="Scale" HorizontalAlignment="Left"/>
                                     <Label Content="x:"/>
                                     <TextBox Height="23" TextWrapping="Wrap" Text="50" MinWidth="50" VerticalContentAlignment="Center"/>
                                 </StackPanel>
@@ -166,7 +186,7 @@
                                     <Button Content="right" Margin="0" Grid.Column="1"/>
                                     <Button Content="top" Margin="0" Grid.Row="1"/>
                                     <Button Content="bottom" Margin="0" Grid.Row="1" Grid.Column="1"/>
-                                    <Button Content="center" Grid.ColumnSpan="2" Margin="0" Grid.Row="2"/>
+                                    <Button Content="back" Grid.ColumnSpan="2" Margin="0" Grid.Row="2"/>
                                 </Grid>
                                 <Separator Grid.ColumnSpan="2" Margin="10,0,0,0" Grid.Row="12" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                                 <Image HorizontalAlignment="Left" Height="60" Margin="3,0,0,0" Grid.RowSpan="3" Width="60" VerticalAlignment="Top" Grid.Row="7" Source="Resources/Icons/Cube_auswahl_r.jpg"/>
@@ -206,7 +226,8 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <WindowsFormsHost DockPanel.Dock="Left"  x:Name="host" ChildChanged="host_ChildChanged" MinWidth="200" /> <!-- MinWidth="{Binding ElementName=Hauptfenster, Path=ActualWidth}" />-->
+                <WindowsFormsHost DockPanel.Dock="Left"  x:Name="host" ChildChanged="host_ChildChanged" MinWidth="200" />
+                <!-- MinWidth="{Binding ElementName=Hauptfenster, Path=ActualWidth}" />-->
             </Grid>
         </Grid>
         <!--
