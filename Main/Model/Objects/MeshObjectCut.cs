@@ -48,6 +48,11 @@ namespace Model.Objects
         public float edge_bbz { get; set; }
         public float edge_bby { get; set; }
 
+        public System.Numerics.Vector3 normalX { get; set; }
+        public System.Numerics.Vector3 normalY { get; set; }
+        public System.Numerics.Vector3 normalZ { get; set; }
+
+
 
         private int[] left_face = { 2, 5, 6, 3 };
         private int[] right_face = { 1, 4, 0, 7 };
@@ -111,6 +116,10 @@ namespace Model.Objects
             edge_bty = 0;
             edge_bbz = 0;
             edge_bby = 0;
+
+            normalX = new System.Numerics.Vector3(0, 0, 0);
+            normalY = new System.Numerics.Vector3(0, 0, 0);
+            normalZ = new System.Numerics.Vector3(0, 0, 0);
 
             Mesh = MyCube(new System.Numerics.Vector3(0, 0, 0), 0, 0, 0);
 
@@ -210,6 +219,8 @@ namespace Model.Objects
                     newPos.Z = scaleZb;
                 }
 
+                
+
                 //Hier dürfen nur absolut-Werte übergeben werden!
                 if (left_edge_top.Contains(Mesh.corner[i]))
                 {
@@ -253,77 +264,18 @@ namespace Model.Objects
                 }
 
 
-                /*
-                if (left_face.Contains(m.corner[i]))
-                {
-                    newPos.X -= scaleXl;
-                    //var newPos = System.Numerics.Vector3.Transform(m.position.List[i], transform);
-                    //mesh.position.List.Add(newPos);
-                }
-                if (right_face.Contains(m.corner[i]))
-                {
-                    newPos.X += scaleXr;
-                }
-                if (top_face.Contains(m.corner[i]))
-                {
-                    newPos.Y += scaleYf;
-                }
-                if (bot_face.Contains(m.corner[i]))
-                {
-                    newPos.Y -= scaleYb;
-                }
-                if (front_face.Contains(m.corner[i]))
-                {
-                    newPos.Z += scaleZt;
-                }
-                if (back_face.Contains(m.corner[i]))
-                {
-                    newPos.Z -= scaleZb;
-                }
-                if (left_edge_top.Contains(m.corner[i]))
-                {
-                    newPos.X += edge_ltx;
-                    newPos.Y -= edge_lty;
-                }
-                if (left_edge_bot.Contains(m.corner[i]))
-                {
-                    newPos.X += edge_lbx;
-                    newPos.Y += edge_lby;
-                }
-                if (right_edge_top.Contains(m.corner[i]))
-                {
-                    newPos.X -= edge_rtx;
-                    newPos.Y -= edge_rty;
-                }
-                if (right_edge_bot.Contains(m.corner[i]))
-                {
-                    newPos.X -= edge_rbx;
-                    newPos.Y += edge_rby;
-                }
-                if (front_edge_top.Contains(m.corner[i]))
-                {
-                    newPos.Z -= edge_ftz;
-                    newPos.Y -= edge_fty;
-                }
-                if (front_edge_bot.Contains(m.corner[i]))
-                {
-                    newPos.Z -= edge_fbz;
-                    newPos.Y += edge_fby;
-                }
-                if (back_edge_top.Contains(m.corner[i]))
-                {
-                    newPos.Z += edge_btz;
-                    newPos.Y -= edge_bty;
-                }
-                if (back_edge_bot.Contains(m.corner[i]))
-                {
-                    newPos.Z += edge_bbz;
-                    newPos.Y += edge_bby;
-                }*/
+               
 
                 Mesh.position.List[i] = newPos;
                 //mesh.position.List.Add(newPos);
             }
+
+            
+
+            
+
+
+            //(Vector1.X * Vector2.Y) - (Vector1.Y * Vector2.X)
 
             //Normals -----------------------------------
             /*for (int i = 0; i < m.normal.List.Count; i++)
@@ -340,7 +292,25 @@ namespace Model.Objects
                 }
             }
             */
-            Mesh.Transform(CalcMatrix()); 
+
+            Mesh.Transform(CalcMatrix());
+
+            System.Numerics.Vector3 v1, v2, norm;
+            v1 = Mesh.position.List[right_face[1]] - Mesh.position.List[right_face[0]];
+            v2 = Mesh.position.List[right_face[2]] - Mesh.position.List[right_face[0]];
+            norm = System.Numerics.Vector3.Cross(v1, v2);
+            normalX = System.Numerics.Vector3.Normalize(norm);
+
+            v1 = Mesh.position.List[top_face[1]] - Mesh.position.List[top_face[0]];
+            v2 = Mesh.position.List[top_face[2]] - Mesh.position.List[top_face[0]];
+            norm = System.Numerics.Vector3.Cross(v1, v2);
+            normalY = System.Numerics.Vector3.Normalize(norm);
+
+            v1 = Mesh.position.List[front_face[1]] - Mesh.position.List[front_face[0]];
+            v2 = Mesh.position.List[front_face[2]] - Mesh.position.List[front_face[0]];
+            norm = System.Numerics.Vector3.Cross(v1, v2);
+            normalZ = System.Numerics.Vector3.Normalize(norm);
+
         }
 
 

@@ -234,10 +234,18 @@ namespace GUI
                 double mouseDeltaX = (mousePosX - mouseOldX);
                 double mouseDeltaY = (mousePosY - mouseOldY);
 
+                float modifier = 2f;
+                if (Keyboard.IsKeyDown(Key.LeftShift) == true)
+                {
+                    modifier = 0.2f;
+                }
+
                 if (selectedItem != null)
                 {
                     MeshObjectCut obj = (MeshObjectCut)selectedItem.DataContext;
-                    obj.scaleXl = scaleXl + (float)mouseDeltaX;
+                    System.Numerics.Vector3 v = System.Numerics.Vector3.TransformNormal(obj.normalX, System.Numerics.Matrix4x4.Transpose(Scene.Camera.CalcMatrix()));
+                    obj.scaleXl = scaleXl + modifier * (float)(mouseDeltaX * (v.X) - mouseDeltaY * (v.Y));
+                    Debug.WriteLine(System.Numerics.Matrix4x4.Transpose(Scene.Camera.CalcMatrix()));
                     scaleXl = obj.scaleXl;
                     obj.update();
                 }

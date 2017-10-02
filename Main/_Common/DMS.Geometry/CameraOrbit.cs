@@ -52,7 +52,7 @@ namespace DMS.Geometry
 		public Matrix4x4 CalcMatrix()
 		{
 			return CalcProjectionMatrix() * CalcViewMatrix();
-		}
+        }
 
 		public Vector3 CalcPosition()
 		{
