@@ -41,7 +41,23 @@ namespace GUI
         private double angelCamera;
 
         private bool dragStarted;
-        float scaleXl;
+        float scaleX1;
+        float scaleX2;
+        float scaleY1;
+        float scaleY2;
+        float scaleZ1;
+        float scaleZ2;
+        float tx;
+        float ty;
+        float tz;
+
+        private int keyx = 0;
+        private int keyy = 0;
+        private int keyz = 0;
+        private int selectedKey = 0;
+        private static int KEYTYPE_X { get { return 0; } }
+        private static int KEYTYPE_Y { get { return 1; } }
+        private static int KEYTYPE_Z { get { return 2; } }
 
         public TreeViewItem selectedItem = null;
         private bool cb_auto_center = true;
@@ -115,17 +131,40 @@ namespace GUI
             float orthoW = w;
             float orthoH = h;
 
-            //GL.Ortho(0, orthoW, 0, orthoH, -1, 1); // Bottom-left corner pixel has coordinate (0, 0)
+            GL.Ortho(0, orthoW, 0, orthoH, -1, 1); // Bottom-left corner pixel has coordinate (0, 0)
             GL.Viewport(0, 0, w, h); // Use all of the glControl painting area
 
             _glc.Resize += _glc_Resize;
-
+     
             _glc.MouseMove += _glc_MouseMove;
-
             _glc.MouseWheel += _glc_MouseWheel;
             _glc.MouseDown += _glc_MouseDown;
             _glc.MouseUp += _glc_MouseUp;
 
+            _glc.KeyDown += _glc_KeyDown;
+        }
+
+
+        private void _glc_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.X)
+            {
+                selectedKey = KEYTYPE_X;
+                keyx++;
+                if (keyx > 1) keyx = 0;
+            }
+            else if (e.KeyCode == Keys.Y)
+            {
+                selectedKey = KEYTYPE_Y;
+                keyy++;
+                if (keyy > 1) keyy = 0;
+            }
+            else if (e.KeyCode == Keys.Z)
+            {
+                selectedKey = KEYTYPE_Z;
+                keyz++;
+                if (keyz > 1) keyz = 0;
+            }
         }
 
         private void _glc_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -158,7 +197,15 @@ namespace GUI
             if (selectedItem != null)
             {
                 MeshObjectCut obj = (MeshObjectCut)selectedItem.DataContext;
-                scaleXl = obj.scaleXl;
+                scaleX1 = obj.scaleXl;
+                scaleX2 = obj.scaleXr;
+                scaleY1 = obj.scaleYb;
+                scaleY2 = obj.scaleYf;
+                scaleZ1 = obj.scaleZb;
+                scaleZ2 = obj.scaleZt;
+                tx = obj.tx;
+                ty = obj.ty;
+                tz = obj.tz;
             }
         }
 
@@ -166,7 +213,7 @@ namespace GUI
 
         {
             Debug.WriteLine("Mouse up!");
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Left || e.Button == MouseButtons.Right)
             {
                 if (selectedItem != null)
                 {
@@ -242,12 +289,103 @@ namespace GUI
 
                 if (selectedItem != null)
                 {
-                    MeshObjectCut obj = (MeshObjectCut)selectedItem.DataContext;
-                    System.Numerics.Vector3 v = System.Numerics.Vector3.TransformNormal(obj.normalX, System.Numerics.Matrix4x4.Transpose(Scene.Camera.CalcMatrix()));
-                    obj.scaleXl = scaleXl + modifier * (float)(mouseDeltaX * (v.X) - mouseDeltaY * (v.Y));
-                    Debug.WriteLine(System.Numerics.Matrix4x4.Transpose(Scene.Camera.CalcMatrix()));
-                    scaleXl = obj.scaleXl;
+                    var obj = (MeshObjectCut)selectedItem.DataContext;
+
+                    if (selectedKey == KEYTYPE_X) {
+                        var v = System.Numerics.Vector3.TransformNormal(obj.normalX, System.Numerics.Matrix4x4.Transpose(Scene.Camera.CalcMatrix()));
+                        //v = System.Numerics.Vector3.TransformNormal(v, obj.CalcMatrix());
+                        if (keyx == 1)
+                        {
+                            var val = scaleX1 + modifier * (float)(mouseDeltaX * (v.X) - mouseDeltaY * (v.Y));
+                            obj.scale(MeshObjectCut.TYPE_ACHSE_X, keyx, val);
+                            scaleX1 = obj.scaleXl;
+                        }
+                        else
+                        {
+                            var val = scaleX2 + modifier * (float)(mouseDeltaX * (v.X) - mouseDeltaY * (v.Y));
+                            obj.scale(MeshObjectCut.TYPE_ACHSE_X, keyx, val);
+                            scaleX2 = obj.scaleXr;
+                        }
+                    }
+                    else if (selectedKey == KEYTYPE_Y)
+                    {
+                        var v = System.Numerics.Vector3.TransformNormal(obj.normalY, System.Numerics.Matrix4x4.Transpose(Scene.Camera.CalcMatrix()));
+                        //v = System.Numerics.Vector3.TransformNormal(obj.normalY, obj.CalcMatrix());
+                        if (keyy == 1)
+                        {
+                            var val = scaleY2 + modifier * (float)(mouseDeltaX * (v.X) - mouseDeltaY * (v.Y));
+                            obj.scale(MeshObjectCut.TYPE_ACHSE_Y, keyy, val);
+                            scaleY2 = obj.scaleYf;
+                        }
+                        else
+                        {
+                            var val = scaleY1 + modifier * (float)(mouseDeltaX * (v.X) - mouseDeltaY * (v.Y));
+                            obj.scale(MeshObjectCut.TYPE_ACHSE_Y, keyy, val);
+                            scaleY1 = obj.scaleYb;
+                        }
+                    }
+                    else if(selectedKey == KEYTYPE_Z) {
+                        var v = System.Numerics.Vector3.TransformNormal(obj.normalZ, System.Numerics.Matrix4x4.Transpose(Scene.Camera.CalcMatrix()));
+                        if (keyz == 1)
+                        {
+                            var val = scaleZ2 + modifier * (float)(mouseDeltaX * (v.X) - mouseDeltaY * (v.Y));
+                            obj.scale(MeshObjectCut.TYPE_ACHSE_Z, keyz, val);
+                            scaleZ2 = obj.scaleZt;
+                        }
+                        else
+                        {
+                            var val = scaleZ1 + modifier * (float)(mouseDeltaX * (v.X) - mouseDeltaY * (v.Y));
+                            obj.scale(MeshObjectCut.TYPE_ACHSE_Z, keyz, val);
+                            scaleZ1 = obj.scaleZb;
+                        }
+                    }
+
                     obj.update();
+                }
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                mouseOldX = mousePosX;
+                mouseOldY = mousePosY;
+                mousePosX = e.X;
+                mousePosY = e.Y;
+                double mouseDeltaX = (mousePosX - mouseOldX);
+                double mouseDeltaY = (mousePosY - mouseOldY);
+
+                float modifier = 2f;
+                if (Keyboard.IsKeyDown(Key.LeftShift) == true)
+                {
+                    modifier = 0.2f;
+                }
+
+                if (selectedItem != null)
+                {
+                    MeshObjectCut obj = (MeshObjectCut)selectedItem.DataContext;
+
+                    if(selectedKey == KEYTYPE_X)
+                    {
+                        System.Numerics.Vector3 v = System.Numerics.Vector3.TransformNormal(obj.normalX, System.Numerics.Matrix4x4.Transpose(Scene.Camera.CalcMatrix()));
+                        obj.tx = tx + modifier * (float)(mouseDeltaX * (v.X) - mouseDeltaY * (v.Y));
+                        Debug.WriteLine(System.Numerics.Matrix4x4.Transpose(Scene.Camera.CalcMatrix()));
+                        tx = obj.tx;
+                    }
+                    else if (selectedKey == KEYTYPE_Y)
+                    {
+                        System.Numerics.Vector3 v = System.Numerics.Vector3.TransformNormal(obj.normalY, System.Numerics.Matrix4x4.Transpose(Scene.Camera.CalcMatrix()));
+                        obj.ty = ty + modifier * (float)(mouseDeltaX * (v.X) - mouseDeltaY * (v.Y));
+                        Debug.WriteLine(System.Numerics.Matrix4x4.Transpose(Scene.Camera.CalcMatrix()));
+                        ty = obj.ty;
+                    }
+                    else if (selectedKey == KEYTYPE_Z)
+                    {
+                        System.Numerics.Vector3 v = System.Numerics.Vector3.TransformNormal(obj.normalZ, System.Numerics.Matrix4x4.Transpose(Scene.Camera.CalcMatrix()));
+                        obj.tz = tz + modifier * (float)(mouseDeltaX * (v.X) - mouseDeltaY * (v.Y));
+                        Debug.WriteLine(System.Numerics.Matrix4x4.Transpose(Scene.Camera.CalcMatrix()));
+                        tz = obj.tz;
+                    }
+
+                    obj.update();
+
                 }
             }
         }
@@ -385,8 +523,27 @@ namespace GUI
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (dragStarted==true)
-                Debug.WriteLine("Changed: "+((Slider)sender).Value);
+            if (dragStarted == true)
+            {
+                string Quelle = ((Slider)sender).Name;
+                float value = (float)((Slider)sender).Value;
+                var obj = (MeshObjectCut)selectedItem.DataContext;
+
+                if (Quelle == "rotateX")
+                {
+                    obj.rotX_deg = 36 * value;
+                }
+                else if (Quelle == "rotateY")
+                {
+                    obj.rotY_deg = 36 * value;
+                }
+                else if (Quelle == "rotateZ")
+                {
+                    obj.rotZ_deg = 36 * value;
+                }
+                obj.update();
+                Scene.Camera.Target = obj.getCenter();
+            }
         }
 
 

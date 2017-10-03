@@ -3587,7 +3587,7 @@
     <None Include="Resources\Model\partof_BP3D_4.0\partof_BP3D_4.0_obj_99\FJ3654.obj" />
     <None Include="Resources\Model\partof_BP3D_4.0\partof_BP3D_4.0_obj_99\FJ3656.obj" />
     <None Include="Resources\Model\partof_BP3D_4.0\partof_BP3D_4.0_obj_99\FJ3659.obj" />
-    <None Include="Resources\Model\Simple\Simple_Object.obj" />
+    <None Include="Resources\Model\Simple\Modell\FJ3394.obj" />
     <None Include="Resources\Shader\frag_base.glsl" />
     <None Include="Resources\Shader\frag_cutCube.glsl" />
     <None Include="Resources\Shader\vertex_base.glsl" />
@@ -3601,6 +3601,10 @@
     <Content Include="Resources\Model\partof_BP3D_4.0\partof_inclusion_relation_list.txt" />
     <Content Include="Resources\Model\partof_BP3D_4.0\partof_parts_list.txt" />
     <Content Include="Resources\Model\partof_BP3D_4.0\partof_parts_list_e.txt" />
+    <Content Include="Resources\Model\Simple\partof_element_parts.txt" />
+    <Content Include="Resources\Model\Simple\partof_inclusion_relation_list.txt" />
+    <Content Include="Resources\Model\Simple\partof_parts_list.txt" />
+    <Content Include="Resources\Model\Simple\partof_parts_list_e.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

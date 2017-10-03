@@ -30,9 +30,6 @@ namespace GUI
         public void Render() {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-
-
-
             Matrix4 camera = Camera.CalcMatrix().ToOpenTK();
             foreach (var meshObject in MeshObjectController.MeshObjects)
             {
@@ -43,9 +40,6 @@ namespace GUI
             {
                 cutObject.Render(camera);
             }
-
-            //MeshObjectController.CutObject?.Render(camera);
-            //GL.Translate(10, 10, 100);
         }
     }
 }

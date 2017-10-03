@@ -25,6 +25,7 @@ namespace Model
 
         public static Vector3 bounds_min = new Vector3(-300,-300,-300);
         public static Vector3 bounds_max = new Vector3(300, 300, 300);
+        private static bool boundsinit = false;
 
         private static ObservableCollection<TreeViewItem> _treeItems;
         private static ObservableCollection<TreeViewItem> _elementPartsTreeItems;
@@ -127,6 +128,7 @@ namespace Model
             reset();
             var base_files = Directory.EnumerateFiles(path_base);
             var obj_files = Directory.EnumerateFiles(path_obj);
+            boundsinit = false;
 
             // Load Mesh Files
             foreach (var file in obj_files)
@@ -140,12 +142,21 @@ namespace Model
                     //berechnet die Gesamtgröße des Objektes
                     Vector3 min = meshObject.Bounds.Item1;
                     Vector3 max = meshObject.Bounds.Item2;
-                    if (min.X < bounds_min.X) bounds_min.X = min.X;
-                    if (min.Y < bounds_min.Y) bounds_min.Y = min.Y;
-                    if (min.Z < bounds_min.Z) bounds_min.Z = min.Z;
-                    if (max.X > bounds_max.X) bounds_max.X = max.X;
-                    if (max.Y > bounds_max.Y) bounds_max.Y = max.Y;
-                    if (max.Z > bounds_max.Z) bounds_max.Z = max.Z;
+                    if (boundsinit == false)
+                    {
+                        bounds_min = min;
+                        bounds_max = max;
+                        boundsinit = true;
+                    }
+                    else
+                    {
+                        if (min.X < bounds_min.X) bounds_min.X = min.X;
+                        if (min.Y < bounds_min.Y) bounds_min.Y = min.Y;
+                        if (min.Z < bounds_min.Z) bounds_min.Z = min.Z;
+                        if (max.X > bounds_max.X) bounds_max.X = max.X;
+                        if (max.Y > bounds_max.Y) bounds_max.Y = max.Y;
+                        if (max.Z > bounds_max.Z) bounds_max.Z = max.Z;
+                    }
                 }
             }
 
@@ -158,17 +169,14 @@ namespace Model
             System.Diagnostics.Debug.WriteLine("Setting up Trees ...");
             setUpTree();
             setUpTreeParts();
-
-
-            //CutObject.Add(new MeshObjectCut(bounds_min, bounds_max,100));
         }
 
         public static MeshObjectCut addNewCuttingRoom()
         {
-            string name = "Room " + cutItemsCount;
+            string name = "Space " + cutItemsCount;
             var item = new TreeViewItem();
-
-            MeshObjectCut obj = new MeshObjectCut(bounds_min, bounds_max, name, 100);
+            Debug.WriteLine("bound: " + bounds_min + " max: " + bounds_max);
+            MeshObjectCut obj = new MeshObjectCut(bounds_min, bounds_max, name, 0);
             CutObject.Add(obj);
 
             item.Header = name;
@@ -289,22 +297,71 @@ namespace Model
 
         public static void loadCube()
         {
-            // var path = Environment.CurrentDirectory + "\\..\\..\\..\\Resources\\Model\\partof_BP3D_4.0\\partof_BP3D_4.0_obj_99\\";
-            var path = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + "\\Resources\\Model\\Cube\\";
-            var files = Directory.EnumerateFiles(path);
-
-            foreach (var file in files)
-            {
-                var meshObject = ObjReaderBP3D.ReadObj(file);
-
-                //var rotX = Matrix4x4.CreateRotationX(DMS.Geometry.MathHelper.DegreesToRadians(90));
-                //meshObject = Transform(meshObject, rotX);
-            }
-            System.Diagnostics.Debug.WriteLine("Finished Reading File");
-
-            addNewCuttingRoom();
+            var path_dir_base = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + "\\Resources\\Model\\Simple\\";
+            var path_dir_obj = path_dir_base + "Modell\\";
+            loadModel2(path_dir_obj);
         }
 
-       
+        private static void loadModel2(string path_obj)
+        {
+            reset();
+            var obj_files = Directory.EnumerateFiles(path_obj);
+            boundsinit = false;
+
+            // Load Mesh Files
+            foreach (var file in obj_files)
+            {
+                var meshObject = ObjReaderBP3D.ReadObj(file);
+                if (meshObject != null)
+                {
+                    MeshObjects.Add(meshObject);
+                    RelationAllGroups.Add(new MeshObjectBP3DGroup(meshObject));
+                    PartAllGroups.Add(new MeshObjectBP3DGroup(meshObject));
+
+                    //berechnet die Gesamtgröße des Objektes
+                    Vector3 min = meshObject.Bounds.Item1;
+                    Vector3 max = meshObject.Bounds.Item2;
+                    if (boundsinit == false)
+                    {
+                        bounds_min = min;
+                        bounds_max = max;
+                        boundsinit = true;
+                    }
+                    else
+                    {
+                        if (min.X < bounds_min.X) bounds_min.X = min.X;
+                        if (min.Y < bounds_min.Y) bounds_min.Y = min.Y;
+                        if (min.Z < bounds_min.Z) bounds_min.Z = min.Z;
+                        if (max.X > bounds_max.X) bounds_max.X = max.X;
+                        if (max.Y > bounds_max.Y) bounds_max.Y = max.Y;
+                        if (max.Z > bounds_max.Z) bounds_max.Z = max.Z;
+                    }
+                }
+            }
+        }
+
+        /*
+        public static void isVecInside(Vector3 point)
+        {
+            for(int i=0;i< MeshObjects.Count; i++)
+            {
+
+                isPointInside(point, MeshObjects[i].Bounds.Item1, MeshObjects[i].Bounds.Item2);
+
+            }
+        }
+
+        private static bool isPointInside(Vector3 value, Vector3 min, Vector3 max)
+        {
+            if(value.X > min.X && value.Y > min.Y && value.Z > min.Z)
+            {
+                if(value.X < max.X && value.Y < max.Y && value.Z < max.Z)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }*/
+
     }
 }

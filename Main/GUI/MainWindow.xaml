@@ -45,7 +45,7 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <Label Content="Cutting space:" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" Height="26" Width="80"/>
+                            <Label Content="Cutting space:" Margin="0" VerticalAlignment="Top" Height="26" HorizontalContentAlignment="Stretch" HorizontalAlignment="Left"/>
                             <Grid Margin="0,0,0,10" Grid.Row="1">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="53*"/>
@@ -93,8 +93,6 @@
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto" MinHeight="1"/>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
@@ -102,77 +100,62 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="1" Margin="0" Orientation="Horizontal" VerticalAlignment="Top" Grid.ColumnSpan="2" Height="26">
-                                    <Label Content="Translate" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                                    <Label Content="x:"/>
-                                    <TextBox Height="23" TextWrapping="Wrap" Text="50" MinWidth="50" VerticalContentAlignment="Center"/>
-                                    <Label Content="y:"/>
-                                    <TextBox Height="23" TextWrapping="Wrap" Text="50" MinWidth="50" VerticalContentAlignment="Center"/>
-                                </StackPanel>
                                 <StackPanel Grid.Column="1" Margin="0" Grid.Row="1" VerticalAlignment="Top" Orientation="Horizontal" Grid.ColumnSpan="2" Height="26">
                                     <Label Content="x"/>
-                                    <Slider VerticalAlignment="Center" Width="235" MinWidth="1" ValueChanged="Slider_ValueChanged" Thumb.DragStarted="Slider_DragStarted" Thumb.DragCompleted="Slider_DragCompleted"/>
+                                    <Slider Name="rotateX" VerticalAlignment="Center" Width="235" MinWidth="1" ValueChanged="Slider_ValueChanged" Thumb.DragStarted="Slider_DragStarted" Thumb.DragCompleted="Slider_DragCompleted"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0" Orientation="Horizontal" VerticalAlignment="Top" Grid.ColumnSpan="2" Height="26">
+                                    <Label Content="Rotate" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Margin="0" Grid.Row="2" VerticalAlignment="Top" Orientation="Horizontal" Grid.ColumnSpan="2" Height="26">
                                     <Label Content="y"/>
-                                    <Slider VerticalAlignment="Center" Width="235" MinWidth="1" ValueChanged="Slider_ValueChanged" Thumb.DragStarted="Slider_DragStarted" Thumb.DragCompleted="Slider_DragCompleted"/>
+                                    <Slider Name="rotateY" VerticalAlignment="Center" Width="235" MinWidth="1" ValueChanged="Slider_ValueChanged" Thumb.DragStarted="Slider_DragStarted" Thumb.DragCompleted="Slider_DragCompleted"/>
                                 </StackPanel>
-                                <StackPanel Grid.Column="1" Margin="0" Orientation="Horizontal" VerticalAlignment="Top" Grid.Row="3" Grid.ColumnSpan="2" Height="26">
-                                    <Label Content="Rotate" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                                    <Label Content="z:"/>
-                                    <TextBox Height="23" TextWrapping="Wrap" Text="0" MinWidth="50" VerticalContentAlignment="Center"/>
-                                    <Label Content="x:"/>
-                                    <TextBox Height="23" TextWrapping="Wrap" Text="0" MinWidth="50" VerticalContentAlignment="Center"/>
-                                </StackPanel>
-                                <StackPanel Grid.Column="1" Margin="0" Grid.Row="4" VerticalAlignment="Top" Orientation="Horizontal" Grid.ColumnSpan="2" Height="26">
+                                <StackPanel Grid.Column="1" Margin="0" Grid.Row="3" VerticalAlignment="Top" Orientation="Horizontal" Grid.ColumnSpan="2" Height="26">
                                     <Label Content="z"/>
-                                    <Slider VerticalAlignment="Center" Width="235" MinWidth="1"/>
+                                    <Slider Name="rotateZ" VerticalAlignment="Center" Width="235" MinWidth="1" ValueChanged="Slider_ValueChanged" Thumb.DragStarted="Slider_DragStarted" Thumb.DragCompleted="Slider_DragCompleted"/>
                                 </StackPanel>
-                                <StackPanel Grid.Column="1" Margin="0" Grid.Row="5" VerticalAlignment="Top" Orientation="Horizontal" Grid.ColumnSpan="2" Height="26">
-                                    <Label Content="x"/>
-                                    <Slider VerticalAlignment="Center" Width="235" MinWidth="1"/>
-                                </StackPanel>
-                                <Separator Margin="0,5,0,0" Grid.Row="6" VerticalAlignment="Top" Grid.ColumnSpan="3" Height="1"/>
-                                <StackPanel Grid.Column="1" Margin="0" Orientation="Horizontal" VerticalAlignment="Top" Grid.Row="7" Grid.ColumnSpan="2" Height="26">
+                                <Separator Margin="0,5,0,0" Grid.Row="4" VerticalAlignment="Top" Grid.ColumnSpan="3" Height="1"/>
+                                <StackPanel Grid.Column="1" Margin="0" Orientation="Horizontal" VerticalAlignment="Top" Grid.Row="5" Grid.ColumnSpan="2" Height="26">
                                     <Label Content="Scale" HorizontalAlignment="Left"/>
                                     <Label Content="x:"/>
                                     <TextBox Height="23" TextWrapping="Wrap" Text="50" MinWidth="50" VerticalContentAlignment="Center"/>
                                 </StackPanel>
-                                <StackPanel Grid.Column="1" Margin="0" Grid.Row="8" VerticalAlignment="Top" Orientation="Horizontal" Grid.ColumnSpan="2" Height="26">
+                                <StackPanel Grid.Column="1" Margin="0" Grid.Row="6" VerticalAlignment="Top" Orientation="Horizontal" Grid.ColumnSpan="2" Height="26">
                                     <Label Content="x"/>
                                     <Slider VerticalAlignment="Center" Width="235" MinWidth="1"/>
                                 </StackPanel>
-                                <StackPanel Grid.Column="1" Margin="0,0,125,0" Orientation="Horizontal" VerticalAlignment="Top" Grid.Row="9" Grid.ColumnSpan="2" Height="26">
+                                <StackPanel Grid.Column="1" Margin="0,0,125,0" Orientation="Horizontal" VerticalAlignment="Top" Grid.Row="7" Grid.ColumnSpan="2" Height="26">
                                     <Label Content="slope f:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                                     <TextBox Height="23" TextWrapping="Wrap" Text="0" MinWidth="30" VerticalContentAlignment="Center" TextChanged="TextBox_TextChanged"/>
                                     <Label Content="b:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                                     <TextBox Height="23" TextWrapping="Wrap" Text="0" MinWidth="30" VerticalContentAlignment="Center" TextChanged="TextBox_TextChanged"/>
                                 </StackPanel>
-                                <StackPanel Grid.Column="2" Margin="1,0,-1,0" Orientation="Horizontal" VerticalAlignment="Top" Grid.Row="9" Height="26">
+                                <StackPanel Grid.Column="2" Margin="1,0,-1,0" Orientation="Horizontal" VerticalAlignment="Top" Grid.Row="7" Height="26">
                                     <Label Content="slope t:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                                     <TextBox Height="23" TextWrapping="Wrap" Text="0" MinWidth="30" VerticalContentAlignment="Center"/>
                                     <Label Content="b:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                                     <TextBox Height="23" TextWrapping="Wrap" Text="0" MinWidth="30" VerticalContentAlignment="Center"/>
                                 </StackPanel>
-                                <StackPanel Grid.Column="1" Margin="0" Grid.Row="10" VerticalAlignment="Top" Orientation="Horizontal" Height="26">
+                                <StackPanel Grid.Column="1" Margin="0" Grid.Row="8" VerticalAlignment="Top" Orientation="Horizontal" Height="26">
                                     <Label Content="f:" Width="20"/>
                                     <Slider VerticalAlignment="Center" Width="105" MinWidth="1"/>
                                 </StackPanel>
-                                <StackPanel Grid.Column="1" Margin="0" Grid.Row="11" VerticalAlignment="Top" Orientation="Horizontal" Height="26">
+                                <StackPanel Grid.Column="1" Margin="0" Grid.Row="9" VerticalAlignment="Top" Orientation="Horizontal" Height="26">
                                     <Label Content="b:" Width="20"/>
                                     <Slider VerticalAlignment="Center" Width="105" MinWidth="1"/>
                                 </StackPanel>
-                                <StackPanel Grid.Column="2" Margin="0" Grid.Row="10" VerticalAlignment="Top" Orientation="Horizontal" Height="26">
+                                <StackPanel Grid.Column="2" Margin="0" Grid.Row="8" VerticalAlignment="Top" Orientation="Horizontal" Height="26">
                                     <Label Content="t:" Width="20"/>
                                     <Slider VerticalAlignment="Center" Width="105" MinWidth="1"/>
                                 </StackPanel>
-                                <StackPanel Grid.Column="2" Margin="0" Grid.Row="11" VerticalAlignment="Top" Orientation="Horizontal" Height="26">
+                                <StackPanel Grid.Column="2" Margin="0" Grid.Row="9" VerticalAlignment="Top" Orientation="Horizontal" Height="26">
                                     <Label Content="b:" Width="20"/>
                                     <Slider VerticalAlignment="Center" Width="105" MinWidth="1"/>
                                 </StackPanel>
-                                <Image Height="65" Grid.RowSpan="3" VerticalAlignment="Top" Width="65" HorizontalAlignment="Left" Source="Resources/Icons/Cube_empty.jpg"/>
-                                <Image HorizontalAlignment="Left" Height="65" Margin="0" Grid.Row="7" Grid.RowSpan="3" VerticalAlignment="Top" Width="65"/>
-                                <Grid Margin="0,0,0,5" Grid.Row="10" Grid.RowSpan="3">
+                                <Image Height="65" Grid.RowSpan="3" VerticalAlignment="Top" Width="65" HorizontalAlignment="Left" Source="Resources/Icons/Cube_empty.jpg" Grid.Row="1"/>
+                                <Image HorizontalAlignment="Left" Height="65" Margin="0" Grid.Row="5" Grid.RowSpan="3" VerticalAlignment="Top" Width="65"/>
+                                <Grid Margin="0,0,0,5" Grid.Row="8" Grid.RowSpan="3">
                                     <Grid.RowDefinitions>
                                         <RowDefinition/>
                                         <RowDefinition/>
@@ -188,8 +171,8 @@
                                     <Button Content="bottom" Margin="0" Grid.Row="1" Grid.Column="1"/>
                                     <Button Content="back" Grid.ColumnSpan="2" Margin="0" Grid.Row="2"/>
                                 </Grid>
-                                <Separator Grid.ColumnSpan="2" Margin="10,0,0,0" Grid.Row="12" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                                <Image HorizontalAlignment="Left" Height="60" Margin="3,0,0,0" Grid.RowSpan="3" Width="60" VerticalAlignment="Top" Grid.Row="7" Source="Resources/Icons/Cube_auswahl_r.jpg"/>
+                                <Separator Grid.ColumnSpan="2" Margin="10,0,0,0" Grid.Row="10" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                <Image HorizontalAlignment="Left" Height="60" Margin="3,0,0,0" Grid.RowSpan="3" Width="60" VerticalAlignment="Top" Grid.Row="5" Source="Resources/Icons/Cube_auswahl_r.jpg"/>
                             </Grid>
                             <Border BorderBrush="Black" BorderThickness="1" Height="302" Grid.Row="3" Margin="0,0,0,5">
                                 <WindowsFormsHost Margin="0"/>

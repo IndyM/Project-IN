@@ -52,6 +52,10 @@ namespace Model.Objects
         public System.Numerics.Vector3 normalY { get; set; }
         public System.Numerics.Vector3 normalZ { get; set; }
 
+        public static int TYPE_ACHSE_X { get { return 0; } }
+        public static int TYPE_ACHSE_Y { get { return 1; } }
+        public static int TYPE_ACHSE_Z { get { return 2; } }
+
 
 
         private int[] left_face = { 2, 5, 6, 3 };
@@ -82,6 +86,12 @@ namespace Model.Objects
         {
             boundsMin = bounds_min;
             boundsMax = bounds_max;
+            boundsMin.X -= freirum;
+            boundsMin.Y -= freirum;
+            boundsMin.Z -= freirum;
+            boundsMax.X += freirum;
+            boundsMax.Y += freirum;
+            boundsMax.Z += freirum;
             this.name = name;
             tx = 0;
             ty = 0;
@@ -117,11 +127,14 @@ namespace Model.Objects
             edge_bbz = 0;
             edge_bby = 0;
 
-            normalX = new System.Numerics.Vector3(0, 0, 0);
-            normalY = new System.Numerics.Vector3(0, 0, 0);
-            normalZ = new System.Numerics.Vector3(0, 0, 0);
+            normalX = new System.Numerics.Vector3(1, 0, 0);
+            normalY = new System.Numerics.Vector3(0, 1, 0);
+            normalZ = new System.Numerics.Vector3(0, 0, 1);
 
             Mesh = MyCube(new System.Numerics.Vector3(0, 0, 0), 0, 0, 0);
+
+            var dir = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + @"\..\Resources\Shader\";
+            Shader = ShaderLoader.FromFiles(dir + "vertex_base.glsl", dir + "frag_cutCube.glsl");
 
             update();
 
@@ -130,33 +143,19 @@ namespace Model.Objects
 
         public void update()
         {
-            /* 
-            for (int i=0;i< Mesh.position.List.Count;i++)
-            System.Diagnostics.Debug.WriteLine("Finished new Cube Mesh["+i+"]: "+ Mesh.position.List[i].ToString());
-            for (int i = 0; i < Mesh.IDs.Count; i++)
-            System.Diagnostics.Debug.WriteLine("Finished new Cube Ids[" + i + "]: " + Mesh.IDs[i]);
-            */
-            //Mesh = Meshes.CreateCubeSpecial(0);
-            
             TransformCube();
-            var dir = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + @"\..\Resources\Shader\";
-            Shader = ShaderLoader.FromFiles(dir + "vertex_base.glsl", dir + "frag_cutCube.glsl");
             Load();
         }
+
 
         public MeshObjectCut addChildren(System.Windows.Controls.TreeViewItem parent)
         {
             this.parent = parent;
             Tuple<System.Numerics.Vector3, System.Numerics.Vector3> bounds = getBounds();
-            //System.Numerics.Vector3 vec1 = bounds.Item1;
-            //vec1.X -= 300;
             Debug.WriteLine("addChildren: bounds: " + bounds);
             MeshObjectCut obj = new MeshObjectCut(bounds.Item1, bounds.Item2, "Child " + childCount);
-            
             childs.Add(obj);
             childCount++;
-            //obj.scaleYb += 100;
-            //obj.update();
             return obj;
         }
 
@@ -169,9 +168,54 @@ namespace Model.Objects
             childs.Clear();
         }
 
-        public void scaleXl_Cube(float x, float y, float z)
+        public void scale(int type_achse, int side, float value)
         {
-
+            Debug.WriteLine("scaleX: " + scaleXr + " l: " + scaleXl+ " boundsMax.X: "+ boundsMax.X+ "boundsMin.X: "+ boundsMin.X);
+            if (type_achse == TYPE_ACHSE_X)
+            {
+                if (side == 0)
+                {
+                    if (value < scaleXl)
+                        if (boundsMin.X < value)
+                            scaleXr = value;
+                }
+                else if (side == 1)
+                {
+                    if (value > scaleXr)
+                        if (boundsMax.X > value)
+                            scaleXl = value;
+                }
+            }
+            else if (type_achse == TYPE_ACHSE_Y)
+            {
+                if (side == 0)
+                {
+                    if (value < scaleYf)
+                        if (boundsMin.Y < value)
+                            scaleYb = value;
+                }
+                else if (side == 1)
+                {
+                    if (value > scaleYb)
+                        if (boundsMax.Y > value)
+                            scaleYf = value;
+                }
+             }
+            else if (type_achse == TYPE_ACHSE_Z)
+            {
+                if (side == 0)
+                {
+                    if (value < scaleZt)
+                        if (boundsMin.Z < value)
+                            scaleZb = value;
+                }
+                else if (side == 1)
+                {
+                    if (value > scaleZb)
+                        if (boundsMax.Z > value)
+                            scaleZt = value;
+                }
+            }
         }
         public float getMaxScaleXl()
         {
@@ -184,10 +228,7 @@ namespace Model.Objects
 
         private void TransformCube()
         {
-            /*var mesh = new Mesh();
-            mesh.uv.List.AddRange(m.uv.List);
-            mesh.IDs.AddRange(m.IDs);*/
-
+            
             //Position ------------------------------------
             for (int i = 0; i < Mesh.position.List.Count; i++)
             {
@@ -195,8 +236,6 @@ namespace Model.Objects
                 if (left_face.Contains(Mesh.corner[i]))
                 {
                     newPos.X = scaleXl;
-                    //var newPos = System.Numerics.Vector3.Transform(m.position.List[i], transform);
-                    //mesh.position.List.Add(newPos);
                 }
                 if (right_face.Contains(Mesh.corner[i]))
                 {
@@ -263,54 +302,25 @@ namespace Model.Objects
                     newPos.Y += edge_bby;
                 }
 
-
-               
-
                 Mesh.position.List[i] = newPos;
-                //mesh.position.List.Add(newPos);
             }
 
-            
-
-            
-
-
-            //(Vector1.X * Vector2.Y) - (Vector1.Y * Vector2.X)
-
-            //Normals -----------------------------------
-            /*for (int i = 0; i < m.normal.List.Count; i++)
+            //Translation und Rotation
+            for (int i = 0; i < Mesh.position.List.Count; i++)
             {
-                if (left_face.Contains(m.corner[i]))
-                {
-                    //var newN = System.Numerics.Vector3.TransformNormal(m.normal.List[i], transform);
-                    var newN = m.position.List[i];
-                    mesh.normal.List.Add(newN);
-                }
-                else
-                {
-                    mesh.normal.List.Add(m.normal.List[i]);
-                }
+                var newPos = System.Numerics.Vector3.Transform(Mesh.position.List[i], CalcMatrix());
+                Mesh.position.List[i] = newPos;
             }
-            */
+            for (int i = 0; i < Mesh.normal.List.Count; i++)
+            {
+                var newN = System.Numerics.Vector3.TransformNormal(Mesh.normal.List[i], CalcMatrix());
+                Mesh.normal.List[i] = newN;
+            }
 
-            Mesh.Transform(CalcMatrix());
-
-            System.Numerics.Vector3 v1, v2, norm;
-            v1 = Mesh.position.List[right_face[1]] - Mesh.position.List[right_face[0]];
-            v2 = Mesh.position.List[right_face[2]] - Mesh.position.List[right_face[0]];
-            norm = System.Numerics.Vector3.Cross(v1, v2);
-            normalX = System.Numerics.Vector3.Normalize(norm);
-
-            v1 = Mesh.position.List[top_face[1]] - Mesh.position.List[top_face[0]];
-            v2 = Mesh.position.List[top_face[2]] - Mesh.position.List[top_face[0]];
-            norm = System.Numerics.Vector3.Cross(v1, v2);
-            normalY = System.Numerics.Vector3.Normalize(norm);
-
-            v1 = Mesh.position.List[front_face[1]] - Mesh.position.List[front_face[0]];
-            v2 = Mesh.position.List[front_face[2]] - Mesh.position.List[front_face[0]];
-            norm = System.Numerics.Vector3.Cross(v1, v2);
-            normalZ = System.Numerics.Vector3.Normalize(norm);
-
+/*
+            normalX = System.Numerics.Vector3.TransformNormal(normalX, CalcMatrix());
+            normalY = System.Numerics.Vector3.TransformNormal(normalY, CalcMatrix());
+            normalZ = System.Numerics.Vector3.TransformNormal(normalZ, CalcMatrix());*/
         }
 
 
@@ -318,11 +328,10 @@ namespace Model.Objects
         public Matrix4x4 CalcMatrix()
         {
             var tran = Matrix4x4.Transpose(Matrix4x4.CreateTranslation(tx, ty, tz));
-            var rotX = Matrix4x4.Transpose(Matrix4x4.CreateRotationX(DMS.Geometry.MathHelper.DegreesToRadians(rotX_deg)));
-            var rotY = Matrix4x4.Transpose(Matrix4x4.CreateRotationY(DMS.Geometry.MathHelper.DegreesToRadians(rotY_deg)));
-            var rotZ = Matrix4x4.Transpose(Matrix4x4.CreateRotationZ(DMS.Geometry.MathHelper.DegreesToRadians(rotZ_deg)));
+            var rotX = Matrix4x4.Transpose(Matrix4x4.CreateRotationX(DMS.Geometry.MathHelper.DegreesToRadians(rotX_deg), getRotCenter()));
+            var rotY = Matrix4x4.Transpose(Matrix4x4.CreateRotationY(DMS.Geometry.MathHelper.DegreesToRadians(rotY_deg), getRotCenter()));
+            var rotZ = Matrix4x4.Transpose(Matrix4x4.CreateRotationZ(DMS.Geometry.MathHelper.DegreesToRadians(rotZ_deg), getRotCenter()));
             //var scal = Matrix4x4.Transpose(Matrix4x4.CreateScale(scaleX, scaleY, scaleZ));
-            //var mtxTarget = Matrix4x4.Transpose(Matrix4x4.CreateTranslation(-Target));
             return Matrix4x4.Transpose(tran * rotX * rotY * rotZ);
         }
 
@@ -467,6 +476,13 @@ namespace Model.Objects
         {
             Tuple<System.Numerics.Vector3, System.Numerics.Vector3> bounds = getBounds();
             System.Numerics.Vector3 ret = bounds.Item1 + 0.5f * (-bounds.Item1 + bounds.Item2);
+            return ret;
+        }
+
+        private System.Numerics.Vector3 getRotCenter()
+        {
+            Tuple<System.Numerics.Vector3, System.Numerics.Vector3> bounds = getBounds();
+            System.Numerics.Vector3 ret = boundsMin + 0.5f * (-boundsMin + boundsMax);
             return ret;
         }
     }
