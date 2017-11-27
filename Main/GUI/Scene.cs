@@ -38,10 +38,7 @@ namespace GUI
                 meshObject.Render(camera);
             }
 
-            foreach (var cutObject in MeshObjectController.CutObject)
-            {
-                cutObject.Render(camera);
-            }
+            MeshObjectController.CutObject?.Render(camera);
         }
     }
 }
