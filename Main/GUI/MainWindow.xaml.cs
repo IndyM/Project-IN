@@ -22,6 +22,7 @@ using System.Diagnostics;
 using Model;
 using DMS.Geometry;
 using Model.Objects;
+using GUI.ViewModel;
 
 namespace GUI
 {
@@ -45,6 +46,7 @@ namespace GUI
         private System.Timers.Timer timer;
         public MainWindow()
         {
+            DataContext = new ObjectBP3DVM();
             InitializeComponent();
 
             _rotating = false;
@@ -123,10 +125,7 @@ namespace GUI
             }
             else
             {
-                Debug.WriteLine("Delta : " + e.Delta);
-                var sign = 1;
-                if (e.Delta < 0)
-                    sign = -1;
+
                 //Scene.Camera.Distance = sign*0.2f*(float)Math.Pow(1.05, e.Delta);
                 Scene.Camera.Distance += e.Delta/5;
                 if (Scene.Camera.Distance < 0)
@@ -210,12 +209,25 @@ namespace GUI
 
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
+            /*
             if (e == null || e.NewValue==null)
                 return;
-            var mod = ((MeshObjectBP3DGroup)((TreeViewItem)e.NewValue).DataContext);
-            if(mod.HasAMesh())
-                Scene.Camera.Target = mod.GetCenter();
+            var mod = ((ObjectBP3D)((TreeViewItem)e.NewValue).DataContext);
+            if (mod.IsMeshObject) {
+                Scene.Camera.Target = ((MeshObjectBP3D)mod).GetCenter();
+                if (MeshObjectController.CutObject != null) {
+                    var vec = ((MeshObjectBP3D)mod).GetCenter();
+                    MeshObjectController.CutObject.InstancePosition = vec;// new Vector3(vec.X,vec.Y,vec.Z);
+                    foreach(var meshObject in MeshObjectController.MeshObjects)
+                        MeshObjectController.getIDsOfMeshObjectInCutObject(meshObject);
+                }
+            }
+            */
+        }
 
+        private void cutCube_Click(object sender, RoutedEventArgs e)
+        {
+            MeshObjectController.cutWithCutObject();
         }
     }
 }

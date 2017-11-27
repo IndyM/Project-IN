@@ -39,7 +39,6 @@ namespace Model
                     List<String> normalBlock = new List<string>();
                     List<String> faceBlock = new List<string>();
 
-
                     // Read until the end of the file is reached.
                     while ((line = reader.ReadLine()) != null)
                     {
@@ -56,8 +55,8 @@ namespace Model
                         }
                     }
                     meshObject = getNewMeshObjectByCommentBlock(commentBlock);
-                    meshObject.Mesh = createMesh(vertexBlock, normalBlock, faceBlock);
-                    meshObject.Load();
+                    meshObject.MeshObject.Mesh = createMesh(vertexBlock, normalBlock, faceBlock);
+                    //meshObject.Load();
                     //MeshObjectController.MeshObjects.Add(meshObject);
                 }
 
@@ -75,17 +74,20 @@ namespace Model
             return meshObject;
         }
 
-        internal static MeshObjectBP3DGroup ReadRelations(string path)
+        internal static IObjectBP3DGroup ReadRelations(string path)
         {
-            var treeBuildList = new ObservableCollection<MeshObjectBP3DGroup>();
+            var treeBuildList = new ObservableCollection<IObjectBP3DGroup>();
             Stream stream = null;
             try
             {
                 stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
                 using (StreamReader reader = new StreamReader(stream))
                 {
-                    
                     stream = null;
+
+                    var relationAllGroups = new List<IObjectBP3DGroup>();
+                    foreach(var meshObjectBP3D in MeshObjectController.MeshObjects)
+                        relationAllGroups.Add(new MeshObjectBP3DGroup(meshObjectBP3D));
 
                     string line = reader.ReadLine();//skip the first line
 
@@ -98,46 +100,39 @@ namespace Model
                         var child_ConID = parts[2];
                         var child_name = parts[3];
 
-                        MeshObjectBP3DGroup child = null;
-                        foreach (var meshObject in MeshObjectController.RelationAllGroups)
+                        IObjectBP3DGroup child = null;
+                        IObjectBP3DGroup parent = null;
+
+                        foreach(var objectBP3D in relationAllGroups)
                         {
-                            if (meshObject.ConceptID.Equals(child_ConID)) { 
-                                child = meshObject;
+                            if (child==null && objectBP3D.ConceptID.Equals(child_ConID)) 
+                                child = objectBP3D;
+                            else if(parent==null && objectBP3D.ConceptID.Equals(parent_ConID))
+                                parent = objectBP3D;
+                            
+                            if (child != null && parent != null)
                                 break;
-                            }
                         }
 
-                        MeshObjectBP3DGroup parent = null;
-                        foreach (var meshObject in MeshObjectController.RelationAllGroups)
-                        {
-                            if (meshObject.ConceptID.Equals(parent_ConID))
-                            {
-                                parent = meshObject;
-                                break;
-                            }
-                        }
                         if (parent == null ) {
-                            parent = new MeshObjectBP3DGroup(parent_name) {
+                            parent = new ObjectBP3DGroup(parent_name) {
                                 ConceptID = parent_ConID,
                             };
                             treeBuildList.Add(parent);
-                            MeshObjectController.RelationAllGroups.Add(parent);
+                            relationAllGroups.Add(parent);
                         }
                         if (child == null)
                         {
-                            child = new MeshObjectBP3DGroup(child_name)
+                            child = new ObjectBP3DGroup(child_name)
                             {
                                 ConceptID = child_ConID,
                             };
                             treeBuildList.Add(child);
-                            MeshObjectController.RelationAllGroups.Add(child);
+                            relationAllGroups.Add(child);
                         }
 
-                        if (parent != null && child != null) {
-                            child.Parent = parent;
-                            parent.Children.Add(child);
-                            treeBuildList.Remove(child);
-                        }
+                        parent.Children.Add(child);
+                        treeBuildList.Remove(child);
                     }
                 }
             }
@@ -154,9 +149,9 @@ namespace Model
             return treeBuildList.FirstOrDefault();
         }
 
-        public static ObservableCollection<MeshObjectBP3DGroup> ReadElementPartList(String path)
+        public static ObservableCollection<IObjectBP3DGroup> ReadElementPartList(String path)
         {
-            var ret = new ObservableCollection<MeshObjectBP3DGroup>();
+            var ret = new ObservableCollection<IObjectBP3DGroup>();
             Stream stream = null;
             try
             {
@@ -166,7 +161,7 @@ namespace Model
 
                     stream = null;
 
-                    MeshObjectBP3DGroup actualGroup = null; 
+                    //MeshObjectBP3DGroup actualGroup = null; 
                     string line = reader.ReadLine();//skip the first line
 
                     while ((line = reader.ReadLine()) != null)
@@ -177,40 +172,52 @@ namespace Model
                         var name = parts[1];
                         var fileID = parts[2];
 
-                        var found_parent = false;
-                        MeshObjectBP3DGroup parent = null;
-                        foreach (var meshObject in MeshObjectController.PartAllGroups) {
-                            if (meshObject.ConceptID.Equals(conceptID))
-                            {
-                                found_parent = true;
+
+
+                        IObjectBP3DGroup child = null;
+                        IObjectBP3DGroup parent = null;
+                        
+                        foreach (var meshObject in ret) {
+                            if (meshObject.ConceptID.Equals(conceptID)) {
                                 parent = meshObject; 
                                 break;
                             }
                         }
-                        MeshObjectBP3DGroup child = null;
-                        foreach (var meshObject in MeshObjectController.PartAllGroups)
+
+                        if (parent == null) // Parent can be MeshObject
                         {
-                            if (meshObject.FileID.Equals(fileID))
+                            foreach (MeshObjectBP3D meshObjectBP3D in MeshObjectController.MeshObjects)
                             {
-                                child = meshObject; 
+                                if (meshObjectBP3D.ConceptID.Equals(conceptID)) // Parent is MeshObject ... create MeshObjectGroup
+                                {
+                                    parent = new MeshObjectBP3DGroup(meshObjectBP3D);
+                                    ret.Add(parent);
+
+                                    break;
+                                }
+                            }
+                        }
+
+
+                        foreach (MeshObjectBP3D meshObjectBP3D in MeshObjectController.MeshObjects) {
+                            if (meshObjectBP3D.FileID.Equals(fileID)) {
+                                child = new MeshObjectBP3DGroup (meshObjectBP3D); 
                                 break;
                             }
                         }
-                        if (parent == null) {
-                            parent = new MeshObjectBP3DGroup(name) { ConceptID = conceptID };
+
+                        if (parent == null) { // No PArent found ... create new ObjectGroup
+                            parent = new ObjectBP3DGroup(name) { ConceptID = conceptID };
+                            ret.Add(parent);
                         }
+
                         if (child != null) {
-                            if (!found_parent) { 
-                                MeshObjectController.PartAllGroups.Add(parent);
-                                ret.Add(parent);
-                            }
                             parent.Children.Add(child);
-                            
-                            
                         }
+                        else
+                            System.Diagnostics.Debug.WriteLine(nameof(ObjReaderBP3D) + "ReadElementPartList, couldn't find child MeshObject");
                     }
                 }
-
             }
             catch (Exception e)
             {
@@ -248,17 +255,6 @@ namespace Model
                 };
                 mesh.normal.List.Add(vertex);
             }
- /*           foreach (var normalLine in normalBlock)
-            {
-                var vertexString = normalLine.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                var vertex = new Vector3()
-                {
-                    X = float.Parse(vertexString[0]),
-                    Y = float.Parse(vertexString[1]),
-                    Z = float.Parse(vertexString[2]),
-                };
-                mesh.normal.List.Add(vertex);
-            }*/
             foreach (var faceLine in faceBlock)
             {
                 var vertexString = faceLine.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);

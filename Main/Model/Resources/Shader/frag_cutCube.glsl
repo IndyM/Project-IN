@@ -2,36 +2,24 @@
 
 in vec3 n;
 in vec3 pos_vertex;
+in vec3 pos_edge;
 
 out vec4 color;
 
 void main() 
 {
-	float w_edge = 1.0-0.01;
+	float w_edge = 1.0-0.02;
 	float scale = 100.0;
-	vec3 abs_pos = abs(pos_vertex.xyz/(0.5*scale));
-	vec3 pow_abs_pos = pow(abs_pos,vec3(50.0));
-	//if(any(lessThan(abs_pos, vec3(1.0-w_edge)))){
-	int count1=0;
-	//abs_pos+= vec3(.0,.0,0.011);
-	if(abs_pos.x>=w_edge){
-		count1++;
-		}
-	if(abs_pos.y>=w_edge){
-		count1++;
-		}
-	if(abs_pos.z>=w_edge){
-		count1++;
-		}
-	if(count1==1){
-	//if(!any(greaterThan(abs_pos, vec3(w_edge)))){
-		color = vec4(.0,.3,.5, .1);
-		}
+	vec3 abs_pos =  abs(pos_edge);
+
+	vec3 step_pos = step(w_edge, abs_pos);
+	float sum = step_pos.x + step_pos.y + step_pos.z;
+
+	if(sum<=1){
+		color = vec4(.0,.3,.3, .1);
+	}
 	else{
 		color = vec4(.0,1.0,1.0, 1.0);
 	
 	}
-
-	//color = vec4(n,1.0);
-	
 }

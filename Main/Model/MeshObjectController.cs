@@ -6,29 +6,29 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace Model
 {
+    
+
     public static class MeshObjectController
     {
+        public static event EventHandler TreeStartChanged;
+        private static void OnTreeStartChanged(EventArgs e) {
+            TreeStartChanged?.Invoke(RelationTreeStart, e);
+        }
+
         private static ObservableCollection<MeshObjectBP3D> _meshObjects;
-        private static ObservableCollection<MeshObjectBP3DGroup> _relationAllGroups;
-        private static ObservableCollection<MeshObjectBP3DGroup> _partAllGroups;
-        private static MeshObjectBP3DGroup _treeStart;
-        private static ObservableCollection<MeshObjectBP3DGroup> _elementParts;
-        //private static Shader baseShader;
 
-
-
-        private static ObservableCollection<TreeViewItem> _treeItems;
-        private static ObservableCollection<TreeViewItem> _elementPartsTreeItems;
-
-
+        private static IObjectBP3DGroup _relationtreeStart;
+        private static ObservableCollection<IObjectBP3DGroup> _elementParts;
 
         private static MeshObjectCut _cutObject;
+        private static List<MeshObjectBP3D> _meshObjectsCut;
 
         /// <summary>
         /// All MeshObjects 
@@ -38,60 +38,38 @@ namespace Model
             set { _meshObjects = value; }
         }
 
-        /// <summary>
-        /// All Groups 
-        /// </summary>
-        public static ObservableCollection<MeshObjectBP3DGroup> RelationAllGroups
+       public static IObjectBP3DGroup RelationTreeStart
         {
-            get { return _relationAllGroups; }
-            set { _relationAllGroups = value; }
+            get { return _relationtreeStart; }
+            set { _relationtreeStart = value;
+                OnTreeStartChanged(new EventArgs());
+            }
         }
-
-        public static MeshObjectBP3DGroup TreeStart {
-            get { return _treeStart; }
-            set { _treeStart = value; }
-        }
-        public static ObservableCollection<MeshObjectBP3DGroup> ElementParts
+        public static ObservableCollection<IObjectBP3DGroup> ElementParts
         {
             get { return _elementParts; }
             set { _elementParts = value; }
         }
 
-        public static ObservableCollection<MeshObjectBP3DGroup> PartAllGroups
-        {
-            get { return _partAllGroups; }
-            set { _partAllGroups = value; }
-        }
-        public static ObservableCollection<TreeViewItem> TreeItems {
-            get { return _treeItems; }
-            set { _treeItems = value; }
-        }
-        public static ObservableCollection<TreeViewItem> ElementPartsTreeItems
-        {
-            get { return _elementPartsTreeItems; }
-            set { _elementPartsTreeItems = value; }
-        }
-
+        /// <summary>
+        /// Cut Object Cube
+        /// </summary>
         public static MeshObjectCut CutObject {
             get { return _cutObject; }
             set { _cutObject = value; }
         }
+        public static List<MeshObjectBP3D> MeshObjectsCut
+        {
+            get { return _meshObjectsCut; }
+            set { _meshObjectsCut = value; }
+        }
 
         static MeshObjectController() {
-
             _meshObjects = new ObservableCollection<MeshObjectBP3D>();
-            _relationAllGroups = new ObservableCollection<MeshObjectBP3DGroup>();
-            _partAllGroups = new ObservableCollection<MeshObjectBP3DGroup>();
+            _elementParts  = new ObservableCollection<IObjectBP3DGroup>();
+            _relationtreeStart = null;
 
-            _elementParts  = new ObservableCollection<MeshObjectBP3DGroup>();
-            _treeItems = new ObservableCollection<TreeViewItem>();
-            _elementPartsTreeItems = new ObservableCollection<TreeViewItem>();
-
-            _treeStart = null;
-
-
-            
-
+            MeshObjectsCut = new List<MeshObjectBP3D>();
         }
 
         public static void loadModelISA() {
@@ -117,24 +95,23 @@ namespace Model
             // Load Mesh Files
             foreach (var file in obj_files)
             {
-                var meshObject = ObjReaderBP3D.ReadObj(file);
-                if (meshObject != null) { 
-                    MeshObjects.Add(meshObject);
-                    RelationAllGroups.Add(new MeshObjectBP3DGroup(meshObject));
-                    PartAllGroups.Add(new MeshObjectBP3DGroup(meshObject));
+                var meshObjectBP3D = ObjReaderBP3D.ReadObj(file);
+                if (meshObjectBP3D != null) { 
+                    MeshObjects.Add(meshObjectBP3D);
+
+
+                    MeshObjectsCut.Add(meshObjectBP3D);
                 }
             }
+
 
             var file_element_parts = base_files.Where(x => x.Contains("element_parts")).ToList().FirstOrDefault();
             var file_inclusion_relation_list = base_files.Where(x => x.Contains("inclusion_relation_list")).ToList().FirstOrDefault();
 
-            TreeStart = ObjReaderBP3D.ReadRelations(file_inclusion_relation_list);
+            RelationTreeStart = ObjReaderBP3D.ReadRelations(file_inclusion_relation_list);
             ElementParts = ObjReaderBP3D.ReadElementPartList(file_element_parts);
+
             System.Diagnostics.Debug.WriteLine("Finished Reading File");
-            System.Diagnostics.Debug.WriteLine("Setting up Trees ...");
-            setUpTree();
-            setUpTreeParts();
- 
 
             _cutObject = new MeshObjectCut();
         }
@@ -142,32 +119,57 @@ namespace Model
         private static void reset()
         {
             _meshObjects.Clear();
-            _relationAllGroups.Clear();
-            _partAllGroups.Clear();
-
             _elementParts.Clear();
-            _treeItems.Clear();
-            _elementPartsTreeItems.Clear();
+            _relationtreeStart = null;
 
-            _treeStart = null;
-
-    }
-
-        private static void setUpTree()
-        {
-
-            TreeItems.Add(MeshObjectController.TreeStart.getTreeViewChildren());
-            /*
-            foreach (var meshGroup in MeshObjectController.TreeStart.Children) {
-                var treeitem = meshGroup.getTreeViewChildren();
-                GroupView.Items.Add(treeitem);
-
-            }*/
+            _meshObjectsCut.Clear();
+            _cutObject = null;
         }
-        private static void setUpTreeParts()
+
+        private static List<MeshObjectBP3D> getAndRemoveObjectsinCutObject()
         {
-            foreach (var element in MeshObjectController.ElementParts)
-                ElementPartsTreeItems.Add(element.getTreeView());
+            var ret = new List<MeshObjectBP3D>();
+            for (int i = 0; i < MeshObjectsCut.Count; i++)
+            {
+                var ids = getIDsOfMeshObjectInCutObject(MeshObjectsCut[i]);
+                if (ids.Count>0){
+                    ret.Add(MeshObjectsCut[i]);
+                    MeshObjectsCut.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            return ret;
+        }
+        public static List<int> getIDsOfMeshObjectInCutObject(MeshObjectBP3D meshObject) {
+
+            var cutFaceCenters = CutObject.getFaceCenters();
+            List<Vector3> positions = meshObject.MeshObject.Mesh.position.List;
+            List<int> idsInCut = new List<int>();
+            for (int i=0;i< positions.Count;i++) {
+                bool inCut = true;
+                foreach(var face in cutFaceCenters)
+                {
+                    var vecToBoundPoint = -face.position + positions[i]; //Vector from Face-Center to vertex
+                    float dot = Vector3.Dot( vecToBoundPoint, face.normal);
+
+                    if (dot > 0)
+                    {
+                        inCut = false;
+                        break;
+                    }
+                }
+                if (inCut)// Vertex is inside the Quad (all Faces)
+                { 
+                    idsInCut.Add(i);
+                    meshObject.MeshObject.baseColor.List[i] = new Vector4(.0f,1.0f,1.0f,.3f);
+                }
+            }
+            return idsInCut;
+        }
+        public static void cutWithCutObject()
+        {
+            var objectsToCut = getAndRemoveObjectsinCutObject();
         }
     }
 }

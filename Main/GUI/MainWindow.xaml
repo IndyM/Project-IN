@@ -16,7 +16,12 @@
                     <RibbonButton Name="loadFull" Label="Full" LargeImageSource="Resources/Icons/load_full.png" Click="loadFull_Click" />
                     <RibbonButton Name="loadPart" Label="Part" LargeImageSource="Resources/Icons/load_half.png" Click="loadPart_Click" />
                 </RibbonGroup>
+                <RibbonGroup Header="Cut" >
+
+                    <RibbonButton Name="cutCube" Label="cut Cube" Click="cutCube_Click" />
                     
+                </RibbonGroup>
+
 
             </RibbonTab>
         </Ribbon>
@@ -31,24 +36,20 @@
         -->
        <!-- <TreeView DockPanel.Dock="Right" ItemsSource="{Binding Source={x:Static model:MeshObjectController.MeshObjects}}" DisplayMemberPath="Name" Width="400" SelectedItemChanged="TreeView_SelectedItemChanged"></TreeView>
 -->
+        
         <TabControl DockPanel.Dock="Right" Width="400">
+
             <TabItem Header="Relation Tree">
-                <TreeView  Name="GroupView" ItemsSource="{Binding Source={x:Static model:MeshObjectController.TreeItems}}"  SelectedItemChanged="TreeView_SelectedItemChanged">
-                    <!--           <TreeView.Resources>
-                <HierarchicalDataTemplate DataType="{x:Type model:MeshObjectController}" ItemsSource="{Binding Source={x:Static model:MeshObjectController.SortedGroups}}">
-                    <TextBlock Text="{Binding Path=Name}" />
-                </HierarchicalDataTemplate>
-                <DataTemplate DataType="{x:Type obj:MeshObjectBP3DGroup}" >
-                    <TextBlock Text="{Binding Path=Name}" />
-                </DataTemplate>
-            </TreeView.Resources>-->
+                <TreeView  Name="GroupView" ItemsSource="{Binding RelationTreeItems}"  SelectedItemChanged="TreeView_SelectedItemChanged">
                 </TreeView>
             </TabItem>
+
             <TabItem Header="Parts">
-                <TreeView  Name="partsView" ItemsSource="{Binding Source={x:Static model:MeshObjectController.ElementPartsTreeItems}}" DisplayMemberPath="Name" SelectedItemChanged="TreeView_SelectedItemChanged">
+                <TreeView  Name="partsView" ItemsSource="{Binding ElementPartsTreeItems}"  SelectedItemChanged="TreeView_SelectedItemChanged">
     
                 </TreeView>
             </TabItem>
+            
         </TabControl>
 
         <Grid>

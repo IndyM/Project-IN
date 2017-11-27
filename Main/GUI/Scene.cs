@@ -28,12 +28,14 @@ namespace GUI
 
         public void Render() {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.Enable(EnableCap.Blend);
 
 
 
 
             Matrix4 camera = Camera.CalcMatrix().ToOpenTK();
-            foreach (var meshObject in MeshObjectController.MeshObjects)
+            foreach (var meshObject in MeshObjectController.MeshObjectsCut)
             {
                 
 
