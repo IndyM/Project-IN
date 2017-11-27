@@ -67,16 +67,16 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Objects\BP3D\IObjectBP3D.cs" />
+    <Compile Include="Objects\BP3D\IObjectBP3DGroup.cs" />
+    <Compile Include="Objects\BP3D\MeshObjectBP3D.cs" />
+    <Compile Include="Objects\BP3D\MeshObjectBP3DGroup.cs" />
+    <Compile Include="Objects\BP3D\ObjectBP3D.cs" />
+    <Compile Include="Objects\BP3D\ObjectBP3DGroup.cs" />
+    <Compile Include="Objects\Cut\CuboidCut.cs" />
     <Compile Include="Objects\IMeshObject.cs" />
     <Compile Include="MeshObjectController.cs" />
-    <Compile Include="Objects\IObjectBP3D.cs" />
-    <Compile Include="Objects\IObjectBP3DGroup.cs" />
     <Compile Include="Objects\MeshObject.cs" />
-    <Compile Include="Objects\MeshObjectBP3D.cs" />
-    <Compile Include="Objects\MeshObjectBP3DGroup.cs" />
-    <Compile Include="Objects\MeshObjectCut.cs" />
-    <Compile Include="Objects\ObjectBP3D.cs" />
-    <Compile Include="Objects\ObjectBP3DGroup.cs" />
     <Compile Include="ObjReader.cs" />
     <Compile Include="ObjReaderBP3D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -3602,6 +3602,7 @@
     <Content Include="Resources\Model\partof_BP3D_4.0\partof_parts_list.txt" />
     <Content Include="Resources\Model\partof_BP3D_4.0\partof_parts_list_e.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

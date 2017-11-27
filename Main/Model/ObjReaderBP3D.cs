@@ -123,8 +123,7 @@ namespace Model
                         }
                         if (child == null)
                         {
-                            child = new ObjectBP3DGroup(child_name)
-                            {
+                            child = new ObjectBP3DGroup(child_name) {
                                 ConceptID = child_ConID,
                             };
                             treeBuildList.Add(child);
