@@ -1,0 +1,6 @@
+CuboidCut:
+ - create Mesh for Cuboid with scale and segments | DMS.Geometry.Meshes.CreateCuboid(...)
+ - (todo) Add rotation for Cuboid
+ - (todo) Bounding Box for Cuboid = Sphere
+ - (todo) Filter MeshController.MeshObjects by Bounding Boxes before Cut 
+    -> maybe Store a list with all MeshObjects with Bounding Box Intersects CuboidCut.BoundingBox 
