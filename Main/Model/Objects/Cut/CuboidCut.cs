@@ -21,7 +21,7 @@ namespace Model.Objects.Cut
         uint _segmentsY;
         uint _segmentsZ;
 
-        public struct FaceCenter
+        public struct FacePoint
         {
             public System.Numerics.Vector3 position;
             public System.Numerics.Vector3 normal;
@@ -35,56 +35,24 @@ namespace Model.Objects.Cut
             set { _instancePosition = value; }
         }
 
-        public Vector3 Scale
-        {
-            get
-            {
-                return _scale;
-            }
-
-            set
-            {
-                _scale = value;
-            }
+        public Vector3 Scale {
+            get  { return _scale; }
+            set {  _scale = value;}
         }
 
-        public uint SegmentsX
-        {
-            get
-            {
-                return _segmentsX;
-            }
-
-            set
-            {
-                _segmentsX = value;
-            }
+        public uint SegmentsX {
+            get { return _segmentsX; }
+            set { _segmentsX = value; }
         }
 
-        public uint SegmentsY
-        {
-            get
-            {
-                return _segmentsY;
-            }
-
-            set
-            {
-                _segmentsY = value;
-            }
+        public uint SegmentsY {
+            get { return _segmentsY; }
+            set { _segmentsY = value; }
         }
 
-        public uint SegmentsZ
-        {
-            get
-            {
-                return _segmentsZ;
-            }
-
-            set
-            {
-                _segmentsZ = value;
-            }
+        public uint SegmentsZ {
+            get { return _segmentsZ; }
+            set { _segmentsZ = value; }
         }
 
         public CuboidCut() :base()
@@ -125,8 +93,7 @@ namespace Model.Objects.Cut
             //GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
             
             Shader.Activate();
-             //vao.SetAttribute(shader.GetAttributeLocation(mesh.position.Name), mesh.position.List.ToArray(), VertexAttribPointerType.Float, 3);
-            
+
             GL.UniformMatrix4(_shader.GetUniformLocation("camera"), true, ref camera);
             GL.Uniform3(_shader.GetUniformLocation("instancePosition"), InstancePosition.ToOpenTK());
             _vao.Draw();
@@ -141,19 +108,22 @@ namespace Model.Objects.Cut
             GL.DepthMask(true);
         }
 
-        public List<FaceCenter> getFaceCenters() {
-            var ret = new List<FaceCenter>();
-            //position[i] and [i+1] are opposite
-            for (int i = 0; i < Mesh.position.List.Count; i += 6) {
-                ret.Add(new FaceCenter() {
-                    position = InstancePosition + Mesh.position.List[i]+0.5f*(-Mesh.position.List[i]+ Mesh.position.List[i+1]),
+        public List<FacePoint> getFacePoints() {
+            var ret = new List<FacePoint>();
+
+            var face_pointCount = Mesh.position.List.Count / 6;
+            // Just one point on each face needed
+            // First Point of each Face with normal used
+            for (int i = 0; i < Mesh.position.List.Count; i += face_pointCount)
+            {
+                ret.Add(new FacePoint()
+                {
+                    position = InstancePosition + Mesh.position.List[i],
                     normal = Mesh.normal.List[i],
-                    }
-                );
+                });
             }
 
             return ret;
         }
-
     }
 }

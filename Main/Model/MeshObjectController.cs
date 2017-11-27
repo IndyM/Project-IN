@@ -145,7 +145,7 @@ namespace Model
         }
         public static List<int> getIDsOfMeshObjectInCutObject(MeshObjectBP3D meshObject) {
 
-            var cutFaceCenters = CutObject.getFaceCenters();
+            var cutFaceCenters = CutObject.getFacePoints();
             List<Vector3> positions = meshObject.MeshObject.Mesh.position.List;
             List<int> idsInCut = new List<int>();
             for (int i=0;i< positions.Count;i++) {

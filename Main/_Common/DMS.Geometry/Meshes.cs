@@ -513,7 +513,7 @@ namespace DMS.Geometry
                     float z = -sizeZ / 2.0f + v * deltaZ;
 
                     m.position.List.Add(new Vector3(fix_x, y, z));
-                    m.normal.List.Add(Vector3.UnitZ);
+                    m.normal.List.Add(Vector3.UnitX);
                     m.uv.List.Add(new Vector2(u, v));
                 }
             }
@@ -526,7 +526,7 @@ namespace DMS.Geometry
                     float z = -sizeZ / 2.0f + v * deltaZ;
 
                     m.position.List.Add(new Vector3(-fix_x, y, z));
-                    m.normal.List.Add(-Vector3.UnitZ);
+                    m.normal.List.Add(-Vector3.UnitX);
                     m.uv.List.Add(new Vector2(u, v));
                 }
             }
