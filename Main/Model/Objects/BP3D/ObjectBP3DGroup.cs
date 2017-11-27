@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace Model.Objects
+namespace Model.Objects.BP3D
 {
     public class ObjectBP3DGroup : ObjectBP3D, IObjectBP3DGroup
     {

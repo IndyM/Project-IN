@@ -1,6 +1,8 @@
 ﻿using DMS.Base;
 using DMS.OpenGL;
 using Model.Objects;
+using Model.Objects.BP3D;
+using Model.Objects.Cut;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,7 +29,7 @@ namespace Model
         private static IObjectBP3DGroup _relationtreeStart;
         private static ObservableCollection<IObjectBP3DGroup> _elementParts;
 
-        private static MeshObjectCut _cutObject;
+        private static CuboidCut _cutObject;
         private static List<MeshObjectBP3D> _meshObjectsCut;
 
         /// <summary>
@@ -54,7 +56,7 @@ namespace Model
         /// <summary>
         /// Cut Object Cube
         /// </summary>
-        public static MeshObjectCut CutObject {
+        public static CuboidCut CutObject {
             get { return _cutObject; }
             set { _cutObject = value; }
         }
@@ -113,7 +115,7 @@ namespace Model
 
             System.Diagnostics.Debug.WriteLine("Finished Reading File");
 
-            _cutObject = new MeshObjectCut();
+            _cutObject = new CuboidCut();
         }
 
         private static void reset()

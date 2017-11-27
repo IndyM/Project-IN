@@ -11,7 +11,7 @@ using DMS.Base;
 using OpenTK.Graphics.OpenGL;
 using System.Numerics;
 
-namespace Model.Objects
+namespace Model.Objects.BP3D
 {
     public class MeshObjectBP3D : ObjectBP3D
     {
@@ -53,7 +53,7 @@ namespace Model.Objects
 
         private void init()
         {
-            var dir = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + @"\..\Resources\Shader\";
+            var dir = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + @"\..\..\Resources\Shader\";
             MeshObject.Shader = ShaderLoader.FromFiles(dir + "vertex_base.glsl", dir + "frag_base.glsl");
         }
         /*

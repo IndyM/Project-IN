@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.Objects
+namespace Model.Objects.BP3D
 {
     public interface IObjectBP3DGroup : IObjectBP3D
     {

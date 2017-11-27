@@ -5,7 +5,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.Objects
+namespace Model.Objects.BP3D
 {
     public abstract class ObjectBP3D : IObjectBP3D
     {

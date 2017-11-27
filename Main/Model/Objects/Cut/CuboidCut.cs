@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 //using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
-namespace Model.Objects
+namespace Model.Objects.Cut
 {
-    public class MeshObjectCut : MeshObject
+    public class CuboidCut : MeshObject
     {
         private Vector3 _instancePosition;
         Vector3 _scale;
@@ -87,12 +87,12 @@ namespace Model.Objects
             }
         }
 
-        public MeshObjectCut() :base()
+        public CuboidCut() :base()
         {
             Scale = new Vector3(10,20,30);
 
             SegmentsX = SegmentsY = SegmentsZ = 10;
-            var dir = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + @"\..\Resources\Shader\";
+            var dir = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + @"\..\..\Resources\Shader\";
             Shader = ShaderLoader.FromFiles(dir + "vertex_base.glsl", dir + "frag_cutCube.glsl");
 
             Mesh = Meshes.CreateCuboid(Scale,SegmentsX,SegmentsY,SegmentsZ);

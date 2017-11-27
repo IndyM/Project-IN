@@ -23,6 +23,7 @@ using Model;
 using DMS.Geometry;
 using Model.Objects;
 using GUI.ViewModel;
+using Model.Objects.BP3D;
 
 namespace GUI
 {
@@ -209,10 +210,10 @@ namespace GUI
 
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            /*
+            
             if (e == null || e.NewValue==null)
                 return;
-            var mod = ((ObjectBP3D)((TreeViewItem)e.NewValue).DataContext);
+            var mod = ((IObjectBP3DGroup)((TreeViewItem)e.NewValue).DataContext);
             if (mod.IsMeshObject) {
                 Scene.Camera.Target = ((MeshObjectBP3D)mod).GetCenter();
                 if (MeshObjectController.CutObject != null) {
@@ -222,7 +223,7 @@ namespace GUI
                         MeshObjectController.getIDsOfMeshObjectInCutObject(meshObject);
                 }
             }
-            */
+            
         }
 
         private void cutCube_Click(object sender, RoutedEventArgs e)
