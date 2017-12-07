@@ -7,15 +7,25 @@ using System.Threading.Tasks;
 using DMS.Geometry;
 using System.IO;
 using DMS.Base;
-using System.Numerics;
+
 using OpenTK.Graphics.OpenGL;
 
-namespace Model.Objects
+using System.Numerics;
+
+namespace Open3D.Geometry.Objects
 {
     public class MeshObject : IMeshObject
     {
+
+
+        public struct MeshPoint
+        {
+            public Vector3 position;
+            public Vector3 normal;
+        };
+
         public IMeshAttribute<Vector4> baseColor = new MeshAttribute<Vector4>(nameof(baseColor));
-        protected Mesh _mesh;
+        protected DMS.Geometry.Mesh _mesh;
         protected VAO _vao;
         protected Shader _shader;
 
@@ -35,7 +45,7 @@ namespace Model.Objects
             get { return _vao; }
             private set { _vao = value; }
         }
-        public Mesh Mesh
+        public DMS.Geometry.Mesh Mesh
         {
             get { return _mesh; }
             set
@@ -56,7 +66,7 @@ namespace Model.Objects
             Shader = ShaderLoader.FromFiles(dir + "vertex_base.glsl", dir + "frag_base.glsl");
         }
 
-        public MeshObject(Mesh mesh) : this()
+        public MeshObject(DMS.Geometry.Mesh mesh) : this()
         {
             Mesh = mesh;
         }

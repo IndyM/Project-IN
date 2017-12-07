@@ -1,4 +1,5 @@
 ﻿using DMS.Geometry;
+using Model.Controller;
 using Model.Objects.BP3D;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model
+namespace Model.Reader
 {
     static class ObjReaderBP3D
     {

@@ -1,6 +1,5 @@
 ﻿using DMS.Base;
-using DMS.OpenGL;
-using Model.Objects;
+
 using Model.Objects.BP3D;
 using Model.Objects.Cut;
 using System;
@@ -9,11 +8,9 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
+using Model.Reader;
 
-namespace Model
+namespace Model.Controller
 {
     
 
@@ -75,14 +72,14 @@ namespace Model
         }
 
         public static void loadModelISA() {
-            var path_dir_base = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + "\\Resources\\Model\\isa_BP3D_4.0\\";
+            var path_dir_base = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + "\\..\\Resources\\Model\\isa_BP3D_4.0\\";
             var path_dir_obj = path_dir_base + "isa_BP3D_4.0_obj_99\\";
 
             loadModel(path_dir_base, path_dir_obj);
         }
         public static void loadModelPartOf()
         {
-            var path_dir_base = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + "\\Resources\\Model\\partof_BP3D_4.0\\";
+            var path_dir_base = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + "\\..\\Resources\\Model\\partof_BP3D_4.0\\";
             var path_dir_obj = path_dir_base + "partof_BP3D_4.0_obj_99\\";
 
             loadModel(path_dir_base, path_dir_obj);
@@ -143,6 +140,7 @@ namespace Model
 
             return ret;
         }
+
         public static List<int> getIDsOfMeshObjectInCutObject(MeshObjectBP3D meshObject) {
 
             var cutFaceCenters = CutObject.getFacePoints();

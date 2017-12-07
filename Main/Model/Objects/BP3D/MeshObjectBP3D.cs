@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DMS.Geometry;
 using DMS.OpenGL;
 using System.IO;
 using DMS.Base;
-//using OpenTK;
-using OpenTK.Graphics.OpenGL;
+
 using System.Numerics;
+using Model.Objects.Mesh;
 
 namespace Model.Objects.BP3D
 {
@@ -40,7 +39,7 @@ namespace Model.Objects.BP3D
         }
 
 
-        public MeshObjectBP3D(String name, Mesh mesh) : this(name)
+        public MeshObjectBP3D(String name, DMS.Geometry.Mesh mesh) : this(name)
         {
             MeshObject.Mesh = mesh;
         }

@@ -31,6 +31,7 @@ namespace Model.Objects.BP3D
             CompatibilityVersion = objectBP3D.CompatibilityVersion;
             RepresentationID = objectBP3D.RepresentationID;
             ConceptID = objectBP3D.ConceptID;
+
         }
     }
 }

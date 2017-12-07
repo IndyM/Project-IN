@@ -67,6 +67,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controller\CutController.cs" />
+    <Compile Include="Controller\MeshObjectController.cs" />
     <Compile Include="Objects\BP3D\IObjectBP3D.cs" />
     <Compile Include="Objects\BP3D\IObjectBP3DGroup.cs" />
     <Compile Include="Objects\BP3D\MeshObjectBP3D.cs" />
@@ -74,11 +76,13 @@
     <Compile Include="Objects\BP3D\ObjectBP3D.cs" />
     <Compile Include="Objects\BP3D\ObjectBP3DGroup.cs" />
     <Compile Include="Objects\Cut\CuboidCut.cs" />
-    <Compile Include="Objects\IMeshObject.cs" />
-    <Compile Include="MeshObjectController.cs" />
-    <Compile Include="Objects\MeshObject.cs" />
-    <Compile Include="ObjReader.cs" />
-    <Compile Include="ObjReaderBP3D.cs" />
+    <Compile Include="Objects\Cut\ICutObject.cs" />
+    <Compile Include="Objects\Mesh\Cuboid.cs" />
+    <Compile Include="Objects\Mesh\IMeshObject.cs" />
+    <Compile Include="Objects\Mesh\MeshObject.cs" />
+    <Compile Include="Objects\Mesh\Sphere.cs" />
+    <Compile Include="Objects\Reader\ObjReader.cs" />
+    <Compile Include="Objects\Reader\ObjReaderBP3D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

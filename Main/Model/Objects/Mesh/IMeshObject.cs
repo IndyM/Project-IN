@@ -7,10 +7,11 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.Objects
+namespace Model.Objects.Mesh
 {
     public interface IMeshObject
     {
+
 
         Shader Shader
         {
@@ -21,7 +22,7 @@ namespace Model.Objects
         {
             get;
         }
-        Mesh Mesh
+        DMS.Geometry.Mesh Mesh
         {
             get;
             set;

@@ -24,6 +24,8 @@ using DMS.Geometry;
 using Model.Objects;
 using GUI.ViewModel;
 using Model.Objects.BP3D;
+using Model.Reader;
+using Model.Controller;
 
 namespace GUI
 {
@@ -218,7 +220,7 @@ namespace GUI
                 Scene.Camera.Target = ((MeshObjectBP3D)mod).GetCenter();
                 if (MeshObjectController.CutObject != null) {
                     var vec = ((MeshObjectBP3D)mod).GetCenter();
-                    MeshObjectController.CutObject.InstancePosition = vec;// new Vector3(vec.X,vec.Y,vec.Z);
+                    MeshObjectController.CutObject.InstancePosition = vec;
                     foreach(var meshObject in MeshObjectController.MeshObjects)
                         MeshObjectController.getIDsOfMeshObjectInCutObject(meshObject);
                 }
