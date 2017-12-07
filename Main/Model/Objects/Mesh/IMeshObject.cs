@@ -1,11 +1,11 @@
-﻿using DMS.Geometry;
-using DMS.OpenGL;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using Zenseless.Geometry;
+using Zenseless.OpenGL;
 
 namespace Model.Objects.Mesh
 {
@@ -22,7 +22,7 @@ namespace Model.Objects.Mesh
         {
             get;
         }
-        DMS.Geometry.Mesh Mesh
+        DefaultMesh Mesh
         {
             get;
             set;

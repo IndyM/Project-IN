@@ -1,5 +1,4 @@
-﻿using DMS.Geometry;
-using DMS.OpenGL;
+﻿
 using OpenTK;
 using System;
 using System.Collections.Generic;
@@ -7,6 +6,8 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using Zenseless.Geometry;
+using Zenseless.OpenGL;
 
 namespace Open3D.Geometry.Objects
 {
@@ -23,7 +24,7 @@ namespace Open3D.Geometry.Objects
         {
             get;
         }
-        DMS.Geometry.Mesh Mesh
+        DefaultMesh Mesh
         {
             get;
             set;

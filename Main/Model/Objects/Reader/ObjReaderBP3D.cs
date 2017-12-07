@@ -1,5 +1,4 @@
-﻿using DMS.Geometry;
-using Model.Controller;
+﻿using Model.Controller;
 using Model.Objects.BP3D;
 using System;
 using System.Collections.Generic;
@@ -10,6 +9,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using Zenseless.Geometry;
 
 namespace Model.Reader
 {
@@ -88,7 +88,7 @@ namespace Model.Reader
 
                     var relationAllGroups = new List<IObjectBP3DGroup>();
                     foreach(var meshObjectBP3D in MeshObjectController.MeshObjects)
-                        relationAllGroups.Add(new MeshObjectBP3DGroup(meshObjectBP3D));
+                        relationAllGroups.Add(new MeshObjectBP3DGroup(meshObjectBP3D) );
 
                     string line = reader.ReadLine();//skip the first line
 
@@ -232,9 +232,9 @@ namespace Model.Reader
             return ret;
         }
 
-        private static Mesh createMesh(List<string> vertexBlock, List<string> normalBlock, List<string> faceBlock)
+        private static DefaultMesh createMesh(List<string> vertexBlock, List<string> normalBlock, List<string> faceBlock)
         {
-            var mesh = new Mesh();
+            var mesh = new DefaultMesh();
             foreach (var vertexLine in vertexBlock) {
                 var vertexString = vertexLine.Split(new char[] {' ' },StringSplitOptions.RemoveEmptyEntries);
                 var vertex = new Vector3() {
@@ -242,7 +242,7 @@ namespace Model.Reader
                     Y = -float.Parse(vertexString[1]), //Invert Y Direction
                     Z = float.Parse(vertexString[2]),
                 };
-                mesh.position.List.Add(vertex);
+                mesh.Position.Add(vertex);
             }
             foreach (var normalLine in normalBlock)
             {
@@ -253,7 +253,7 @@ namespace Model.Reader
                     Y = -float.Parse(vertexString[1]),
                     Z = float.Parse(vertexString[2]),
                 };
-                mesh.normal.List.Add(vertex);
+                mesh.Normal.Add(vertex);
             }
             foreach (var faceLine in faceBlock)
             {
@@ -262,7 +262,7 @@ namespace Model.Reader
                     var facePart = ele.Split(new char[] { '/' });
                     mesh.IDs.Add(uint.Parse(facePart[0])-1);
                     //no uvs used, just add an empty Vector
-                    mesh.uv.List.Add(new Vector2(.0f,.0f));
+                    mesh.TexCoord.Add(new Vector2(.0f,.0f));
                 }
             }
 
@@ -312,6 +312,7 @@ namespace Model.Reader
                   ConceptID = conceptID,
                   Bounds = bounds,
                   Volume = volume,
+                  
             };
 
 

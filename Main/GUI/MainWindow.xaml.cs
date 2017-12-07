@@ -20,7 +20,7 @@ using OpenTK.Graphics.OpenGL;
 
 using System.Diagnostics;
 using Model;
-using DMS.Geometry;
+
 using Model.Objects;
 using GUI.ViewModel;
 using Model.Objects.BP3D;

@@ -1,14 +1,16 @@
-﻿using DMS.OpenGL;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DMS.Geometry;
 using System.IO;
-using DMS.Base;
 using System.Numerics;
 using OpenTK.Graphics.OpenGL;
+using Zenseless.Base;
+using Zenseless.Geometry;
+using Zenseless.OpenGL;
+using Zenseless.HLGL;
+using Model.Controller;
 
 namespace Model.Objects.Mesh
 {
@@ -20,12 +22,15 @@ namespace Model.Objects.Mesh
             public Vector3 normal;
         };
 
-        public IMeshAttribute<Vector4> baseColor = new MeshAttribute<Vector4>(nameof(baseColor));
-        protected DMS.Geometry.Mesh _mesh;
+        protected DefaultMesh _mesh;
         protected VAO _vao;
         protected Shader _shader;
+        private OpenTK.Vector4 _baseColor;
 
-
+        public OpenTK.Vector4 BaseColor
+        {
+            get => _baseColor; set => _baseColor = value;
+        }
         public Shader Shader
         {
             get { return _shader; }
@@ -41,14 +46,15 @@ namespace Model.Objects.Mesh
             get { return _vao; }
             private set { _vao = value; }
         }
-        public DMS.Geometry.Mesh Mesh
+        public DefaultMesh Mesh
         {
             get { return _mesh; }
             set
             {
                 _mesh = value;
-                foreach (var normal in Mesh.normal.List)
-                    baseColor.List.Add(new Vector4(normal, 1.0f));
+
+                //   foreach (var normal in Mesh.Normal)
+                //       baseColor.List.Add(new Vector4(normal, 1.0f));
                 if (Shader != null)
                     Load();
             }
@@ -60,16 +66,18 @@ namespace Model.Objects.Mesh
 
             var dir = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + @"\..\..\Resources\Shader\";
             Shader = ShaderLoader.FromFiles(dir + "vertex_base.glsl", dir + "frag_base.glsl");
+
+            BaseColor = ColorController.getColor();
         }
 
-        public MeshObject(DMS.Geometry.Mesh mesh) : this()
+        public MeshObject(DefaultMesh mesh) : this()
         {
             Mesh = mesh;
         }
 
         protected virtual void Load()
         {
-            Vao = VAOLoader.FromMesh(Mesh, _shader);
+            Vao = VAOLoader.FromMesh(_mesh, _shader);
         }
 
         public virtual void Render(OpenTK.Matrix4 camera)
@@ -83,8 +91,11 @@ namespace Model.Objects.Mesh
             //GL.CullFace(CullFaceMode.FrontAndBack);
 
             _shader.Activate();
-            _vao.SetAttribute(_shader.GetAttributeLocation(baseColor.Name), baseColor.List.ToArray(), VertexAttribPointerType.Float, 4);
-            GL.UniformMatrix4(_shader.GetUniformLocation("camera"), true, ref camera);
+
+            //_vao.SetAttribute(_shader.GetAttributeLocation(baseColor.Name), baseColor.List.ToArray(), VertexAttribPointerType.Float, 4);
+            GL.Uniform4(_shader.GetResourceLocation(ShaderResourceType.Uniform, "baseColor"),  ref _baseColor);
+
+            GL.UniformMatrix4(_shader.GetResourceLocation(ShaderResourceType.Uniform, "camera"), true, ref camera);
             _vao.Draw();
             _shader.Deactivate();
         }

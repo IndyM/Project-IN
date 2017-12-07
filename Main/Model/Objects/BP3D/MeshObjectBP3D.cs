@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DMS.OpenGL;
 using System.IO;
-using DMS.Base;
 
 using System.Numerics;
 using Model.Objects.Mesh;
+using Zenseless.Geometry;
+using Zenseless.Base;
+using Zenseless.OpenGL;
+using Model.Controller;
 
 namespace Model.Objects.BP3D
 {
@@ -34,20 +36,20 @@ namespace Model.Objects.BP3D
         }
         public MeshObjectBP3D(String name) : base(name) {
             MeshObject = new MeshObject();
-
-
         }
 
 
-        public MeshObjectBP3D(String name, DMS.Geometry.Mesh mesh) : this(name)
+        public MeshObjectBP3D(String name, DefaultMesh mesh) : this(name)
         {
             MeshObject.Mesh = mesh;
         }
         public MeshObjectBP3D(MeshObjectBP3D meshObject) : base(meshObject)
         {
+
             FileID = meshObject.FileID;
             Bounds = meshObject.Bounds;
             Volume = meshObject.Volume;
+            MeshObject = meshObject.MeshObject;
         }
 
         private void init()

@@ -39,9 +39,8 @@
     <StartupObject>GUI.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=2.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenTK.2.0.0\lib\net20\OpenTK.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="OpenTK, Version=3.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenTK.3.0.0-pre\lib\net20\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK.GLControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenTK.GLControl.1.1.2349.61993\lib\NET40\OpenTK.GLControl.dll</HintPath>
@@ -109,13 +108,13 @@
       <Project>{6A23DBDF-2F9D-4775-87B0-E790521103CD}</Project>
       <Name>Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\_Common\DMS.Geometry\DMS.Geometry.csproj">
-      <Project>{B37B7DDE-435B-4F27-9A9B-9B6DF8744EBE}</Project>
-      <Name>DMS.Geometry</Name>
+    <ProjectReference Include="..\_Common\Zenseless.Geometry\Zenseless.Geometry.csproj">
+      <Project>{E46F4516-C535-4245-B6F4-FA3E75563245}</Project>
+      <Name>Zenseless.Geometry</Name>
     </ProjectReference>
-    <ProjectReference Include="..\_Common\DMS.OpenGL\DMS.OpenGL.csproj">
-      <Project>{c660f6af-c100-4169-a9fb-61e1ebe87f34}</Project>
-      <Name>DMS.OpenGL</Name>
+    <ProjectReference Include="..\_Common\Zenseless.OpenGL\Zenseless.OpenGL.csproj">
+      <Project>{ce298c1a-8b9f-4822-8c06-8b057b14cecb}</Project>
+      <Name>Zenseless.OpenGL</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

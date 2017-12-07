@@ -1,6 +1,4 @@
-﻿using DMS.Base;
-
-using Model.Objects.BP3D;
+﻿using Model.Objects.BP3D;
 using Model.Objects.Cut;
 using System;
 using System.Collections.Generic;
@@ -9,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using Model.Reader;
+using Zenseless.Base;
 
 namespace Model.Controller
 {
@@ -144,7 +143,7 @@ namespace Model.Controller
         public static List<int> getIDsOfMeshObjectInCutObject(MeshObjectBP3D meshObject) {
 
             var cutFaceCenters = CutObject.getFacePoints();
-            List<Vector3> positions = meshObject.MeshObject.Mesh.position.List;
+            List<Vector3> positions = meshObject.MeshObject.Mesh.Position;
             List<int> idsInCut = new List<int>();
             for (int i=0;i< positions.Count;i++) {
                 bool inCut = true;
@@ -162,7 +161,7 @@ namespace Model.Controller
                 if (inCut)// Vertex is inside the Quad (all Faces)
                 { 
                     idsInCut.Add(i);
-                    meshObject.MeshObject.baseColor.List[i] = new Vector4(.0f,1.0f,1.0f,.3f);
+  //                  meshObject.MeshObject.baseColor.List[i] = new Vector4(.0f,1.0f,1.0f,.3f);
                 }
             }
             return idsInCut;

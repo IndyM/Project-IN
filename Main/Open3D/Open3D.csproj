@@ -31,9 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=2.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenTK.2.0.0\lib\net20\OpenTK.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="OpenTK, Version=3.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenTK.3.0.0-pre\lib\net20\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -50,29 +49,34 @@
     <Compile Include="Geometry\Basics\Sphere.cs" />
     <Compile Include="Geometry\Intersection.cs" />
     <Compile Include="Geometry\Mesh\Mesh.cs" />
+    <Compile Include="Geometry\Mesh\MeshesExtension.cs" />
     <Compile Include="Geometry\Mesh\Objects\Cuboid.cs" />
     <Compile Include="Geometry\Mesh\Objects\IMeshObject.cs" />
     <Compile Include="Geometry\Mesh\Objects\MeshObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\_Common\DMS.Base\DMS.Base.csproj">
-      <Project>{e5ff60a4-46fb-42d2-9430-bc523315c2e0}</Project>
-      <Name>DMS.Base</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\_Common\DMS.Geometry\DMS.Geometry.csproj">
-      <Project>{b37b7dde-435b-4f27-9a9b-9b6df8744ebe}</Project>
-      <Name>DMS.Geometry</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\_Common\DMS.OpenGL\DMS.OpenGL.csproj">
-      <Project>{c660f6af-c100-4169-a9fb-61e1ebe87f34}</Project>
-      <Name>DMS.OpenGL</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\_Common\Zenseless.Base\Zenseless.Base.csproj">
+      <Project>{6E8350F9-C711-4F67-B964-7215AAB5A98E}</Project>
+      <Name>Zenseless.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\_Common\Zenseless.Geometry\Zenseless.Geometry.csproj">
+      <Project>{E46F4516-C535-4245-B6F4-FA3E75563245}</Project>
+      <Name>Zenseless.Geometry</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\_Common\Zenseless.HLGL\Zenseless.HLGL.csproj">
+      <Project>{227D6BE1-BA08-4030-A755-07288540931F}</Project>
+      <Name>Zenseless.HLGL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\_Common\Zenseless.OpenGL\Zenseless.OpenGL.csproj">
+      <Project>{CE298C1A-8B9F-4822-8C06-8B057B14CECB}</Project>
+      <Name>Zenseless.OpenGL</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

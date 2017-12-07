@@ -2,10 +2,11 @@
 
 uniform mat4 camera;
 uniform vec3 instancePosition;// just for Cut
+uniform vec4 baseColor;
 
 in vec3 position;
 in vec3 normal;
-in vec4 baseColor;
+
 in vec3 edgePosition; // just for Cut
 
 out vec3 n;

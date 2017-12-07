@@ -1,10 +1,10 @@
 ﻿
-using DMS.Geometry;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using Zenseless.Geometry;
 
 namespace Open3D.Geometry.Objects
 {
@@ -52,23 +52,20 @@ namespace Open3D.Geometry.Objects
             var ret = new List<MeshPoint>();
 
             ///<todo> Take care of different Segments
-            var cuboidOneSegment = Meshes.CreateCuboid(Scale, 1, 1, 1);
+            var cuboidOneSegment = MeshesExtension.CreateCuboid(Scale, 1, 1, 1);
             
-            var face_pointCount = cuboidOneSegment.position.List.Count / 6; // 6 Faces
+            var face_pointCount = cuboidOneSegment.Position.Count / 6; // 6 Faces
             // Just one point on each face needed
             // First Point of each Face with normal used
-            for (int i = 0; i < cuboidOneSegment.position.List.Count; i += face_pointCount) {
+            for (int i = 0; i < cuboidOneSegment.Position.Count; i += face_pointCount) {
                 ret.Add(new MeshPoint() {
-                    position = InstancePosition + cuboidOneSegment.position.List[i],
-                    normal = cuboidOneSegment.normal.List[i],
+                    position = InstancePosition + cuboidOneSegment.Position[i],
+                    normal = cuboidOneSegment.Normal[i],
                 });
             }
 
             return ret;
         }
-
-
-
 
 /*
         private void Create()

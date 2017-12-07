@@ -1,6 +1,4 @@
-﻿using DMS.Base;
-using DMS.Geometry;
-using DMS.OpenGL;
+﻿
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,8 +7,11 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 //using OpenTK;
-using OpenTK.Graphics.OpenGL;
+using OpenTK.Graphics.OpenGL4;
 using Model.Objects.Mesh;
+using Zenseless.Base;
+using Zenseless.OpenGL;
+using Zenseless.Geometry;
 
 namespace Model.Objects.Cut
 {
@@ -21,8 +22,8 @@ namespace Model.Objects.Cut
         {
             get
             {
-                if (Mesh.position.List.Count > 0)
-                    return Mesh.position.List[0].Length();
+                if (Mesh.Position.Count > 0)
+                    return Mesh.Position[0].Length();
 
                 else
                     return .0f;
@@ -32,8 +33,8 @@ namespace Model.Objects.Cut
         {
             get
             {
-                if (Mesh.position.List.Count > 0)
-                    return Mesh.position.List[0].LengthSquared();
+                if (Mesh.Position.Count > 0)
+                    return Mesh.Position[0].LengthSquared();
                 else
                     return .0f;
             }
@@ -47,21 +48,21 @@ namespace Model.Objects.Cut
             var dir = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + @"\..\..\Resources\Shader\";
             Shader = ShaderLoader.FromFiles(dir + "vertex_base.glsl", dir + "frag_cutCube.glsl");
 
-            Mesh = Meshes.CreateCuboid(Scale,SegmentsX,SegmentsY,SegmentsZ);
+            Mesh = MeshesExtension.CreateCuboid(Scale,SegmentsX,SegmentsY,SegmentsZ);
         }
 
         protected override void Load()
         {
             base.Load();
-            var tmpMesh = Meshes.CreateCube();
+
             var edgePosition = new List<Vector3>();
-            foreach (var position in Mesh.position.List)
+            foreach (var position in Mesh.Position)
                 edgePosition.Add(new Vector3() {
                     X = position.X / ( 0.5f * Scale.X),
                     Y = position.Y / (0.5f * Scale.Y),
                     Z = position.Z / (0.5f * Scale.Z),
                 });
-            Vao.SetAttribute(_shader.GetAttributeLocation("edgePosition"), edgePosition.ToArray(), VertexAttribPointerType.Float, 3);
+            Vao.SetAttribute(_shader.GetResourceLocation(Zenseless.HLGL.ShaderResourceType.Attribute,"edgePosition"), edgePosition.ToArray(), VertexAttribPointerType.Float, 3);
         }
 
 
@@ -78,8 +79,8 @@ namespace Model.Objects.Cut
             
             Shader.Activate();
 
-            GL.UniformMatrix4(_shader.GetUniformLocation("camera"), true, ref camera);
-            GL.Uniform3(_shader.GetUniformLocation("instancePosition"), InstancePosition.ToOpenTK());
+            GL.UniformMatrix4(_shader.GetResourceLocation(Zenseless.HLGL.ShaderResourceType.Uniform,"camera"), true, ref camera);
+            GL.Uniform3(_shader.GetResourceLocation(Zenseless.HLGL.ShaderResourceType.Uniform,"instancePosition"), InstancePosition.ToOpenTK());
             _vao.Draw();
             _shader.Deactivate();
             
@@ -98,7 +99,7 @@ namespace Model.Objects.Cut
         {
             //BoundingBox is a sphere, cause of Rotations
             var center = InstancePosition;
-            var radiusSquared = Mesh.position.List[0].LengthSquared();
+            var radiusSquared = Mesh.Position[0].LengthSquared();
             var pointDistanceSquared = (-center + point).LengthSquared();
 
             if (pointDistanceSquared <= radiusSquared)
