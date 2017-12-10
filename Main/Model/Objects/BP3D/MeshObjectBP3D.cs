@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 using System.IO;
 
 using System.Numerics;
-using Model.Objects.Mesh;
+
 using Zenseless.Geometry;
 using Zenseless.Base;
 using Zenseless.OpenGL;
 using Model.Controller;
+using Open3D.Geometry.Objects;
 
 namespace Model.Objects.BP3D
 {
@@ -31,7 +32,7 @@ namespace Model.Objects.BP3D
         }//(cm3): 21.758500
 
 
-        public MeshObject MeshObject {
+        public IMeshObject MeshObject {
             get; set;
         }
         public MeshObjectBP3D(String name) : base(name) {
@@ -109,6 +110,17 @@ namespace Model.Objects.BP3D
             ret.Add(new Vector3(Bounds.Item2.X, Bounds.Item2.Y, Bounds.Item2.Z));
 
             return ret;
+        }
+
+        public void Clone(MeshObjectBP3D clone) {
+            base.Clone(clone);
+
+            clone.Bounds = Bounds; // no need to new ();
+
+            clone.FileID = FileID;
+            clone.MeshObject = MeshObject.Clone();
+
+            clone.Volume = Volume;
         }
     }
 }

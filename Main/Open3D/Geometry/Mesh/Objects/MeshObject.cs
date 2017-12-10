@@ -23,12 +23,15 @@ namespace Open3D.Geometry.Objects
             public Vector3 normal;
         };
 
-//        public IMeshAttribute<Vector4> baseColor = new MeshAttribute<Vector4>(nameof(baseColor));
         protected DefaultMesh _mesh;
         protected VAO _vao;
         protected Shader _shader;
+        private OpenTK.Vector4 _baseColor;
 
-
+        public OpenTK.Vector4 BaseColor
+        {
+            get => _baseColor; set => _baseColor = value;
+        }
         public Shader Shader
         {
             get { return _shader; }
@@ -50,8 +53,6 @@ namespace Open3D.Geometry.Objects
             set
             {
                 _mesh = value;
- //               foreach (var normal in Mesh.normal.List)
- //                   baseColor.List.Add(new Vector4(normal, 1.0f));
                 if (Shader != null)
                     Load();
             }
@@ -60,8 +61,7 @@ namespace Open3D.Geometry.Objects
 
         public MeshObject()
         {
-
-            var dir = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + @"\..\Resources\Shader\";
+            var dir = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + @"\Shader\";
             Shader = ShaderLoader.FromFiles(dir + "vertex_base.glsl", dir + "frag_base.glsl");
         }
 
@@ -72,7 +72,7 @@ namespace Open3D.Geometry.Objects
 
         protected virtual void Load()
         {
-            Vao = VAOLoader.FromMesh(this.Mesh, _shader);
+            Vao = VAOLoader.FromMesh(_mesh, _shader);
         }
 
         public virtual void Render(OpenTK.Matrix4 camera)
@@ -86,10 +86,25 @@ namespace Open3D.Geometry.Objects
             //GL.CullFace(CullFaceMode.FrontAndBack);
 
             _shader.Activate();
-//            _vao.SetAttribute(_shader.GetAttributeLocation(baseColor.Name), baseColor.List.ToArray(), VertexAttribPointerType.Float, 4);
-            GL.UniformMatrix4(_shader.GetResourceLocation(ShaderResourceType.Uniform,"camera"), true, ref camera);
+
+            //_vao.SetAttribute(_shader.GetAttributeLocation(baseColor.Name), baseColor.List.ToArray(), VertexAttribPointerType.Float, 4);
+            GL.Uniform4(_shader.GetResourceLocation(ShaderResourceType.Uniform, "baseColor"), ref _baseColor);
+
+            GL.UniformMatrix4(_shader.GetResourceLocation(ShaderResourceType.Uniform, "camera"), true, ref camera);
             _vao.Draw();
             _shader.Deactivate();
         }
+
+        public IMeshObject Clone()
+        {
+            var clone = new MeshObject();
+            clone.Mesh.Add(Mesh);
+            clone.Shader = Shader;
+            clone._baseColor = new OpenTK.Vector4(_baseColor.X,_baseColor.Y,_baseColor.Z,_baseColor.W);
+            clone.Load();
+
+            return clone;
+        }
+            
     }
 }

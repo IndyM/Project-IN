@@ -76,10 +76,6 @@
     <Compile Include="Objects\BP3D\ObjectBP3DGroup.cs" />
     <Compile Include="Objects\Cut\CuboidCut.cs" />
     <Compile Include="Objects\Cut\ICutObject.cs" />
-    <Compile Include="Objects\Mesh\Cuboid.cs" />
-    <Compile Include="Objects\Mesh\IMeshObject.cs" />
-    <Compile Include="Objects\Mesh\MeshObject.cs" />
-    <Compile Include="Objects\Mesh\Sphere.cs" />
     <Compile Include="Objects\Reader\ObjReader.cs" />
     <Compile Include="Objects\Reader\ObjReaderBP3D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

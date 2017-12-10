@@ -8,14 +8,14 @@ using System.Text;
 using System.Threading.Tasks;
 //using OpenTK;
 using OpenTK.Graphics.OpenGL4;
-using Model.Objects.Mesh;
+
 using Zenseless.Base;
 using Zenseless.OpenGL;
 using Zenseless.Geometry;
 
 namespace Model.Objects.Cut
 {
-    public class CuboidCut : Cuboid ,ICutObject
+    public class CuboidCut : Open3D.Geometry.Objects.Cuboid ,ICutObject
     {
 
         private float BoundingRadius
@@ -48,7 +48,7 @@ namespace Model.Objects.Cut
             var dir = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + @"\..\..\Resources\Shader\";
             Shader = ShaderLoader.FromFiles(dir + "vertex_base.glsl", dir + "frag_cutCube.glsl");
 
-            Mesh = MeshesExtension.CreateCuboid(Scale,SegmentsX,SegmentsY,SegmentsZ);
+
         }
 
         protected override void Load()

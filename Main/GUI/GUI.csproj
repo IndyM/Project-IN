@@ -72,6 +72,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Scene.cs" />
+    <Compile Include="UserControls\CuboidControl\CuboidControl.xaml.cs">
+      <DependentUpon>CuboidControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\CuboidControl\CuboidControlVM.cs" />
     <Compile Include="ViewModel\ObjectBP3DVM.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -85,6 +89,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UserControls\CuboidControl\CuboidControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -107,6 +115,10 @@
     <ProjectReference Include="..\Model\Model.csproj">
       <Project>{6A23DBDF-2F9D-4775-87B0-E790521103CD}</Project>
       <Name>Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Open3D\Open3D.csproj">
+      <Project>{4a05399b-8dcc-489b-8551-9eefa85b4d8c}</Project>
+      <Name>Open3D</Name>
     </ProjectReference>
     <ProjectReference Include="..\_Common\Zenseless.Geometry\Zenseless.Geometry.csproj">
       <Project>{E46F4516-C535-4245-B6F4-FA3E75563245}</Project>

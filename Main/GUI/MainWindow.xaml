@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ucs="clr-namespace:GUI.UserControls"
         xmlns:model ="clr-namespace:Model;assembly=Model"
         xmlns:obj ="clr-namespace:Model.Objects;assembly=Model"
         xmlns:local="clr-namespace:GUI"
@@ -25,19 +26,13 @@
 
             </RibbonTab>
         </Ribbon>
-        <!--
-        <Menu Height="24" DockPanel.Dock="Top">
-            <MenuItem Header="File">
-                <MenuItem Name="OpenFile" Header="Open File ..." Click="OpenFile_Click" />
-                <MenuItem Header="Exit" />
-            </MenuItem>
-            <MenuItem Header="Edit"></MenuItem>
-        </Menu>
-        -->
-       <!-- <TreeView DockPanel.Dock="Right" ItemsSource="{Binding Source={x:Static model:MeshObjectController.MeshObjects}}" DisplayMemberPath="Name" Width="400" SelectedItemChanged="TreeView_SelectedItemChanged"></TreeView>
--->
-        
-        <TabControl DockPanel.Dock="Right" Width="400">
+        <Grid DockPanel.Dock="Right" Width="400">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <ucs:CuboidControl/>
+            <TabControl Grid.Row="1">
 
             <TabItem Header="Relation Tree">
                 <TreeView  Name="GroupView" ItemsSource="{Binding RelationTreeItems}"  SelectedItemChanged="TreeView_SelectedItemChanged">
@@ -51,7 +46,7 @@
             </TabItem>
             
         </TabControl>
-
+        </Grid>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>

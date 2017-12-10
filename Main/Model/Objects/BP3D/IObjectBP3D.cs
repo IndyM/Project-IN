@@ -26,6 +26,7 @@ namespace Model.Objects.BP3D
             get; set;
         } // FMA59763
 
+        void Clone(IObjectBP3D clone);
 
     }
 }

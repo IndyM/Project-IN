@@ -15,7 +15,21 @@ namespace Model.Reader
 {
     static class ObjReaderBP3D
     {
-       
+        //Translate to Model-Center using Verteces min/max
+        /*      public static readonly Vector3 vec_center_translation = new Vector3() {
+                  X = .0f,
+                  Y = 859.735591888428f,
+                  Z = 146.015302658081f,
+              };*/
+        //Translate to Model-Center using Verteces sum
+        public static readonly Vector3 vec_center_translation = new Vector3()
+        {
+            X = .0f,
+            Y = 1096.42678852839f,
+            Z = -97.8305799292432f,
+        };
+
+
         /// <summary>
         /// Read a PB3D .obj File
         /// </summary>
@@ -231,29 +245,42 @@ namespace Model.Reader
 
             return ret;
         }
+        private static Vector3 convertOrientation(Vector3 bp3dVector) {
+
+            Vector3 normalSystem = new Vector3()
+            {
+                X = bp3dVector.X,
+                Y = bp3dVector.Z ,
+                Z = bp3dVector.Y ,
+            };
+            return normalSystem ;
+        }
 
         private static DefaultMesh createMesh(List<string> vertexBlock, List<string> normalBlock, List<string> faceBlock)
         {
+
             var mesh = new DefaultMesh();
             foreach (var vertexLine in vertexBlock) {
                 var vertexString = vertexLine.Split(new char[] {' ' },StringSplitOptions.RemoveEmptyEntries);
+
+
                 var vertex = new Vector3() {
-                    X = -float.Parse(vertexString[0]),
-                    Y = -float.Parse(vertexString[1]), //Invert Y Direction
+                    X = float.Parse(vertexString[0]),
+                    Y = float.Parse(vertexString[1]),
                     Z = float.Parse(vertexString[2]),
-                };
-                mesh.Position.Add(vertex);
+            };
+                mesh.Position.Add(convertOrientation(vertex) - vec_center_translation);
             }
             foreach (var normalLine in normalBlock)
             {
                 var vertexString = normalLine.Split(new char[] {' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var vertex = new Vector3()
                 {
-                    X = -float.Parse(vertexString[0]),
-                    Y = -float.Parse(vertexString[1]),
+                    X = float.Parse(vertexString[0]),
+                    Y = float.Parse(vertexString[1]),
                     Z = float.Parse(vertexString[2]),
                 };
-                mesh.Normal.Add(vertex);
+                mesh.Normal.Add(convertOrientation(vertex));
             }
             foreach (var faceLine in faceBlock)
             {
@@ -288,19 +315,22 @@ namespace Model.Reader
             if (name == "")
                 name = fileID+" NoName";
             var args = commentBlock[firstline + 6].Split(new char[] { ':' , ' '}).Last();
-            var vecs = args.Split(new char[] { '-', ' ','(',',',')' },StringSplitOptions.RemoveEmptyEntries);
+            var vecs = args.Split(new string[] { ")-(" },StringSplitOptions.None);
+           
+            var first = vecs[0].Split(new char[] { ' ', '(', ',', ')' }, StringSplitOptions.RemoveEmptyEntries);
+            var sec =  vecs[1].Split(new char[] { ' ', '(', ',', ')' }, StringSplitOptions.RemoveEmptyEntries);
             var vec1 = new Vector3() {
-                X= float.Parse(vecs[0]),
-                Y = float.Parse(vecs[1]),
-                Z = float.Parse(vecs[2]),
+                X= float.Parse(first[0]),
+                Y = float.Parse(first[1]),
+                Z = float.Parse(first[2]),
             };
             var vec2 = new Vector3()
             {
-                X = float.Parse(vecs[3]),
-                Y = float.Parse(vecs[4]),
-                Z = float.Parse(vecs[5]),
+                X = float.Parse(sec[0]),
+                Y = float.Parse(sec[1]),
+                Z = float.Parse(sec[2]),
             };
-            var bounds = new Tuple<Vector3, Vector3>(vec1,vec2);
+            var bounds = new Tuple<Vector3, Vector3>(convertOrientation(vec1)-vec_center_translation, convertOrientation(vec2)- vec_center_translation);
 
             Double volume;
             Double.TryParse(commentBlock[firstline].Split(new char[] { ':', ' ' }).Last(), out volume);

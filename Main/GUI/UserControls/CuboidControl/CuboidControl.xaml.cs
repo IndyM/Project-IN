@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GUI.UserControls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,12 @@ namespace GUI.UserControls
     /// </summary>
     public partial class CuboidControl : UserControl
     {
+        CuboidControlVM viewModel { get; set; } = new CuboidControlVM();
         public CuboidControl()
-        {
+        { 
+            DataContext = viewModel;
             InitializeComponent();
+
         }
     }
 }

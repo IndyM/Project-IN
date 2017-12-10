@@ -1,0 +1,98 @@
+﻿<UserControl x:Class="GUI.UserControls.CuboidControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GUI.UserControls"
+             mc:Ignorable="d" 
+             Background="WhiteSmoke"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height=" Auto"/>
+            <RowDefinition Height=" Auto"/>
+        </Grid.RowDefinitions>
+        <ToggleButton x:Name="togglePosition"  HorizontalContentAlignment="Stretch"  Content="Cuboid"/>
+        <!-- Template="{StaticResource ControlHeader}" -->
+        
+        <!-- Position Content-->
+        <ContentControl Grid.Row="1">
+            <ContentControl.Style>
+                <Style TargetType="ContentControl">
+                    <Setter Property="Visibility" Value="{Binding}"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=togglePosition, Path=IsChecked}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                        <DataTrigger  Binding="{Binding ElementName=togglePosition, Path=IsChecked}" Value="False">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ContentControl.Style>
+
+            <Grid Grid.Row="1" Name="uiCoord_Position" Margin="10,5,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="1" Text="Scale"  Margin="0,5"/>
+                <Grid Grid.Row="2"  Margin="20,5" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="x" Width="20" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Width="80" TextAlignment="Right" Text="{Binding SelectedCuboid.ScaleX,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"/>
+                    <Slider Name="sliderScaleX" Grid.Row="0" Grid.Column="2"  Value="{Binding Path=SelectedCuboid.ScaleX,UpdateSourceTrigger=PropertyChanged ,Mode=TwoWay}"  MinWidth="100" Margin="5,0,0,0" TickFrequency="5" Maximum="600" LargeChange="10" Minimum="1" SmallChange="1"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Y" Width="20" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Width="80" TextAlignment="Right" Text="{Binding SelectedCuboid.ScaleY,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"/>
+                    <Slider Name="sliderScaleY" Grid.Row="1" Grid.Column="2"  Value="{Binding Path=SelectedCuboid.ScaleY,UpdateSourceTrigger=PropertyChanged ,Mode=TwoWay}"  VerticalAlignment="Center" MinWidth="100" Margin="5,0,0,0" TickFrequency="5" Maximum="600" LargeChange="10" Minimum="1" SmallChange="1"/>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Z" Width="20" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="2" Grid.Column="1" Width="80" TextAlignment="Right" Text="{Binding SelectedCuboid.ScaleZ,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"/>
+                    <Slider Name="sliderScaleZ" Grid.Row="2" Grid.Column="2" Value="{Binding Path=SelectedCuboid.ScaleZ,UpdateSourceTrigger=PropertyChanged ,Mode=TwoWay}"  MinWidth="100" Margin="5,0,0,0" TickFrequency="5" Maximum="600" Minimum="1" SmallChange="1" LargeChange="10"/>
+
+                </Grid>
+                <TextBlock Grid.Row="3" Text="Segments"  Margin="0,5"/>
+                <Grid Grid.Row="4"  Margin="20,5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="x" Width="20" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Width="80" TextAlignment="Right" Text="{Binding SelectedCuboid.SegmentsX,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"/>
+                    <Slider Name="sliderSegX" Grid.Row="0" Grid.Column="2" Value="{Binding Path=SelectedCuboid.SegmentsX,UpdateSourceTrigger=PropertyChanged ,Mode=TwoWay}" MinWidth="100" Margin="5,0,0,0" TickFrequency="5" Maximum="60" Minimum="1" SmallChange="1" LargeChange="5"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Y" Width="20" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Width="80" TextAlignment="Right" Text="{Binding SelectedCuboid.SegmentsY,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"/>
+                    <Slider Name="sliderSegY" Grid.Row="1" Grid.Column="2" Value="{Binding Path=SelectedCuboid.SegmentsY,UpdateSourceTrigger=PropertyChanged ,Mode=TwoWay}"  MinWidth="100" Margin="5,0,0,0" TickFrequency="5" Maximum="60" Minimum="1" SmallChange="1" LargeChange="5"/>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Z" Width="20" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="2" Grid.Column="1" Width="80" TextAlignment="Right" Text="{Binding SelectedCuboid.SegmentsZ,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"/>
+                    <Slider Name="sliderSegZ" Grid.Row="2" Grid.Column="2"  Value="{Binding Path=SelectedCuboid.SegmentsZ,UpdateSourceTrigger=PropertyChanged ,Mode=TwoWay}" MinWidth="100" Margin="5,0,0,0" TickFrequency="5" Maximum="60" Minimum="1" SmallChange="1" LargeChange="5"/>
+
+                </Grid>
+            </Grid>
+        </ContentControl>
+    </Grid>
+</UserControl>

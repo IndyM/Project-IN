@@ -10,7 +10,8 @@ namespace Open3D.Geometry
 {
     public static class Intersection
     {
-        public static bool RaySphere(Vector3 ray_point, Vector3 ray_dir, Vector3 sphere_center, double sphere_radius, ref Tuple<Vector3, Vector3> intersectionPoints)
+
+        public static bool IntersectRaySphere(Vector3 ray_point, Vector3 ray_dir, Vector3 sphere_center, double sphere_radius, ref Tuple<Vector3, Vector3> intersectionPoints)
         {
 
             /// (x+dx*t-Mx)^2+(y+dy-My)^2 +(z+dz*t-Mz)^2 = r^2 // Equation Intesect Sphere/Ray
@@ -72,7 +73,7 @@ namespace Open3D.Geometry
             return true;
         }
 
-        public static bool PlaneSphere(Basics.Plane plane, Sphere sphere)
+        public static bool IsPlaneInSphere(Basics.Plane plane, Sphere sphere)
         {
             // d = (q - p.p[0])*p.n;
             //

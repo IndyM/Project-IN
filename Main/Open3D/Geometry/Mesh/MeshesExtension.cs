@@ -76,9 +76,9 @@ namespace Zenseless.Geometry
             }
             // Right Face
             float fix_x = sizeX / 2.0f;
-            for (uint u = 0; u < segmentsZ + 1; ++u)
+            for (uint u = 0; u < segmentsY + 1; ++u)
             {
-                for (uint v = 0; v < segmentsY + 1; ++v)
+                for (uint v = 0; v < segmentsZ + 1; ++v)
                 {
                     float y = -sizeY / 2.0f + u * deltaY;
                     float z = -sizeZ / 2.0f + v * deltaZ;
@@ -89,9 +89,9 @@ namespace Zenseless.Geometry
                 }
             }
             // Left Face
-            for (uint u = 0; u < segmentsZ + 1; ++u)
+            for (uint u = 0; u < segmentsY + 1; ++u)
             {
-                for (uint v = 0; v < segmentsY + 1; ++v)
+                for (uint v = 0; v < segmentsZ + 1; ++v)
                 {
                     float y = -sizeY / 2.0f + u * deltaY;
                     float z = -sizeZ / 2.0f + v * deltaZ;
@@ -107,7 +107,8 @@ namespace Zenseless.Geometry
             uint verticesZ = segmentsZ + 1;
             uint verticesY = segmentsY + 1;
             //add ids
-            uint oneFace_point_count = (uint)(m.Position.Count / 6);
+            uint oneFace_point_count = (segmentsX+1)*(segmentsZ+1);
+
             uint offset = 0;
             //Top & Bot
             for (uint u = 0; u < 2; ++u)
@@ -127,6 +128,7 @@ namespace Zenseless.Geometry
                 }
                 offset += oneFace_point_count;
             }
+            oneFace_point_count = (segmentsX + 1) * (segmentsY + 1);
             //Front& Back
             for (uint u = 0; u < 2; ++u)
             {
@@ -145,21 +147,21 @@ namespace Zenseless.Geometry
                 }
                 offset += oneFace_point_count;
             }
-
+            oneFace_point_count = (segmentsZ + 1) * (segmentsY + 1);
             //Right & Left
             for (uint u = 0; u < 2; ++u)
             {
-                for (uint v = 0; v < segmentsZ; ++v)
+                for (uint v = 0; v < segmentsY; ++v)
                 {
-                    for (uint w = 0; w < segmentsY; ++w)
+                    for (uint w = 0; w < segmentsZ; ++w)
                     {
-                        m.IDs.Add(offset + v * verticesY + w);
-                        m.IDs.Add(offset + v * verticesY + w + 1);
-                        m.IDs.Add(offset + (v + 1) * verticesY + w);
+                        m.IDs.Add(offset + v * verticesZ + w);
+                        m.IDs.Add(offset + v * verticesZ + w + 1);
+                        m.IDs.Add(offset + (v + 1) * verticesZ + w);
 
-                        m.IDs.Add(offset + (v + 1) * verticesY + w);
-                        m.IDs.Add(offset + v * verticesY + w + 1);
-                        m.IDs.Add(offset + (v + 1) * verticesY + w + 1);
+                        m.IDs.Add(offset + (v + 1) * verticesZ + w);
+                        m.IDs.Add(offset + v * verticesZ + w + 1);
+                        m.IDs.Add(offset + (v + 1) * verticesZ + w + 1);
                     }
                 }
                 offset += oneFace_point_count;

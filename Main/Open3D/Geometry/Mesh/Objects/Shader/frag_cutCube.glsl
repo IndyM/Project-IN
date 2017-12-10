@@ -8,9 +8,8 @@ out vec4 color;
 
 void main() 
 {
-	float edge_thickness = 0.02;
-
-	float w_edge = 1.0-edge_thickness;
+	float w_edge = 1.0-0.02;
+	float scale = 100.0;
 	vec3 abs_pos =  abs(pos_edge);
 
 	vec3 step_pos = step(w_edge, abs_pos);

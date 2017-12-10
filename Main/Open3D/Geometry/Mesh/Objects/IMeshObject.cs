@@ -29,7 +29,14 @@ namespace Open3D.Geometry.Objects
             get;
             set;
         }
+        OpenTK.Vector4 BaseColor
+        {
+            get;
+            set;
+        }
 
         void Render(Matrix4 camera);
+
+        IMeshObject Clone();
     }
 }
