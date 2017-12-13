@@ -18,6 +18,5 @@ namespace Model.Objects.BP3D
         {
             get;
         }
-
     }
 }

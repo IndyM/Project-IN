@@ -29,6 +29,11 @@ namespace Open3D.Geometry.Objects
             get;
             set;
         }
+        Matrix4 Transform
+        {
+            get;set;
+        }
+
         OpenTK.Vector4 BaseColor
         {
             get;

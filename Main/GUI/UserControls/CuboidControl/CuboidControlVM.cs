@@ -1,4 +1,5 @@
 ﻿using Model.Controller;
+using Model3D.Controller;
 using Open3D.Geometry.Objects;
 using System;
 using System.Collections.Generic;
@@ -27,14 +28,14 @@ namespace GUI.UserControls
 
         public CuboidControlVM()
         {
-            MeshObjectController.SelectedCutObjectChanged += MeshObjectController_SelectedCutObjectChanged;
+            CutController.SelectedCutObjectChanged += MeshObjectController_SelectedCutObjectChanged;
             
         }
 
         private void MeshObjectController_SelectedCutObjectChanged(object sender, EventArgs e)
         {
-            if (MeshObjectController.CutObject.GetType().IsSubclassOf(typeof(Cuboid))) 
-                SelectedCuboid = MeshObjectController.CutObject;
+            if (CutController.CutObject.GetType().IsSubclassOf(typeof(Cuboid))) 
+                SelectedCuboid = CutController.CutObject;
 
             OnPropertyChanged("SelectedCuboid");
 

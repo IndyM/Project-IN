@@ -33,16 +33,5 @@ namespace Model.Objects.BP3D
             ConceptID = objectBP3D.ConceptID;
 
         }
-
-        public void Clone(IObjectBP3D clone = null)
-        {
-            if (clone == null)
-                return;
-
-            clone.CompatibilityVersion = CompatibilityVersion;
-            clone.ConceptID = ConceptID;
-            clone.RepresentationID = RepresentationID;
-
-        }
     }
 }

@@ -12,21 +12,19 @@ using Zenseless.OpenGL;
 using Zenseless.Geometry;
 using Zenseless.Base;
 using Zenseless.HLGL;
+using OpenTK;
 
 namespace Open3D.Geometry.Objects
 {
     public class MeshObject : IMeshObject
     {
-        public struct MeshPoint
-        {
-            public Vector3 position;
-            public Vector3 normal;
-        };
 
         protected DefaultMesh _mesh;
         protected VAO _vao;
         protected Shader _shader;
         private OpenTK.Vector4 _baseColor;
+
+        private Matrix4 _transform;
 
         public OpenTK.Vector4 BaseColor
         {
@@ -58,15 +56,20 @@ namespace Open3D.Geometry.Objects
             }
         }
 
+        public Matrix4 Transform { get => _transform; set => _transform = value; }
 
         public MeshObject()
         {
+            Mesh = new DefaultMesh();
+            Transform = Matrix4.Identity;
+
             var dir = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + @"\Shader\";
             Shader = ShaderLoader.FromFiles(dir + "vertex_base.glsl", dir + "frag_base.glsl");
         }
 
         public MeshObject(DefaultMesh mesh) : this()
         {
+            
             Mesh = mesh;
         }
 
@@ -87,7 +90,6 @@ namespace Open3D.Geometry.Objects
 
             _shader.Activate();
 
-            //_vao.SetAttribute(_shader.GetAttributeLocation(baseColor.Name), baseColor.List.ToArray(), VertexAttribPointerType.Float, 4);
             GL.Uniform4(_shader.GetResourceLocation(ShaderResourceType.Uniform, "baseColor"), ref _baseColor);
 
             GL.UniformMatrix4(_shader.GetResourceLocation(ShaderResourceType.Uniform, "camera"), true, ref camera);
@@ -98,7 +100,18 @@ namespace Open3D.Geometry.Objects
         public IMeshObject Clone()
         {
             var clone = new MeshObject();
-            clone.Mesh.Add(Mesh);
+
+            var mesh = new DefaultMesh();
+            foreach (var pos in Mesh.Position)
+                mesh.Position.Add(new System.Numerics.Vector3(pos.X, pos.Y, pos.Z));
+            foreach (var nor in Mesh.Normal)
+                mesh.Normal.Add(new System.Numerics.Vector3(nor.X, nor.Y, nor.Z));
+            foreach (var tex in Mesh.TexCoord)
+                mesh.TexCoord.Add(new System.Numerics.Vector2(tex.X, tex.Y));
+            foreach (var id in Mesh.IDs)
+                mesh.IDs.Add(id);
+
+            clone.Mesh = mesh;
             clone.Shader = Shader;
             clone._baseColor = new OpenTK.Vector4(_baseColor.X,_baseColor.Y,_baseColor.Z,_baseColor.W);
             clone.Load();

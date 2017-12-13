@@ -26,6 +26,7 @@ using GUI.ViewModel;
 using Model.Objects.BP3D;
 using Model.Reader;
 using Model.Controller;
+using Model3D.Controller;
 
 namespace GUI
 {
@@ -59,10 +60,10 @@ namespace GUI
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            OpenTK.Toolkit.Init();
+                        OpenTK.Toolkit.Init();
 
-            //_glc.BackColor = System.Drawing.Color.DarkGray;
-            _glc.Load += new EventHandler(glc_Load);
+                       //_glc.BackColor = System.Drawing.Color.DarkGray;
+                       _glc.Load += new EventHandler(glc_Load);
             _glc.Paint += new PaintEventHandler(glc_Paint);
 
             // Assign the GLControl as the host control's child.
@@ -86,7 +87,7 @@ namespace GUI
             timer.Elapsed += OnTimedEvent;
             // Start the timer
             timer.Enabled = true;
-
+            CutController.Init();
         }
         
 
@@ -197,15 +198,18 @@ namespace GUI
             }
         }
 
-        private void loadFull_Click(object sender, RoutedEventArgs e)
+        private void LoadFull_Click(object sender, RoutedEventArgs e)
         {
-            MeshObjectController.loadModelISA();
+
+            ModelController.LoadModelISA();
+            Model3DController.CreateMeshObjects();
 
         }
 
-        private void loadPart_Click(object sender, RoutedEventArgs e)
+        private void LoadPart_Click(object sender, RoutedEventArgs e)
         {
-            MeshObjectController.loadModelPartOf();
+            ModelController.LoadModelPartOf();
+            Model3DController.CreateMeshObjects();
 
         }
 
@@ -217,20 +221,20 @@ namespace GUI
                 return;
             var mod = ((IObjectBP3DGroup)((TreeViewItem)e.NewValue).DataContext);
             if (mod.IsMeshObject) {
-                Scene.Camera.Target = ((MeshObjectBP3D)mod).GetCenter();
-                if (MeshObjectController.CutObject != null) {
-                    var vec = ((MeshObjectBP3D)mod).GetCenter();
-                    MeshObjectController.CutObject.InstancePosition = vec;
-                    foreach(var meshObject in MeshObjectController.MeshObjects)
-                        MeshObjectController.getIDsOfMeshObjectInCutObject(meshObject);
-                }
+                Scene.Camera.Target = ((PolygonObjectBP3D)mod).GetCenter();
+ /*               if (ModelController.CutObject != null) {
+                    var vec = ((PolygonObjectBP3D)mod).GetCenter();
+                    ModelController.CutObject.InstancePosition = vec;
+                    foreach(var meshObject in ModelController.PolygonObjects)
+                        ModelController.getIDsOfMeshObjectInCutObject(meshObject);
+                }*/
             }
             
         }
 
         private void cutCube_Click(object sender, RoutedEventArgs e)
         {
-            MeshObjectController.cutWithCutObject();
+            CutController.DoCut();
         }
     }
 }

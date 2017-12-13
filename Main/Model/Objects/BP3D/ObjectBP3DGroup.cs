@@ -21,15 +21,15 @@ namespace Model.Objects.BP3D
 
         public ObjectBP3DGroup(String name) : base(name)
         {
-            init();
+            Init();
         }
 
         public ObjectBP3DGroup(ObjectBP3D objectBP3D) : base(objectBP3D)
         {
-            init();
+            Init();
 
         }
-        private void init() {
+        private void Init() {
             Children = new ObservableCollection<IObjectBP3DGroup>();
         }
     }

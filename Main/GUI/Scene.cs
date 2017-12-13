@@ -1,5 +1,7 @@
 ﻿using Model;
 using Model.Controller;
+using Model3D.Controller;
+using Model3D.Objects.Cut;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using System;
@@ -34,12 +36,14 @@ namespace GUI
             GL.Enable(EnableCap.Blend);
 
             Matrix4 camera = Camera.CalcMatrix().ToOpenTK();
-            foreach (var meshObject in MeshObjectController.MeshObjectsCut)
+            foreach (var meshObject in Model3DController.MeshObjects)
             {
                 meshObject.Render(camera);
             }
+            foreach(var cutObject in CutController.CutObjects)
+                cutObject.Render(camera);
+            CutController.CutObject?.Render(camera);
 
-            MeshObjectController.CutObject?.Render(camera);
         }
     }
 }

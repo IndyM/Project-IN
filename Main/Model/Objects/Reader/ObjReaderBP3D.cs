@@ -35,9 +35,9 @@ namespace Model.Reader
         /// </summary>
         /// <param name="path"></param>
         /// <returns> The read MeshObjectBP3D </returns>
-        public static MeshObjectBP3D ReadObj(String path)
+        public static PolygonObjectBP3D ReadObj(String path)
         {
-            MeshObjectBP3D meshObject = null;
+            PolygonObjectBP3D meshObject = null;
 
             Stream stream = null;
             try
@@ -49,10 +49,10 @@ namespace Model.Reader
 
                     string line;
 
-                    List<String> commentBlock = new List<string>();
-                    List<String> vertexBlock = new List<string>();
-                    List<String> normalBlock = new List<string>();
-                    List<String> faceBlock = new List<string>();
+                    List<String> commentList = new List<string>();
+                    List<Vector3> vertexList = new List<Vector3>();
+                    List<Vector3> normalList = new List<Vector3>();
+                    List<uint> idList = new List<uint>();
 
                     // Read until the end of the file is reached.
                     while ((line = reader.ReadLine()) != null)
@@ -63,14 +63,15 @@ namespace Model.Reader
                         //Dataformat described in http://paulbourke.net/dataformats/obj/
                         switch (key)
                         {
-                            case "#": commentBlock.Add(args); break;
-                            case "v": vertexBlock.Add(args); break;
-                            case "vn": normalBlock.Add(args); break;
-                            case "f": faceBlock.Add(args); break;
+                            case "#": commentList.Add(args); break;
+                            case "v":  vertexList.Add(parseVector3(args) - vec_center_translation); break;
+                            case "vn": normalList.Add(parseVector3(args)); break;
+                            case "f": idList.AddRange(parseIds(args)); break;
                         }
                     }
-                    meshObject = getNewMeshObjectByCommentBlock(commentBlock);
-                    meshObject.MeshObject.Mesh = createMesh(vertexBlock, normalBlock, faceBlock);
+                    meshObject = getNewMeshObjectByCommentBlock(commentList,vertexList,normalList,idList);
+
+                    //meshObject.MeshObject.Mesh = createMesh(vertexList, normalList, idList);
                     //meshObject.Load();
                     //MeshObjectController.MeshObjects.Add(meshObject);
                 }
@@ -89,6 +90,64 @@ namespace Model.Reader
             return meshObject;
         }
 
+
+        private static PolygonObjectBP3D getNewMeshObjectByCommentBlock(List<string> commentList, List<Vector3> vertexList, List<Vector3> normalList, List<uint> idList)
+        {
+            if (commentList.Count == 0)
+                return null;
+
+            var firstline = 5;
+
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+            Double.TryParse(commentList[firstline].Split(new char[] { ':', ' ' }).Last(), out double compatibilityVersion);
+
+            String fileID = commentList[firstline + 1].Split(new char[] { ':', ' ' }).Last();
+
+            String RepresentationID = commentList[firstline + 2].Split(new char[] { ':', ' ' }).Last();
+            //Build UP
+            String conceptID = commentList[firstline + 4].Split(new char[] { ':', ' ' }).Last();
+            String name = commentList[firstline + 5].Split(new char[] { ':' }).Last().Substring(1);
+            if (name == "")
+                name = fileID + " NoName";
+            var args = commentList[firstline + 6].Split(new char[] { ':', ' ' }).Last();
+            var vecs = args.Split(new string[] { ")-(" }, StringSplitOptions.None);
+
+            var first = vecs[0].Split(new char[] { ' ', '(', ',', ')' }, StringSplitOptions.RemoveEmptyEntries);
+            var sec = vecs[1].Split(new char[] { ' ', '(', ',', ')' }, StringSplitOptions.RemoveEmptyEntries);
+            var vec1 = new Vector3()
+            {
+                X = float.Parse(first[0]),
+                Y = float.Parse(first[1]),
+                Z = float.Parse(first[2]),
+            };
+            var vec2 = new Vector3()
+            {
+                X = float.Parse(sec[0]),
+                Y = float.Parse(sec[1]),
+                Z = float.Parse(sec[2]),
+            };
+            var bounds = new Tuple<Vector3, Vector3>(convertOrientation(vec1) - vec_center_translation, convertOrientation(vec2) - vec_center_translation);
+
+            Double volume;
+            Double.TryParse(commentList[firstline].Split(new char[] { ':', ' ' }).Last(), out volume);
+
+            var ret = new PolygonObjectBP3D(name)
+            {
+                CompatibilityVersion = compatibilityVersion,
+                FileID = fileID,
+                RepresentationID = RepresentationID,
+                ConceptID = conceptID,
+                Bounds = bounds,
+                Volume = volume,
+
+                VertexList = vertexList,
+                NormalList = normalList,
+                IdList = idList,
+            };
+
+            return ret;
+        }
+
         internal static IObjectBP3DGroup ReadRelations(string path)
         {
             var treeBuildList = new ObservableCollection<IObjectBP3DGroup>();
@@ -101,8 +160,8 @@ namespace Model.Reader
                     stream = null;
 
                     var relationAllGroups = new List<IObjectBP3DGroup>();
-                    foreach(var meshObjectBP3D in MeshObjectController.MeshObjects)
-                        relationAllGroups.Add(new MeshObjectBP3DGroup(meshObjectBP3D) );
+                    foreach(var meshObjectBP3D in ModelController.PolygonObjects)
+                        relationAllGroups.Add(new PolygonObjectBP3DGroup(meshObjectBP3D) );
 
                     string line = reader.ReadLine();//skip the first line
 
@@ -200,11 +259,11 @@ namespace Model.Reader
 
                         if (parent == null) // Parent can be MeshObject
                         {
-                            foreach (MeshObjectBP3D meshObjectBP3D in MeshObjectController.MeshObjects)
+                            foreach (PolygonObjectBP3D meshObjectBP3D in ModelController.PolygonObjects)
                             {
                                 if (meshObjectBP3D.ConceptID.Equals(conceptID)) // Parent is MeshObject ... create MeshObjectGroup
                                 {
-                                    parent = new MeshObjectBP3DGroup(meshObjectBP3D);
+                                    parent = new PolygonObjectBP3DGroup(meshObjectBP3D);
                                     ret.Add(parent);
 
                                     break;
@@ -213,9 +272,9 @@ namespace Model.Reader
                         }
 
 
-                        foreach (MeshObjectBP3D meshObjectBP3D in MeshObjectController.MeshObjects) {
+                        foreach (PolygonObjectBP3D meshObjectBP3D in ModelController.PolygonObjects) {
                             if (meshObjectBP3D.FileID.Equals(fileID)) {
-                                child = new MeshObjectBP3DGroup (meshObjectBP3D); 
+                                child = new PolygonObjectBP3DGroup (meshObjectBP3D); 
                                 break;
                             }
                         }
@@ -256,24 +315,67 @@ namespace Model.Reader
             return normalSystem ;
         }
 
+        private static Vector3 parseVector3(string vertexString)
+        {
+            var vertexStringArray = vertexString.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+
+            var vertex = new Vector3()
+            {
+                X = float.Parse(vertexStringArray[0]),
+                Y = float.Parse(vertexStringArray[1]),
+                Z = float.Parse(vertexStringArray[2]),
+            };
+
+            return convertOrientation(vertex);
+        }
+
+        /*
+        private static Vector3 parseNormal(string normalString)
+        {
+            var normalStringArray = normalString.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            var normal = new Vector3()
+            {
+                X = float.Parse(normalStringArray[0]),
+                Y = float.Parse(normalStringArray[1]),
+                Z = float.Parse(normalStringArray[2]),
+            };
+            return convertOrientation(normal);
+        }*/
+        private static uint[] parseIds(string idsSTring)
+        {
+            var ret = new uint[3];
+            var idsStringArray = idsSTring.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            for(int i = 0; i < 3; i++) { 
+                var facePart = idsStringArray[i].Split(new char[] { '/' });
+            ret[i] = uint.Parse(facePart[0]) - 1;
+                //no uvs used, just add an empty Vector
+                //mesh.TexCoord.Add(new Vector2(.0f, .0f));
+            }
+            return ret;
+        }
+        /*
         private static DefaultMesh createMesh(List<string> vertexBlock, List<string> normalBlock, List<string> faceBlock)
         {
 
             var mesh = new DefaultMesh();
-            foreach (var vertexLine in vertexBlock) {
-                var vertexString = vertexLine.Split(new char[] {' ' },StringSplitOptions.RemoveEmptyEntries);
+            foreach (var vertexLine in vertexBlock)
+            {
+                var vertexString = vertexLine.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
 
-                var vertex = new Vector3() {
+                var vertex = new Vector3()
+                {
                     X = float.Parse(vertexString[0]),
                     Y = float.Parse(vertexString[1]),
                     Z = float.Parse(vertexString[2]),
-            };
+                };
                 mesh.Position.Add(convertOrientation(vertex) - vec_center_translation);
             }
             foreach (var normalLine in normalBlock)
             {
-                var vertexString = normalLine.Split(new char[] {' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var vertexString = normalLine.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var vertex = new Vector3()
                 {
                     X = float.Parse(vertexString[0]),
@@ -285,69 +387,18 @@ namespace Model.Reader
             foreach (var faceLine in faceBlock)
             {
                 var vertexString = faceLine.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var ele in vertexString) {
+                foreach (var ele in vertexString)
+                {
                     var facePart = ele.Split(new char[] { '/' });
-                    mesh.IDs.Add(uint.Parse(facePart[0])-1);
+                    mesh.IDs.Add(uint.Parse(facePart[0]) - 1);
                     //no uvs used, just add an empty Vector
-                    mesh.TexCoord.Add(new Vector2(.0f,.0f));
+                    mesh.TexCoord.Add(new Vector2(.0f, .0f));
                 }
             }
 
             return mesh;
         }
-
-        private static MeshObjectBP3D getNewMeshObjectByCommentBlock(List<string> commentBlock)
-        {
-            if (commentBlock.Count == 0)
-                return null;
-            var firstline = 5;
-            Double compatibilityVersion;
-
-            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
-            Double.TryParse( commentBlock[firstline].Split(new char[]{ ':', ' ' }).Last(),out compatibilityVersion);
-
-            String fileID = commentBlock[firstline+1].Split(new char[] { ':', ' ' }).Last();
-
-            String RepresentationID = commentBlock[firstline+2].Split(new char[] { ':', ' ' }).Last();
-            //Build UP
-            String conceptID = commentBlock[firstline + 4].Split(new char[] { ':', ' ' }).Last();
-            String name = commentBlock[firstline + 5].Split(new char[] { ':' }).Last().Substring(1);
-            if (name == "")
-                name = fileID+" NoName";
-            var args = commentBlock[firstline + 6].Split(new char[] { ':' , ' '}).Last();
-            var vecs = args.Split(new string[] { ")-(" },StringSplitOptions.None);
-           
-            var first = vecs[0].Split(new char[] { ' ', '(', ',', ')' }, StringSplitOptions.RemoveEmptyEntries);
-            var sec =  vecs[1].Split(new char[] { ' ', '(', ',', ')' }, StringSplitOptions.RemoveEmptyEntries);
-            var vec1 = new Vector3() {
-                X= float.Parse(first[0]),
-                Y = float.Parse(first[1]),
-                Z = float.Parse(first[2]),
-            };
-            var vec2 = new Vector3()
-            {
-                X = float.Parse(sec[0]),
-                Y = float.Parse(sec[1]),
-                Z = float.Parse(sec[2]),
-            };
-            var bounds = new Tuple<Vector3, Vector3>(convertOrientation(vec1)-vec_center_translation, convertOrientation(vec2)- vec_center_translation);
-
-            Double volume;
-            Double.TryParse(commentBlock[firstline].Split(new char[] { ':', ' ' }).Last(), out volume);
-
-            var ret = new MeshObjectBP3D(name) {
-                  CompatibilityVersion = compatibilityVersion,
-                  FileID = fileID,
-                  RepresentationID = RepresentationID,
-                  ConceptID = conceptID,
-                  Bounds = bounds,
-                  Volume = volume,
-                  
-            };
-
-
-            return ret;
-        }
+        */
 
         /// <summary>
         /// Splits a line in keyword and arguments.

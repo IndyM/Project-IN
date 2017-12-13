@@ -14,9 +14,9 @@ namespace Model.Reader
     public static class ObjReader
     {
         // http://paulbourke.net/dataformats/obj/
-        public static List<MeshObjectBP3D> Read(String path) {
+        public static List<PolygonObjectBP3D> Read(String path) {
            
-            var meshObjects = new List<MeshObjectBP3D>();
+            var meshObjects = new List<PolygonObjectBP3D>();
 
             Stream stream = null;
             try
@@ -26,7 +26,7 @@ namespace Model.Reader
                 {
                     stream = null;
    
-                    MeshObjectBP3D meshObject = null;
+                    PolygonObjectBP3D meshObject = null;
                     string line;
                     // Read and display lines from the file until the end of 
                     // the file is reached.
@@ -37,10 +37,10 @@ namespace Model.Reader
                         SplitLine(line,out key,out args);
 
                         switch (key) {
-                            case "o": meshObject = new MeshObjectBP3D(args); break;
+                            case "o": meshObject = new PolygonObjectBP3D(args); break;
                             case "v":
                                 if (meshObject == null)
-                                    meshObject = new MeshObjectBP3D("Object_"+ MeshObjectController.MeshObjects.Count);
+                                    meshObject = new PolygonObjectBP3D("Object_"+ ModelController.PolygonObjects.Count);
 
 
                                 break;

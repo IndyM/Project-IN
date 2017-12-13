@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,8 +26,5 @@ namespace Model.Objects.BP3D
         {
             get; set;
         } // FMA59763
-
-        void Clone(IObjectBP3D clone);
-
     }
 }

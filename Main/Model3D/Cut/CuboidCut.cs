@@ -13,7 +13,7 @@ using Zenseless.Base;
 using Zenseless.OpenGL;
 using Zenseless.Geometry;
 
-namespace Model.Objects.Cut
+namespace Model3D.Objects.Cut
 {
     public class CuboidCut : Open3D.Geometry.Objects.Cuboid ,ICutObject
     {
@@ -42,10 +42,10 @@ namespace Model.Objects.Cut
 
         public CuboidCut() :base()
         {
-            Scale = new Vector3(10,20,30);
 
-            SegmentsX = SegmentsY = SegmentsZ = 10;
-            var dir = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + @"\..\..\Resources\Shader\";
+
+//            SegmentsX = SegmentsY = SegmentsZ = 1;
+            var dir = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + @"\..\Resources\Shader\";
             Shader = ShaderLoader.FromFiles(dir + "vertex_base.glsl", dir + "frag_cutCube.glsl");
 
 

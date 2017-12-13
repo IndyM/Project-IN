@@ -5,7 +5,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.Objects.Cut
+namespace Model3D.Objects.Cut
 {
     interface ICutObject
     {

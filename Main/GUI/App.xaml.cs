@@ -13,5 +13,11 @@ namespace GUI
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            OpenTK.Toolkit.Init();
+ //           Model3D.Controller.CutController.Init();
+        }
+
     }
 }

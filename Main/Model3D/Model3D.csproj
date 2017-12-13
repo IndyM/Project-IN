@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4A05399B-8DCC-489B-8551-9EEFA85B4D8C}</ProjectGuid>
+    <ProjectGuid>{835609F4-9A82-4AD0-8DE2-0656B839F45C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Open3D</RootNamespace>
-    <AssemblyName>Open3D</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <RootNamespace>Model3D</RootNamespace>
+    <AssemblyName>Model3D</AssemblyName>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -45,25 +45,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Geometry\Basics\Plane.cs" />
-    <Compile Include="Geometry\Basics\Sphere.cs" />
-    <Compile Include="Intersection.cs" />
-    <Compile Include="Geometry\Mesh\Mesh.cs" />
-    <Compile Include="Geometry\Mesh\MeshesExtension.cs" />
-    <Compile Include="Geometry\Mesh\Objects\Cuboid.cs" />
-    <Compile Include="Geometry\Mesh\Objects\IMeshObject.cs" />
-    <Compile Include="Geometry\Mesh\Objects\MeshObject.cs" />
+    <Compile Include="Controller\ColorController.cs" />
+    <Compile Include="Controller\CutController.cs" />
+    <Compile Include="Controller\Model3DController.cs" />
+    <Compile Include="Cut\CuboidCut.cs" />
+    <Compile Include="Cut\ICutObject.cs" />
+    <Compile Include="MeshObjectBP3D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="Geometry\Mesh\Objects\Shader\frag_base.glsl" />
-    <None Include="Geometry\Mesh\Objects\Shader\frag_cutCube.glsl" />
-    <None Include="Geometry\Mesh\Objects\Shader\vertex_base.glsl" />
-    <None Include="OpenTK.dll.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{6a23dbdf-2f9d-4775-87b0-e790521103cd}</Project>
+      <Name>Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Open3D\Open3D.csproj">
+      <Project>{4a05399b-8dcc-489b-8551-9eefa85b4d8c}</Project>
+      <Name>Open3D</Name>
+    </ProjectReference>
     <ProjectReference Include="..\_Common\Zenseless.Base\Zenseless.Base.csproj">
       <Project>{6E8350F9-C711-4F67-B964-7215AAB5A98E}</Project>
       <Name>Zenseless.Base</Name>
@@ -73,7 +71,7 @@
       <Name>Zenseless.Geometry</Name>
     </ProjectReference>
     <ProjectReference Include="..\_Common\Zenseless.HLGL\Zenseless.HLGL.csproj">
-      <Project>{227D6BE1-BA08-4030-A755-07288540931F}</Project>
+      <Project>{227d6be1-ba08-4030-a755-07288540931f}</Project>
       <Name>Zenseless.HLGL</Name>
     </ProjectReference>
     <ProjectReference Include="..\_Common\Zenseless.OpenGL\Zenseless.OpenGL.csproj">
@@ -81,12 +79,12 @@
       <Name>Zenseless.OpenGL</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="OpenTK.dll.config" />
+    <None Include="packages.config" />
+    <None Include="Resources\Shader\frag_base.glsl" />
+    <None Include="Resources\Shader\frag_cutCube.glsl" />
+    <None Include="Resources\Shader\vertex_base.glsl" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

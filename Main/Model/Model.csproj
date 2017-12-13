@@ -65,26 +65,18 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controller\ColorController.cs" />
-    <Compile Include="Controller\CutController.cs" />
-    <Compile Include="Controller\MeshObjectController.cs" />
+    <Compile Include="Controller\ModelController.cs" />
     <Compile Include="Objects\BP3D\IObjectBP3D.cs" />
     <Compile Include="Objects\BP3D\IObjectBP3DGroup.cs" />
-    <Compile Include="Objects\BP3D\MeshObjectBP3D.cs" />
-    <Compile Include="Objects\BP3D\MeshObjectBP3DGroup.cs" />
     <Compile Include="Objects\BP3D\ObjectBP3D.cs" />
     <Compile Include="Objects\BP3D\ObjectBP3DGroup.cs" />
-    <Compile Include="Objects\Cut\CuboidCut.cs" />
-    <Compile Include="Objects\Cut\ICutObject.cs" />
+    <Compile Include="Objects\BP3D\PolygonObjectBP3D.cs" />
+    <Compile Include="Objects\BP3D\PolygonObjectBP3DGroup.cs" />
     <Compile Include="Objects\Reader\ObjReader.cs" />
     <Compile Include="Objects\Reader\ObjReaderBP3D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Open3D\Open3D.csproj">
-      <Project>{4a05399b-8dcc-489b-8551-9eefa85b4d8c}</Project>
-      <Name>Open3D</Name>
-    </ProjectReference>
     <ProjectReference Include="..\_Common\Zenseless.Base\Zenseless.Base.csproj">
       <Project>{6E8350F9-C711-4F67-B964-7215AAB5A98E}</Project>
       <Name>Zenseless.Base</Name>
@@ -3599,9 +3591,6 @@
     <None Include="Resources\Model\partof_BP3D_4.0\partof_BP3D_4.0_obj_99\FJ3654.obj" />
     <None Include="Resources\Model\partof_BP3D_4.0\partof_BP3D_4.0_obj_99\FJ3656.obj" />
     <None Include="Resources\Model\partof_BP3D_4.0\partof_BP3D_4.0_obj_99\FJ3659.obj" />
-    <None Include="Resources\Shader\frag_base.glsl" />
-    <None Include="Resources\Shader\frag_cutCube.glsl" />
-    <None Include="Resources\Shader\vertex_base.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Model\isa_BP3D_4.0\isa_element_parts.txt" />

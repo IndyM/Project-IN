@@ -1,4 +1,5 @@
 ﻿
+using Open3D.Geometry.Basics;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -72,11 +73,23 @@ namespace Open3D.Geometry.Objects
             get { return _segmentsZ; }
             set { _segmentsZ = value; Create(); OnPropertyChanged("SegmentsZ"); }
         }
-        public Cuboid()
+
+
+        public Sphere Bounding
         {
-            Scale = new Vector3(1.0f, 1.0f, 1.0f);
+            get {
+ /*               float max = .0;
+                Vector3.Max(Scale);*/ 
+
+                return new Sphere();  }
+        }
+
+        public Cuboid() : base()
+        {
+            Scale = new Vector3(10, 10, 10);
             SegmentsX = SegmentsY = SegmentsZ = 1;
         }
+
 
         public void Create()
         {
@@ -86,7 +99,37 @@ namespace Open3D.Geometry.Objects
             Load();
         }
 
-        public List<MeshPoint> getFacePoints()
+        /// <summary>
+        /// Get the StartIndex of each Face
+        /// 
+        /// [0] top
+        /// [1] bot
+        /// [2] front
+        /// [3] back
+        /// [4] right
+        /// [5] left
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public uint[] getStartIndexFaces() {
+
+
+            //Top & Bot
+            uint top = 0;
+            uint bot = top + (SegmentsX + 1) * (SegmentsZ + 1);
+
+            //Front & Back
+            uint front = bot + (SegmentsX + 1) * (SegmentsZ + 1);
+            uint back =  front+ (SegmentsX + 1) * (SegmentsY + 1);
+            //Right & Left
+            uint right = back + (SegmentsX + 1) * (SegmentsY + 1);
+            uint left = right + (SegmentsZ + 1) * (SegmentsY + 1);
+
+
+            return new uint[]{
+                top, bot, front,back,right,left};
+        }
+ /*       public List<MeshPoint> getFacePoints()
         {
             var ret = new List<MeshPoint>();
 
@@ -104,6 +147,20 @@ namespace Open3D.Geometry.Objects
                     normal = cuboidOneSegment.Normal[i],
                 });
             }
+
+            return ret;
+        }*/
+
+        public Basics.Plane[] AsPlanes()
+        {
+            var ret = new Basics.Plane[6];
+
+            var facesStartIndex = getStartIndexFaces();
+
+            // Just one point on each face needed
+            // First Point of each Face with normal used
+            for (int i = 0; i < 6; i ++)
+                ret[i] =new Basics.Plane(InstancePosition + Mesh.Position[i], Mesh.Normal[i]);
 
             return ret;
         }

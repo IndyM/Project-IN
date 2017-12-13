@@ -14,8 +14,8 @@
             <RibbonTab Header="Home">
                 <RibbonGroup Header="Load Model" >
                    
-                    <RibbonButton Name="loadFull" Label="Full" LargeImageSource="Resources/Icons/load_full.png" Click="loadFull_Click" />
-                    <RibbonButton Name="loadPart" Label="Part" LargeImageSource="Resources/Icons/load_half.png" Click="loadPart_Click" />
+                    <RibbonButton Name="loadFull" Label="Full" LargeImageSource="Resources/Icons/load_full.png" Click="LoadFull_Click" />
+                    <RibbonButton Name="loadPart" Label="Part" LargeImageSource="Resources/Icons/load_half.png" Click="LoadPart_Click" />
                 </RibbonGroup>
                 <RibbonGroup Header="Cut" >
 

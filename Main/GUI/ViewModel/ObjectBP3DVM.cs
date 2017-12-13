@@ -30,8 +30,8 @@ namespace GUI.ViewModel
             RelationTreeItems = new ObservableCollection<TreeViewItem>();
             ElementPartsTreeItems = new ObservableCollection<TreeViewItem>();
 
-            MeshObjectController.TreeStartChanged += MeshObjectController_TreeStartChanged;
-            MeshObjectController.ElementParts.CollectionChanged += MeshObjectController_ElementParts_CollectionChanged;
+            ModelController.TreeStartChanged += MeshObjectController_TreeStartChanged;
+            ModelController.ElementParts.CollectionChanged += MeshObjectController_ElementParts_CollectionChanged;
         }
 
         private void MeshObjectController_TreeStartChanged(object sender, EventArgs e)

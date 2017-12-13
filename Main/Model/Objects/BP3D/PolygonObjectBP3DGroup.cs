@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Model.Objects.BP3D
 {
-    public class MeshObjectBP3DGroup : MeshObjectBP3D , IObjectBP3DGroup
+    public class PolygonObjectBP3DGroup : PolygonObjectBP3D , IObjectBP3DGroup
     {
         public ObservableCollection<IObjectBP3DGroup> Children
         {
@@ -20,7 +20,7 @@ namespace Model.Objects.BP3D
             get { return true; }
         }
 
-        public MeshObjectBP3DGroup(MeshObjectBP3D meshObject) : base(meshObject)
+        public PolygonObjectBP3DGroup(PolygonObjectBP3D meshObject) : base(meshObject)
         {
             Children = new ObservableCollection<IObjectBP3DGroup>();
         }

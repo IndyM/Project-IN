@@ -1,11 +1,11 @@
 ﻿using Model.Objects.BP3D;
-using Model.Objects.Cut;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Numerics;
+
 using Model.Reader;
 using Zenseless.Base;
 using System.ComponentModel;
@@ -14,33 +14,31 @@ namespace Model.Controller
 {
     
 
-    public static class MeshObjectController 
+    public static class ModelController 
     {
         public static event EventHandler TreeStartChanged;
         private static void OnTreeStartChanged(EventArgs e) {
             TreeStartChanged?.Invoke(RelationTreeStart, e);
         }
 
-        public static event EventHandler SelectedCutObjectChanged;
-        private static void OnSelectedCutObjectChanged(EventArgs e)
-        {
-            SelectedCutObjectChanged?.Invoke(CutObject, e);
-        }
 
-        private static ObservableCollection<MeshObjectBP3D> _meshObjects;
+
+
+        private static ObservableCollection<PolygonObjectBP3D> _polygonObjects;
+//        private static List<PolygonObjectBP3D> _workingMeshObjects;
 
         private static IObjectBP3DGroup _relationtreeStart;
         private static ObservableCollection<IObjectBP3DGroup> _elementParts;
 
-        private static CuboidCut _cutObject; 
-        private static List<MeshObjectBP3D> _meshObjectsCut;
+//        private static CuboidCut _cutObject; 
+
 
         /// <summary>
         /// All MeshObjects 
         /// </summary>
-        public static ObservableCollection<MeshObjectBP3D> MeshObjects {
-            get { return _meshObjects; }
-            set { _meshObjects = value; }
+        public static ObservableCollection<PolygonObjectBP3D> PolygonObjects {
+            get { return _polygonObjects; }
+            set { _polygonObjects = value; }
         }
 
        public static IObjectBP3DGroup RelationTreeStart
@@ -59,45 +57,44 @@ namespace Model.Controller
         /// <summary>
         /// Cut Object Cube
         /// </summary>
-        public static CuboidCut CutObject {
+ /*       public static CuboidCut CutObject {
             get { return _cutObject; }
             set { _cutObject = value; OnSelectedCutObjectChanged(new EventArgs()); }
         }
-        public static List<MeshObjectBP3D> MeshObjectsCut
+        public static List<PolygonObjectBP3D> WorkingMeshObjects
         {
-            get { return _meshObjectsCut; }
-            set { _meshObjectsCut = value; }
+            get { return _workingMeshObjects; }
+            set { _workingMeshObjects = value; }
         }
-
+        */
 
         public static int VertexCount {
             get;set;
         }
 
-        static MeshObjectController() {
-            _meshObjects = new ObservableCollection<MeshObjectBP3D>();
+        static ModelController() {
+            _polygonObjects = new ObservableCollection<PolygonObjectBP3D>();
+     //       WorkingMeshObjects = new List<PolygonObjectBP3D>();
             _elementParts  = new ObservableCollection<IObjectBP3DGroup>();
             _relationtreeStart = null;
 
-            MeshObjectsCut = new List<MeshObjectBP3D>();
-
         }
 
-        public static void loadModelISA() {
+        public static void LoadModelISA() {
             var path_dir_base = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + "\\..\\Resources\\Model\\isa_BP3D_4.0\\";
             var path_dir_obj = path_dir_base + "isa_BP3D_4.0_obj_99\\";
 
-            loadModel(path_dir_base, path_dir_obj);
+            LoadModel(path_dir_base, path_dir_obj);
         }
-        public static void loadModelPartOf()
+        public static void LoadModelPartOf()
         {
             var path_dir_base = Path.GetDirectoryName(PathTools.GetSourceFilePath()) + "\\..\\Resources\\Model\\partof_BP3D_4.0\\";
             var path_dir_obj = path_dir_base + "partof_BP3D_4.0_obj_99\\";
 
-            loadModel(path_dir_base, path_dir_obj);
+            LoadModel(path_dir_base, path_dir_obj);
         }
 
-        private static void loadModel(string path_base, string path_obj)
+        private static void LoadModel(string path_base, string path_obj)
         {
             reset();
             var base_files = Directory.EnumerateFiles(path_base);
@@ -117,10 +114,10 @@ namespace Model.Controller
             foreach (var file in obj_files)
             {
                 var meshObjectBP3D = ObjReaderBP3D.ReadObj(file);
-                meshObjectBP3D.MeshObject.BaseColor = ColorController.getColor();
+ //               meshObjectBP3D.MeshObject.BaseColor = ColorController.getRandomColor();
                 if (meshObjectBP3D != null) { 
-                    MeshObjects.Add(meshObjectBP3D);
-                    VertexCount += meshObjectBP3D.MeshObject.Mesh.Position.Count;
+                    PolygonObjects.Add(meshObjectBP3D);
+                    VertexCount += meshObjectBP3D.VertexList.Count;
                     /*
                     foreach (var point in meshObjectBP3D.MeshObject.Mesh.Position)
                     {
@@ -137,7 +134,8 @@ namespace Model.Controller
                             lowestZ = point.Z;
                     }
                     */
-                    MeshObjectsCut.Add(meshObjectBP3D);
+
+ //                   WorkingMeshObjects.Add(meshObjectBP3D.Clone());
                 }
             }
   /*          System.Diagnostics.Debug.WriteLine("sum Y : "+sumY/counter);
@@ -152,66 +150,21 @@ namespace Model.Controller
 
             System.Diagnostics.Debug.WriteLine("Finished Reading File");
 
-            CutObject = new CuboidCut();
+//            CutObject = new CuboidCut();
         }
 
         private static void reset()
         {
-            _meshObjects.Clear();
+            _polygonObjects.Clear();
+//            _workingMeshObjects.Clear();
             _elementParts.Clear();
             _relationtreeStart = null;
 
-            _meshObjectsCut.Clear();
-            _cutObject = null;
+//            _workingMeshObjects.Clear();
+//            _cutObject = null;
         }
 
 
 
-        private static List<MeshObjectBP3D> getAndRemoveObjectsinCutObject()
-        {
-            var ret = new List<MeshObjectBP3D>();
-            for (int i = 0; i < MeshObjectsCut.Count; i++)
-            {
-                var ids = getIDsOfMeshObjectInCutObject(MeshObjectsCut[i]);
-                if (ids.Count>0){
-                    ret.Add(MeshObjectsCut[i]);
-                    MeshObjectsCut.RemoveAt(i);
-                    i--;
-                }
-            }
-
-            return ret;
-        }
-
-        public static List<int> getIDsOfMeshObjectInCutObject(MeshObjectBP3D meshObject) {
-
-            var cutFaceCenters = CutObject.getFacePoints();
-            List<Vector3> positions = meshObject.MeshObject.Mesh.Position;
-            List<int> idsInCut = new List<int>();
-            for (int i=0;i< positions.Count;i++) {
-                bool inCut = true;
-                foreach(var face in cutFaceCenters)
-                {
-                    var vecToBoundPoint = -face.position + positions[i]; //Vector from Face-Center to vertex
-                    float dot = Vector3.Dot( vecToBoundPoint, face.normal);
-
-                    if (dot > 0)
-                    {
-                        inCut = false;
-                        break;
-                    }
-                }
-                if (inCut)// Vertex is inside the Quad (all Faces)
-                { 
-                    idsInCut.Add(i);
-  //                  meshObject.MeshObject.baseColor.List[i] = new Vector4(.0f,1.0f,1.0f,.3f);
-                }
-            }
-            return idsInCut;
-        }
-        public static void cutWithCutObject()
-        {
-            var objectsToCut = getAndRemoveObjectsinCutObject();
-        }
     }
 }

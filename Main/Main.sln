@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUI", "GUI\GUI.csproj", "{9CEA51CB-42F7-4DBF-9458-47A71D420479}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zenseless.OpenGL", "_Common\Zenseless.OpenGL\Zenseless.OpenGL.csproj", "{CE298C1A-8B9F-4822-8C06-8B057B14CECB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zenseless.HLGL", "_Common\Zenseless.HLGL\Zenseless.HLGL.csproj", "{227D6BE1-BA08-4030-A755-07288540931F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model3D", "Model3D\Model3D.csproj", "{835609F4-9A82-4AD0-8DE2-0656B839F45C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,8 +83,19 @@ Global
 		{227D6BE1-BA08-4030-A755-07288540931F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{227D6BE1-BA08-4030-A755-07288540931F}.Release|x86.ActiveCfg = Release|Any CPU
 		{227D6BE1-BA08-4030-A755-07288540931F}.Release|x86.Build.0 = Release|Any CPU
+		{835609F4-9A82-4AD0-8DE2-0656B839F45C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{835609F4-9A82-4AD0-8DE2-0656B839F45C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{835609F4-9A82-4AD0-8DE2-0656B839F45C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{835609F4-9A82-4AD0-8DE2-0656B839F45C}.Debug|x86.Build.0 = Debug|Any CPU
+		{835609F4-9A82-4AD0-8DE2-0656B839F45C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{835609F4-9A82-4AD0-8DE2-0656B839F45C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{835609F4-9A82-4AD0-8DE2-0656B839F45C}.Release|x86.ActiveCfg = Release|Any CPU
+		{835609F4-9A82-4AD0-8DE2-0656B839F45C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F1979B0A-B1C5-4C44-94E1-ECCAC4E40DCC}
 	EndGlobalSection
 EndGlobal
